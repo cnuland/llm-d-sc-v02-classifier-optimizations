@@ -3304,3 +3304,64 @@ This is the third time tier-exact accuracy and gate behaviour have disagreed
 ordered taxonomy with a threshold gate, accuracy ranks models differently from
 the metric the deployment runs on, and the accuracy ranking is the wrong one to
 ship against.**
+
+## 91. Per-annotator heads do NOT clear the floor — the gain was my training loop
+
+§83 motivated per-juror heads as the one mechanism with a route past the
+agreement ceiling, and the first run looked like it delivered: 0.9149 on refined
+gold against the five-run `train.py` incumbent median of 0.9016, **+1.33 against
+a 1.06-point floor**.
+
+The control says otherwise. `perjuror.py` in `soft` mode is the identical script,
+corpus, loader, optimiser, schedule and pooling, with a single shared head over
+the vote distribution instead of one head per juror:
+
+| arm | refined gold | real gold |
+|---|---:|---:|
+| per-juror heads | 0.9149 | 0.8947 |
+| **control: shared soft head, same loop** | **0.9096** | 0.9019 |
+| **delta attributable to per-juror heads** | **+0.53** | **-0.72** |
+| `train.py` incumbent (median of 5 runs) | 0.9016 | 0.8923 |
+
+**+0.53 on refined gold and -0.72 on real gold: the mechanism is inside the noise
+floor and does not have a consistent sign.** Per-annotator modelling is not
+confirmed on this signal.
+
+**What the control does show is that most of the apparent gain was the training
+loop**, which beats the `train.py` incumbent by +0.80 on refined gold with a
+plain shared head. `perjuror.py` differs from `train.py` in several ways at once
+— masked-mean pooling instead of BERT's pooler, OneCycleLR instead of linear
+warmup, and a larger row count (161,617 vs the round-V corpus) — so that +0.80 is
+**confounded across three changes and is not a finding**. It is a lead: if it
+survives isolation it is worth more than anything the head structure did.
+
+**This is the correct outcome to record and the one I would have got wrong.**
+Without the control, "per-annotator heads clear complexity's floor" was a clean
+story with literature support behind it (§83, arXiv 2409.17577), and it would have
+been wrong.
+
+## 92. Self-consistency training labels: +0.80, inside the floor
+
+Round AJ, the untested cell from §83/§85. Same 20,000 prompts in both arms; only
+the labelling process differs. Two seeds each:
+
+| arm | labels | seed 11 | seed 22 | median |
+|---|---|---:|---:|---:|
+| aj1 | panel (2 jurors, 1 sample each) | 0.8670 | 0.8511 | 0.8591 |
+| **aj2** | **self-consistency (1 juror, 3 samples)** | **0.8697** | **0.8644** | **0.8671** |
+| | | +0.27 | +1.33 | **+0.80** |
+
+**Positive in both seeds but +0.80 median against a 1.06-point floor: suggestive,
+not established.** Two seeds cannot resolve it, and the honest label is
+"unresolved" rather than either "works" or "does not".
+
+What it does close is the pre-registered question. Four label-quality
+interventions have now been measured on complexity — tie-resolved labels (+0.27),
+the v2-rubric relabel (0.00 over three seeds), §85's clean-subset analysis, and
+now denoised training labels (+0.80) — and **not one has cleared the floor.**
+Label noise is not the binding constraint on this signal. The label axis is
+closed unless someone wants to spend many seeds chasing a sub-floor effect.
+
+Note the absolute numbers here are low (0.86-0.87) because both arms train on
+20,000 rows rather than the full corpus; only the aj1-vs-aj2 difference is
+meaningful.
