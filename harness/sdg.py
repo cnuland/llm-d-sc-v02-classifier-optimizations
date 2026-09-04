@@ -146,7 +146,7 @@ def gen_from_real(signal, labels, exemplars, tier, n, model, tag):
 
 # ---------------------------------------------------------------- verification
 
-def blind_relabel(signal, labels, texts, model, batch=20, effort="low"):
+def blind_relabel(signal, labels, texts, model, batch=20, effort="low", pass_tag=""):
     """Independent label from text + rubric alone. The judge never sees the
     generator's intended tier, so agreement is evidence rather than assent."""
     out = []
@@ -165,8 +165,12 @@ def blind_relabel(signal, labels, texts, model, batch=20, effort="low"):
              f"of: {', '.join(labels)}. Apply the rubric strictly, including its "
              f"boundary rules.\n\n{listing}")
         try:
+            # pass_tag joins the cache key, so repeated passes over identical
+            # prompts genuinely re-query instead of replaying one cached answer.
+            # Without it a self-consistency measurement reads 100% by construction.
             items = L.ask_json(p, L.label_schema(labels, with_reason=False),
-                               model=model, effort=effort, max_tokens=8000)["items"]
+                               model=model, effort=effort, max_tokens=8000,
+                               seed_tag=pass_tag)["items"]
             if len(items) == len(chunk):
                 return items
         except Exception:

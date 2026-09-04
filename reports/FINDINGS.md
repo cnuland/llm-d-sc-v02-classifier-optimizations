@@ -3038,3 +3038,61 @@ simultaneously and produced eight concurrent trainers on a 16-core machine. A
 chain of waiters is a chain of triggers, and interrupting it anywhere fires
 everything downstream. Waiters are now disarmed and rounds are launched
 deliberately.
+
+## 83. The ceiling is a property of the PANEL, not the task — self-agreement beats inter-agreement by 27.7 points
+
+Every ceiling in this report rests on inter-juror agreement, and all three jurors
+are Claude models. The question never asked: **when the same juror labels the
+same prompt twice, does it agree with itself?**
+
+400 complexity prompts, stratified 200 unanimous / 176 contested, one model
+(`claude-sonnet-5`) relabelling three times with distinct cache keys:
+
+| measurement | value |
+|---|---:|
+| inter-juror agreement over the sample | 53.2% |
+| **self-agreement across 3 passes** | **80.9%** |
+| **delta** | **+27.7** |
+| self-agreement on unanimous rows (n=200) | 90.0% |
+| self-agreement on contested rows (n=176) | 70.5% |
+
+**Each model is far more consistent with itself than the models are with each
+other.** That is the "self >> inter" branch, and it changes the reading of §69:
+the disagreement driving every ceiling in this report is dominated by
+**systematic between-model difference**, not by irreducible ambiguity in the
+prompts.
+
+Two consequences, both actionable:
+
+1. **Intra-juror sampling noise is real and is currently baked into the gold.**
+   Each juror labelled once; rows where all three happened to agree became gold.
+   Re-sampling shows **10% of "unanimous" rows are unanimous by luck of the draw**
+   (90.0% self-agreement on rows the panel agreed on 100% of the time). The fix is
+   cheap and does not need a new panel: **majority-of-3-samples per juror before
+   cross-juror adjudication**, which costs 3x labelling on one model.
+
+2. **Modelling the raters is the right response, not averaging them.** If the
+   models are individually coherent but mutually different, soft targets over
+   their votes throw away the structure. That is exactly the case per-annotator
+   heads are built for, and it is now motivated by measurement rather than by the
+   literature alone.
+
+**The honest alternative reading**, which this experiment cannot separate: each
+model may hold a stable but genuinely different interpretation, in which case the
+ambiguity is real and lives *between* raters rather than within them. That is the
+perspectivist position, and it points at the same response — model the raters —
+while meaning something different about the task. Distinguishing them needs a
+non-Claude juror, which this project does not have.
+
+**What it does settle:** "high 90s is unreachable" was justified by inter-juror
+agreement, and inter-juror agreement is not a measurement of task difficulty. It
+is a measurement of this particular three-model panel. §69's ceilings stand as
+descriptions of the current evaluation and should NOT be read as facts about the
+problem.
+
+## 84. Egress gate, second seed
+
+`eg-ad1-cw-seed22`: entsec-gold 0.9434 against seed 11's 0.9533 — median **0.9484**,
+majority baseline 82.89%. The gate result is stable across seeds; publication
+waits on the containment comparison in §79 being re-run on the median model
+rather than the better one.
