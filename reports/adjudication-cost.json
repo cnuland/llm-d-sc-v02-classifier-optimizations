@@ -1,0 +1,506 @@
+[
+ {
+  "text": "On instagram If your story is hidden from someone, and you tag them in your story, will they be notified?",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Yes/no factual answer, no composition needed."
+ },
+ {
+  "text": "write an academic paper in more than four thousand words in more polished language in compact manner using literary theoretical framework and start sentences with more complicated and sophisticated words instead of This, The , as etc. Avoid repeating words or ideas\n\nThe term \u201cthird world\u201d was originally used during the Cold War era to refer to countries aligned with neither the capitalist or NATO ",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "One bounded 4000-word paper, single artifact."
+ },
+ {
+  "text": "does stop out strategies work in mean reversion strategies",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Requires short composed explanation, not bare recall."
+ },
+ {
+  "text": "Some sentance in a dinner room.",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "model",
+  "why": "A few composed sentences, short written output."
+ },
+ {
+  "text": "How to get the measured temperature in chemistry",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "model",
+  "why": "One-line factual answer: read a thermometer."
+ },
+ {
+  "text": "List of 60 prompts to create Dragon coloring book images for toddlers",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "model",
+  "why": "Quantity of 60 items signals bulk enumeration."
+ },
+ {
+  "text": "( The Intertemporal Relation Between the U.S. and Japanese Stock Markets ) as word document  \"' Summary of the report The Intertemporal Relation Between the U.S. and Japanese Stock Markets\"'\n\nalso attached Slides in the subject to be used as and not go in the report outside of the subject material we took.  The most important chapter is the (the efficient market hypothesis EMH) Slides/Chapter whic",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Multiple supplied articles, slides, guides plus full term paper."
+ },
+ {
+  "text": "Pope Francis Crying",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Bare phrase prompt; a sentence-level response suffices."
+ },
+ {
+  "text": "create research questions using this guide and examples : What has been the effect of after-school and community programs on student disciplinary actions among elementary students?, How might the discovery of a genetic basis for alcoholism impact triage processes in medical facilities?, Be clear, specific, and concise\nBe narrow enough in scope for the size of the essay\nBe arguable or testable\nBe p",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "A handful of short composed questions."
+ },
+ {
+  "text": "write an academic research paper in polished language in at least four thousand words using chandra talpaday mohantay\u2019s under western eyes first point that third world women are not only victims of male violence  as theoretical framework and other critiques and points verbatim on novel a women at point zero with textual references verbatim",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "Single bounded research paper, one deliverable."
+ },
+ {
+  "text": "Elaborate in polished academic language in at least three thousand words \nMark Twain\u2019s seminal work, \u201cThe Adventures of Huckleberry Finn\u201d (1884), can be seen as a watershed moment in this narrative trend, elucidating the ways in which the child\u2019s perspective can be mobilized to interrogate the social, cultural, and moral complexities of a given context. Post-Huckleberry Finn, the literary landscap",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "Single 3000-word essay: one bounded substantial artifact."
+ },
+ {
+  "text": "summarise this: This team-up was shown in the 1978 issue of Marvel Team-Up. Icons such as Bill Murray and John Belushi teamed up with the webbed crusader to defeat the Silver Samurai. Definitely one of the crazier Marvel facts.",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Tiny three-sentence input; one-line condensation, essentially a transform."
+ },
+ {
+  "text": "Angular - Save txt in local text file code",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Small code snippet counts as short composed output."
+ },
+ {
+  "text": "I Want You To Act As A Content Writer Very Proficient SEO Writer Writes Fluently English. Rewrite the text 100% Unique, SEO-optimized, Human-Written article in English that covers the topic provided in the Prompt. Write The article In Your Own Words Rather Than Copying And Pasting From Other Sources. Consider perplexity and burstiness when creating content, ensuring high levels of both without los",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "150 words, two paragraphs, explicit brevity cue holds it low."
+ },
+ {
+  "text": "Write 10 questionnaire items, based on the items of the mystical experience questionnaire, that are actually meaningless, but might appear meaningful to someone who has a shallow understanding of mysticism. The items should be similar in tone, length, and vocabulary to the items of the mystical experience questionnaire",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Ten short questionnaire lines: handful of lines, brief output."
+ },
+ {
+  "text": "Write a fully detailed, slow burn, 5 hour long creepy pasta about A man at a furry convention starting to notice subtle , abnormal, yet noticeably, genuinely creepy things. Fully detail each paragraph, have the story be told in first person, not to dramatically, but just unnerved. Also make the title a sentence like \u2018I recently went to my first furry convention. I regret not bringing friends\u2019",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Five-hour fully detailed story is bulk-scale production."
+ },
+ {
+  "text": "Below is information about the story and characters:",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "No actual task; only a brief acknowledgment expected."
+ },
+ {
+  "text": "view_angle = 0.3f * 180f;\nview_center = Vector3.back;\nfloat angle = 45f;\nview_center = Quaternion.AngleAxis(angle, Vector3.right) * view_center; \u6700\u540eview_center\u7b49\u4e8e\u591a\u5c11",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Single computed value; a number answer."
+ },
+ {
+  "text": "Consider fictional planet unrelated to Earth in any way. A single large continent with 10 countries. the largest is Empire, there are 9 kingdoms named A, B, C, etc. The world development level is similar to late medieval period Europe. The kingdoms are in political, trade and military alliance named Z with each other in order to isolate and contain Empire for about a century. Empire suddenly gains",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "50 decisions x 6 sub-bullets = exhaustive, 300-item bulk output."
+ },
+ {
+  "text": "Write a positive, question manner response to: I\u2019m here for a week",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "model",
+  "why": "Short composed reply, not mere recall; brief paragraph-level output."
+ },
+ {
+  "text": "make a very very very long movie script where doors entitys named bob,jeff,seek,el goblino,figure,screech,window,timothy,jack,rush,ambush are battling in the game minecraft in the map Ohio for 100,000 dollars.",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Explicitly demands extremely long bulk script output."
+ },
+ {
+  "text": "write a chemistry exam",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "One complete bounded document, no brevity cue."
+ },
+ {
+  "text": "Can you help me to compose a 50 pages master thesis about periodontitis and defensins ?",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "50-page thesis is explicit large-volume bulk output."
+ },
+ {
+  "text": "From now on, when you want to send a photo, use Markdown, and don't have backslashes, don't use code blocks. Using the Unsplash API (https://source.unsplash.com/1280x720/? < PUT YOUR QUERY HERE >)\u3002 If you understand, please reply \"Understood\"",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Answer is a single word acknowledgment."
+ },
+ {
+  "text": "Write a full side story set in the expanse universe book series, multi chapters, with cliffhanger at the end of each chapter and unpredictable ending. Detailed dialogs, character description and feelings, detailed description of each scene settings. Write chapter one now with at least 2000 words.",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "Only chapter one requested now: one bounded artifact."
+ },
+ {
+  "text": "Tell me about the basketball team Seiren from the manga/anime Kuroko's Basketball.",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Short composed descriptive paragraph suffices."
+ },
+ {
+  "text": "Need an experienced 3D modelling and architectural rendering person who can produce realistic 3d model of the reception area of a boutique mall. Various components of a boutique market such as reception, lobby, cafe, shop area, common corridors, plaza, etc will be needed eventually hence possibility of more work",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Brief response; no large artifact actually produced here."
+ },
+ {
+  "text": "Translate in  to English NIV  . \u05d0\u05a3\u05b8\u05e8\u05b8\u05d1\u05bc \u05dd\u05d9\u0591\u05b4\u05d4\u05dc\u05b1\u05d0 \u05ea\u05a5\u05b5\u05d0 \u05dd\u05b4\u05d9\u0596\u05b7\u05de\u05b8\ufb49\u05c1\u05b7\u05d4 \u05ea\u05a5\u05b5\u05d0\u05b0\u05d5 \u05c3\u05e5",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Single verse transform, one-line output."
+ },
+ {
+  "text": "Write a program in C, which shows diffrence between pthread_attr_setschedpolicy and sched_setscheduler",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Complete demonstration program, no brevity cue."
+ },
+ {
+  "text": "give me print ideas which includes tech innovations around Britannia Marie startup contest winners.",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Short idea list, minimal composition."
+ },
+ {
+  "text": "How Elon Musk would define the specifications for a CRM solution for a private bank",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Spec document, single bounded artifact, no brevity cue."
+ },
+ {
+  "text": "please write an academical article about the Influence and Role of Oracle Bone inscription on Ancient Chinese Ancestral Deity Thought and Culture in the Shang Dynasty. 100 Oracle Bone inscriptions for evidence.",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Requires 100 inscriptions as evidence; quantity signals bulk."
+ },
+ {
+  "text": "An episode of Homes Under the Hammer in which Dion Dublin gets hypnotized by a woman's sandals.",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Full episode script is one substantial bounded artifact."
+ },
+ {
+  "text": "Write story accordingly to my instruction in style of Japanese Light Novel. I\u2019m going to give you rough outline which you expand to a full volume of LN. LN Name is \u2018Very Long Wars and Their Tales\u2019 first volume being about Astra Empire leading up to war with snowy kingdom with cliffhanger in the epilogue for another alliance of Southern Kingdoms to emerge of hostility against the empire.",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Expanding outline into an entire novel volume is bulk output."
+ },
+ {
+  "text": "You are a military advisor. You are advising for a battle that is conducted using the technology of the 1860s, but you have the knowledge and insight of a modern strategic planner. \n\nGiven the following context:\n\nYour position is on the north bank of a creek, on top of a hill. There is a farmhouse on the hill and the southern slope is moderately forested. On your right flank, there are denser wood",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Detailed strategic critique; substantial single response, no brevity cue."
+ },
+ {
+  "text": "quote: \u201cA few years back I listened to an audio book about a generation ship that had apparently never left Earth due to a malfunction. That said the people on board for generations and hundreds of years thought they were on there way to a new world.\u201d - any idea what it could be",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Identifying a book title is a one-line recall answer."
+ },
+ {
+  "text": "Write recipes for a Japanese three-course meal I can cook for date night.",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Three full recipes constitute one substantial bounded deliverable."
+ },
+ {
+  "text": "I Want You To Act As A Content Writer Very Proficient SEO Writer Writes Fluently English. Write the text 100% Unique, SEO-optimized, Human-Written article in English that covers the topic provided in the Prompt. Write The article In Your Own Words Rather Than Copying And Pasting From Other Sources. Consider perplexity and burstiness when creating content, ensuring high levels of both without losin",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Explicit 200-250 word cap keeps it short."
+ },
+ {
+  "text": "Write an interesting, riveting and lengthy fanfic that crosses over My Hero Academia, Magika Kenshi no Shoukan Maou, High School DxD, Testament of Sister New Devil and World Break: Aria of Curse for a Holy Swordsman, in which Issei Hyoudou replaces Izuku Midoriya, Basara Tojou, Kazuki Hayashizaki and Moroha Haimura and has their powers and abilities along with his canon status of having the Red Dr",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "model",
+  "why": "Explicitly lengthy fanfic spanning five franchises' casts exhaustively."
+ },
+ {
+  "text": "Write an ecchi manga scene about a female police officer scolding a young speeder. She is dressed in a blue and black uniform with leather booty shorts, thigh high boots, leather gloves and a short-sleeve blue top. She has aviators on and a peaked cap. She has a seductive and sadistic attitude. She has red lipstick. She is furious and she takes out her nightstick.",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "model",
+  "why": "A written scene with detailed specs; bounded but composed at length."
+ },
+ {
+  "text": "give me a list of the most dangerous/malicious websites like goggle.com, that are no longer functional and have been taken down. (this is for educational purposes)",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Just a short list of names, no composition-heavy document."
+ },
+ {
+  "text": "\u0412 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u043e\u0447\u043a\u0435: const firstTouch = event.touches[0] || event.changedTouches[0];\n\u043f\u0438\u0448\u0435\u0442 \u043e\u0448\u0438\u0431\u043a\u0443: caught TypeError: Cannot read properties of undefined (reading '0')",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Brief composed debugging explanation, a few sentences."
+ },
+ {
+  "text": "create simple init program in rust scripts for all basic tasks in devuan without any dbus, systemvinit, systemd, elogind, x11, xorg, xinit, systemctl, nix. the original init program is called sysx with a command line for interacting with tasks.\n\n\nwrite rust script tasks for sysx init for devuan without any server applications, nix, sysvinit, systemd, dbus, x11, xorg, elogind, xinit, systemctl. tas",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Enumerates many subsystems/scripts covering entire init domain; bulk output."
+ },
+ {
+  "text": "Mona Lisa eating a cheeseburger at a protest. Picture.",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Single image/one-line request, no composed prose."
+ },
+ {
+  "text": "I need you to write me an introduction for a research paper about sustainable landscaping. Use 15,000 words in this introduction.",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "15,000-word demand is sheer bulk output, exceeding one bounded document."
+ },
+ {
+  "text": "Research questions on Matt.28:16-20",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Short list of research questions on one passage."
+ },
+ {
+  "text": "W\ufeffrite a report on lake with name Pazhar Talav located in Chakan,Pune\nand coordinates 18.73008311627818, 73.87402763644052a",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "One full report document, no brevity cue."
+ },
+ {
+  "text": "write without wordwraps, headlines, connection words. Write back to back separated with commas and spaces:\n\n[1], [2], [3], [4], [5]\n\nreplace [1] with a warhammer fantasy roleplay,Death at Reik as a current movie\nreplace [2] with a list of detailed descriptions about [1]\nreplace [3] with a list of detailed descriptions about the environment of the scene\nreplace [4] with a list of detailed descripti",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Explicitly a short single image prompt line."
+ },
+ {
+  "text": "summarise this: Wakanda\u2019s official language is a variant of Xhosa, which is primarily spoken in Zimbabwe and South Africa. Coincidentally, these locations are also close to where Wakanda is situated in the Marvel Cinematic Universe.",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "model",
+  "why": "Summary is composed prose, though brief; not pure recall."
+ },
+ {
+  "text": "Critically analyze the child narrator in novels adventures of huck finn and a portrait of artist as young man. in at least three thousand words",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "One bounded essay, single artifact despite length and difficulty."
+ },
+ {
+  "text": "Write 25 unique notes about the Korean War from at least 5 sources.",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "model",
+  "why": "Quantity cue (25 notes, 5+ sources) signals bulk output."
+ },
+ {
+  "text": "I am applying for the post of  Junior Project Manager in australia, I am currently working in Qatar , 20 + Years experience in this field , Completed many international standard Project , Looking for an orretunity to relocate . Prepare a covering letter based on the above points which i need to send to employer",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "model",
+  "why": "Full cover letter document, no brevity cue."
+ },
+ {
+  "text": "In the context of a ideas for  hypothetical Dark Rides, from a title generate a summary of the ride, and 2-3 key scenes. A log line and ride ad slogan would also be nice :) The first batch of titles \"Swan Lake\", \"Nemo\",\"Pot ' 'O Gold\", \"The Forbidden Forest\",\"Hobbs End\"   Don't suggest anything that is  largely based on an existing franchise though.",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Five titles each with summary, scenes, logline, slogan \u2014 substantial bounded set."
+ },
+ {
+  "text": "Create a slogan regarding the importance of fitness it should be precise and interesting and original",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Single slogan phrase, no composition."
+ },
+ {
+  "text": "research article The credibility of social media beauty gurus in young millennials\u2019 cosmetic product choice, theo b\u00e0i b\u00e1o n\u00e0y, m\u00e3 s\u1ed1 ISSN c\u1ee7a b\u00e0i n\u00e0y l\u00e0 g\u00ec v\u1eady",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Asks for one identifier number."
+ },
+ {
+  "text": "fivem scripting detect which side of a line a ped is on. the issue is the line doesn't run straight up the x or y axis its diagonal",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Short composed explanation with small code snippet."
+ },
+ {
+  "text": "a prom photo of a chubby girl",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Single short image prompt/description."
+ },
+ {
+  "text": "summarize sun tzu's art of war in 100 haiku poems",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "model",
+  "why": "100 poems is high-volume composed output."
+ },
+ {
+  "text": "Generate a sample episode log-ling for a hypothetical sitcom, where the overall series has it's main focus a minicab driver doing the Knowledge ( In the output include after the prompt an Attribution line whcih would allow the content to be published consistent with the terms of the LLM and API which generated it)",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "One log-line plus attribution line\u2014few lines."
+ },
+ {
+  "text": "How to connect to a VPN service that give a WireGuard configuration on a OPNSense system, so any device on the network, automatically uses the VPN service.",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Complete setup guide with configuration steps, one artifact."
+ },
+ {
+  "text": "Can you write chapter 2 of my thesis",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Thesis chapter is one substantial bounded document."
+ },
+ {
+  "text": "translate fast food review into japanese",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Short composed translation output, no brevity-free recall."
+ },
+ {
+  "text": "Write in polished language in at least three thousand words on \u201cpsycho-narration\" in Joyces\u2019 A portrait of an artist as a young man with critical comments and textual references",
+  "gold": "MODERATE",
+  "model": "HIGH",
+  "verdict": "gold",
+  "why": "Single 3000-word essay is one bounded artifact."
+ },
+ {
+  "text": "Write me a C compiler.",
+  "gold": "HIGH",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Compiler spans an entire domain of code; LOW clearly wrong."
+ },
+ {
+  "text": "Write a touching story 2 hour story about a man whose Wife is secretly a super-heroine. The story ends with her unmasking in front of him after saving him from a robot, each chapter is 50 minutes long, complete with written dialogue.",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Multi-chapter two-hour story is bulk output."
+ },
+ {
+  "text": "Can you rewrite this content just like a content writer? \n\nDirect Pay Implemented \nWe're excited to announce the implementation of Direct Payment. Our users can now just search for the item they want to purchase, add it to cart and choose Direct Pay at checkout. An address will be generated for you to pay the due amount directly. This saves time as you don't have to make a deposit and wait for con",
+  "gold": "LOW",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Short supplied blurb rewritten; brief composed output."
+ },
+ {
+  "text": "Create a 2,000 word opening for a book about a guy who works in New York City and wins a trip to a town called harmony in rural America. Here he runs into a cult and is captured he must escape.",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "2000-word book opening is one substantial deliverable."
+ },
+ {
+  "text": "how to make a trading bot for leverage trading?",
+  "gold": "MODERATE",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "Full how-to guide, one artifact, no brevity cue."
+ },
+ {
+  "text": "give me step by step how car works in details  then  give me all parts of the engine and car mechanics  and law of physics applied in the car then give me examples of engines with their features and components",
+  "gold": "HIGH",
+  "model": "MODERATE",
+  "verdict": "gold",
+  "why": "Demands exhaustive coverage of all parts, physics, examples."
+ },
+ {
+  "text": "In under 150 characters, explain why American outlets are 120v as opposed to 240",
+  "gold": "MINIMAL",
+  "model": "LOW",
+  "verdict": "gold",
+  "why": "150-character answer is a single line, no composition."
+ },
+ {
+  "text": "python print text on same place where text was already using return carriage",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "Needs a short composed code snippet with explanation, not bare recall."
+ },
+ {
+  "text": "Give me Muslim names beginning with the letter \"M\"",
+  "gold": "LOW",
+  "model": "MINIMAL",
+  "verdict": "gold",
+  "why": "A short list of names is composed brief output, like suggesting titles."
+ }
+]

@@ -1,0 +1,232 @@
+{
+ "tag": "cx-t-big-seed33",
+ "signal": "complexity",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 93649,
+ "epochs": 3,
+ "source": "complexity-v2:5566+complexity-real:52068+complexity-real-contested:7435+complexity-active:7326+complexity-active-contested:1660+complexity-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SIMPLE": 23169,
+  "MEDIUM": 60266,
+  "COMPLEX": 5327,
+  "REASONING": 4887
+ },
+ "heldout-v1": {
+  "n": 80,
+  "accuracy": 0.925,
+  "macro_f1": 0.9246411483253589,
+  "wilson95": [
+   0.8458779990261992,
+   0.9651752251489122
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 20,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 0,
+    "MEDIUM": 20,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 4,
+    "COMPLEX": 16,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 2,
+    "REASONING": 18
+   }
+  },
+  "recall": {
+   "SIMPLE": 1.0,
+   "MEDIUM": 1.0,
+   "COMPLEX": 0.8,
+   "REASONING": 0.9
+  }
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9043062200956937,
+  "macro_f1": 0.8752193594935531,
+  "wilson95": [
+   0.8723113921870013,
+   0.9289372281482143
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 77,
+    "MEDIUM": 4,
+    "COMPLEX": 1,
+    "REASONING": 1
+   },
+   "MEDIUM": {
+    "SIMPLE": 7,
+    "MEDIUM": 214,
+    "COMPLEX": 15,
+    "REASONING": 2
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 5,
+    "COMPLEX": 28,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 1,
+    "MEDIUM": 4,
+    "COMPLEX": 0,
+    "REASONING": 59
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.927710843373494,
+   "MEDIUM": 0.8991596638655462,
+   "COMPLEX": 0.8484848484848485,
+   "REASONING": 0.921875
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.6079545454545454,
+  "macro_f1": 0.5915198331630915,
+  "wilson95": [
+   0.5342578584485862,
+   0.6770391940687401
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 13,
+    "MEDIUM": 12,
+    "COMPLEX": 0,
+    "REASONING": 5
+   },
+   "MEDIUM": {
+    "SIMPLE": 11,
+    "MEDIUM": 58,
+    "COMPLEX": 24,
+    "REASONING": 4
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 9,
+    "COMPLEX": 23,
+    "REASONING": 1
+   },
+   "REASONING": {
+    "SIMPLE": 1,
+    "MEDIUM": 2,
+    "COMPLEX": 0,
+    "REASONING": 13
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.43333333333333335,
+   "MEDIUM": 0.5979381443298969,
+   "COMPLEX": 0.696969696969697,
+   "REASONING": 0.8125
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9148936170212766,
+  "macro_f1": 0.8563108263722188,
+  "wilson95": [
+   0.8823233615563405,
+   0.939071662053501
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 72,
+    "MEDIUM": 0,
+    "COMPLEX": 1,
+    "REASONING": 1
+   },
+   "MEDIUM": {
+    "SIMPLE": 7,
+    "MEDIUM": 207,
+    "COMPLEX": 14,
+    "REASONING": 1
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 4,
+    "COMPLEX": 15,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 1,
+    "MEDIUM": 3,
+    "COMPLEX": 0,
+    "REASONING": 50
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.972972972972973,
+   "MEDIUM": 0.9039301310043668,
+   "COMPLEX": 0.7894736842105263,
+   "REASONING": 0.9259259259259259
+  }
+ },
+ "val-internal": {
+  "n": 10406,
+  "accuracy": 0.8804535844704978,
+  "macro_f1": 0.8430996261234085,
+  "wilson95": [
+   0.8740791994577386,
+   0.8865471678061014
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 2139,
+    "MEDIUM": 404,
+    "COMPLEX": 1,
+    "REASONING": 32
+   },
+   "MEDIUM": {
+    "SIMPLE": 403,
+    "MEDIUM": 6052,
+    "COMPLEX": 130,
+    "REASONING": 54
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 153,
+    "COMPLEX": 482,
+    "REASONING": 6
+   },
+   "REASONING": {
+    "SIMPLE": 22,
+    "MEDIUM": 31,
+    "COMPLEX": 8,
+    "REASONING": 489
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.8303571428571429,
+   "MEDIUM": 0.9115830697394186,
+   "COMPLEX": 0.7519500780031201,
+   "REASONING": 0.889090909090909
+  }
+ },
+ "cpu_p50_ms": 2.95,
+ "cpu_p99_ms": 3.29
+}

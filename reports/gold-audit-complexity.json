@@ -1,0 +1,9 @@
+{
+ "stratum": "correct",
+ "n": 120,
+ "tally": {
+  "gold": 116,
+  "alternative": 3,
+  "neither": 1
+ }
+}

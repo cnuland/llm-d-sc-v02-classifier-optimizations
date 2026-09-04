@@ -1,0 +1,233 @@
+{
+ "tag": "co-q-seed11",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 40451,
+ "epochs": 4,
+ "source": "cost-v2:5970+cost-real:6697+cost-real-contested:2279+cost-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "MINIMAL": 7940,
+  "MODERATE": 14573,
+  "LOW": 15953,
+  "HIGH": 1985
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9665178571428572,
+  "wilson95": [
+   0.8863601247107462,
+   0.9908108735098498
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 2,
+    "HIGH": 13
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8548009367681498,
+  "macro_f1": 0.8013124043003974,
+  "wilson95": [
+   0.8182204198014873,
+   0.8850542871905951
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 72,
+    "LOW": 14,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 4,
+    "LOW": 93,
+    "MODERATE": 18,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 5,
+    "MODERATE": 184,
+    "HIGH": 14
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 7,
+    "HIGH": 16
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8372093023255814,
+   "LOW": 0.808695652173913,
+   "MODERATE": 0.9064039408866995,
+   "HIGH": 0.6956521739130435
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5714285714285714,
+  "macro_f1": 0.5388755121883464,
+  "wilson95": [
+   0.49582256887553966,
+   0.6438409351886684
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 13,
+    "LOW": 12,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 17,
+    "LOW": 36,
+    "MODERATE": 16,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 8,
+    "MODERATE": 39,
+    "HIGH": 10
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 8,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.52,
+   "LOW": 0.5217391304347826,
+   "MODERATE": 0.6724137931034483,
+   "HIGH": 0.5
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.876010781671159,
+  "macro_f1": 0.7913922577863105,
+  "wilson95": [
+   0.8385713322422924,
+   0.9057430661595925
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 65,
+    "LOW": 6,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 86,
+    "MODERATE": 14,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 5,
+    "MODERATE": 166,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 5,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9154929577464789,
+   "LOW": 0.8349514563106796,
+   "MODERATE": 0.9021739130434783,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 4495,
+  "accuracy": 0.9259176863181312,
+  "macro_f1": 0.9256868882092577,
+  "wilson95": [
+   0.9178920469766717,
+   0.9332159360205513
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 834,
+    "LOW": 49,
+    "MODERATE": 2,
+    "HIGH": 1
+   },
+   "LOW": {
+    "MINIMAL": 82,
+    "LOW": 1642,
+    "MODERATE": 89,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 3,
+    "LOW": 74,
+    "MODERATE": 1478,
+    "HIGH": 19
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 13,
+    "HIGH": 208
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9413092550790068,
+   "LOW": 0.9056811913954771,
+   "MODERATE": 0.9390088945362135,
+   "HIGH": 0.9369369369369369
+  }
+ },
+ "cpu_p50_ms": 2.94,
+ "cpu_p99_ms": 3.24,
+ "seed_note": "Three runs of this recipe differing only in seed span 1.35 points on refined gold (0.8733 / 0.8760 / 0.8868). This model is the MEDIAN run, not the best: publishing the maximum of several single-seed draws inflates the reported figure by roughly half a spread. Treat any comparison against this model smaller than ~1.4 points as unmeasured."
+}

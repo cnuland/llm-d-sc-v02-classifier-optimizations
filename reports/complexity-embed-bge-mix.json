@@ -1,0 +1,181 @@
+{
+ "tag": "complexity-embed-bge-mix",
+ "signal": "complexity",
+ "arch": "embed",
+ "base": "BAAI/bge-base-en-v1.5",
+ "train_rows": 12033,
+ "epochs": 3,
+ "source": "complexity-v2:5566+complexity-real:7804",
+ "train_prior": {
+  "REASONING": 1595,
+  "COMPLEX": 1592,
+  "MEDIUM": 6049,
+  "SIMPLE": 2797
+ },
+ "heldout-v1": {
+  "n": 80,
+  "accuracy": 0.9125,
+  "macro_f1": 0.909507014187789,
+  "wilson95": [
+   0.8302301722291654,
+   0.95696854535256
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 20,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 1,
+    "MEDIUM": 14,
+    "COMPLEX": 4,
+    "REASONING": 1
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 20,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 1,
+    "REASONING": 19
+   }
+  },
+  "recall": {
+   "SIMPLE": 1.0,
+   "MEDIUM": 0.7,
+   "COMPLEX": 1.0,
+   "REASONING": 0.95
+  }
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.6961722488038278,
+  "macro_f1": 0.6905588793229243,
+  "wilson95": [
+   0.6504606423351149,
+   0.7383108775908478
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 72,
+    "MEDIUM": 6,
+    "COMPLEX": 3,
+    "REASONING": 2
+   },
+   "MEDIUM": {
+    "SIMPLE": 20,
+    "MEDIUM": 134,
+    "COMPLEX": 74,
+    "REASONING": 10
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 5,
+    "COMPLEX": 28,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 3,
+    "MEDIUM": 2,
+    "COMPLEX": 2,
+    "REASONING": 57
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.8674698795180723,
+   "MEDIUM": 0.5630252100840336,
+   "COMPLEX": 0.8484848484848485,
+   "REASONING": 0.890625
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.5284090909090909,
+  "macro_f1": 0.5304282574181148,
+  "wilson95": [
+   0.454840724666094,
+   0.6007637628384657
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 16,
+    "MEDIUM": 8,
+    "COMPLEX": 0,
+    "REASONING": 6
+   },
+   "MEDIUM": {
+    "SIMPLE": 24,
+    "MEDIUM": 38,
+    "COMPLEX": 28,
+    "REASONING": 7
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 5,
+    "COMPLEX": 28,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 4,
+    "MEDIUM": 1,
+    "COMPLEX": 0,
+    "REASONING": 11
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.5333333333333333,
+   "MEDIUM": 0.3917525773195876,
+   "COMPLEX": 0.8484848484848485,
+   "REASONING": 0.6875
+  }
+ },
+ "val-internal": {
+  "n": 1337,
+  "accuracy": 0.7928197456993269,
+  "macro_f1": 0.8055354165052965,
+  "wilson95": [
+   0.7702711256260794,
+   0.8136904698375459
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 292,
+    "MEDIUM": 25,
+    "COMPLEX": 2,
+    "REASONING": 2
+   },
+   "MEDIUM": {
+    "SIMPLE": 62,
+    "MEDIUM": 438,
+    "COMPLEX": 161,
+    "REASONING": 9
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 4,
+    "COMPLEX": 167,
+    "REASONING": 1
+   },
+   "REASONING": {
+    "SIMPLE": 6,
+    "MEDIUM": 2,
+    "COMPLEX": 3,
+    "REASONING": 163
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.9096573208722741,
+   "MEDIUM": 0.6537313432835821,
+   "COMPLEX": 0.9709302325581395,
+   "REASONING": 0.9367816091954023
+  }
+ },
+ "cpu_p50_ms": 13.11,
+ "cpu_p99_ms": 14.0
+}

@@ -1,0 +1,149 @@
+{
+ "tag": "smoke-ModernBERT-base",
+ "signal": "sensitivity",
+ "arch": "head",
+ "base": "answerdotai/ModernBERT-base",
+ "train_rows": 1764,
+ "epochs": 1,
+ "source": "sensitivity-train.jsonl",
+ "heldout-v1": {
+  "n": 75,
+  "accuracy": 0.7066666666666667,
+  "macro_f1": 0.7023809523809523,
+  "wilson95": [
+   0.5955934132076389,
+   0.7976000278184184
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 14,
+    "INTERNAL": 1,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 3,
+    "INTERNAL": 12,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 5,
+    "INTERNAL": 5,
+    "CONFIDENTIAL": 5,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 1,
+    "INTERNAL": 1,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 13,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 1,
+    "INTERNAL": 5,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 9
+   }
+  }
+ },
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.40492957746478875,
+  "macro_f1": 0.20958873407924425,
+  "wilson95": [
+   0.3494750550239881,
+   0.4629217632260495
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 103,
+    "INTERNAL": 9,
+    "CONFIDENTIAL": 14,
+    "REGULATED": 63,
+    "NEVER_EGRESS": 53
+   },
+   "INTERNAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 2,
+    "CONFIDENTIAL": 4,
+    "REGULATED": 6,
+    "NEVER_EGRESS": 15
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 2,
+    "REGULATED": 1,
+    "NEVER_EGRESS": 3
+   },
+   "REGULATED": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 7,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 1,
+    "NEVER_EGRESS": 1
+   }
+  }
+ },
+ "val-internal": {
+  "n": 196,
+  "accuracy": 0.9693877551020408,
+  "macro_f1": 0.969130631188877,
+  "wilson95": [
+   0.934832884042845,
+   0.9858963334974467
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 37,
+    "INTERNAL": 1,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 2,
+    "INTERNAL": 35,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 2,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 41,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 40,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 37
+   }
+  }
+ },
+ "cpu_p50_ms": 15.69,
+ "cpu_p99_ms": 16.64
+}

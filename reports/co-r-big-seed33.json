@@ -1,0 +1,233 @@
+{
+ "tag": "co-r-big-seed33",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 85942,
+ "epochs": 3,
+ "source": "cost-v2:5970+cost-real:43717+cost-real-contested:15805+cost-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "MINIMAL": 15361,
+  "LOW": 34295,
+  "MODERATE": 33322,
+  "HIGH": 2964
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9665178571428572,
+  "wilson95": [
+   0.8863601247107462,
+   0.9908108735098498
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 2,
+    "HIGH": 13
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8735362997658079,
+  "macro_f1": 0.8096991654853243,
+  "wilson95": [
+   0.8386445351566164,
+   0.9017667900264671
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 75,
+    "LOW": 10,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 98,
+    "MODERATE": 14,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 4,
+    "MODERATE": 186,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 9,
+    "HIGH": 14
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.872093023255814,
+   "LOW": 0.8521739130434782,
+   "MODERATE": 0.916256157635468,
+   "HIGH": 0.6086956521739131
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5773809523809523,
+  "macro_f1": 0.5392986951972153,
+  "wilson95": [
+   0.5017727861422681,
+   0.6495293432606237
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 12,
+    "LOW": 13,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 13,
+    "LOW": 39,
+    "MODERATE": 17,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 8,
+    "MODERATE": 38,
+    "HIGH": 12
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 8,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.48,
+   "LOW": 0.5652173913043478,
+   "MODERATE": 0.6551724137931034,
+   "HIGH": 0.5
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.8975741239892183,
+  "macro_f1": 0.8059359899613846,
+  "wilson95": [
+   0.8625349721366348,
+   0.9244641229477956
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 68,
+    "LOW": 2,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 2,
+    "LOW": 89,
+    "MODERATE": 12,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 4,
+    "MODERATE": 169,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 6,
+    "HIGH": 7
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9577464788732394,
+   "LOW": 0.8640776699029126,
+   "MODERATE": 0.9184782608695652,
+   "HIGH": 0.5384615384615384
+  }
+ },
+ "val-internal": {
+  "n": 9550,
+  "accuracy": 0.8191623036649215,
+  "macro_f1": 0.8164724903199517,
+  "wilson95": [
+   0.8113150483344373,
+   0.8267528886512461
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 1398,
+    "LOW": 246,
+    "MODERATE": 12,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 428,
+    "LOW": 3065,
+    "MODERATE": 355,
+    "HIGH": 2
+   },
+   "MODERATE": {
+    "MINIMAL": 11,
+    "LOW": 554,
+    "MODERATE": 3091,
+    "HIGH": 58
+   },
+   "HIGH": {
+    "MINIMAL": 2,
+    "LOW": 1,
+    "MODERATE": 58,
+    "HIGH": 269
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8442028985507246,
+   "LOW": 0.7961038961038961,
+   "MODERATE": 0.8322563274098007,
+   "HIGH": 0.8151515151515152
+  }
+ },
+ "cpu_p50_ms": 2.93,
+ "cpu_p99_ms": 3.24,
+ "seed_note": "Three seeds of this recipe give 0.8868 / 0.9003 / 0.8976 on refined gold (median 0.8976, spread 1.35 pts). This is the MEDIAN run. Trained on 43,717 jury-agreed plus 15,805 contested real-traffic rows \u2014 6.5x the previous corpus, which is worth +2.16 points over the smaller-corpus median and is the only change in this project that exceeded cost's measurement noise."
+}

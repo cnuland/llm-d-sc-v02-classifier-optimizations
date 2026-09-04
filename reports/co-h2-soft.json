@@ -1,0 +1,232 @@
+{
+ "tag": "co-h2-soft",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 13451,
+ "epochs": 6,
+ "source": "cost-v2:5970+cost-real:6697+cost-real-contested:2279",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "LOW": 4779,
+  "MINIMAL": 2638,
+  "MODERATE": 4499,
+  "HIGH": 1535
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.95,
+  "macro_f1": 0.9494949494949495,
+  "wilson95": [
+   0.8629926537490016,
+   0.9828508088208587
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 3,
+    "HIGH": 12
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8501170960187353,
+  "macro_f1": 0.7967653679283426,
+  "wilson95": [
+   0.813144592561589,
+   0.8808459598827432
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 71,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 96,
+    "MODERATE": 16,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 10,
+    "MODERATE": 181,
+    "HIGH": 12
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 7,
+    "HIGH": 15
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8255813953488372,
+   "LOW": 0.8347826086956521,
+   "MODERATE": 0.8916256157635468,
+   "HIGH": 0.6521739130434783
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5119047619047619,
+  "macro_f1": 0.46444589981741685,
+  "wilson95": [
+   0.43690061343139175,
+   0.5863766372459762
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 10,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 16,
+    "LOW": 38,
+    "MODERATE": 14,
+    "HIGH": 1
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 14,
+    "MODERATE": 32,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 10,
+    "HIGH": 6
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.4,
+   "LOW": 0.5507246376811594,
+   "MODERATE": 0.5517241379310345,
+   "HIGH": 0.375
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.876010781671159,
+  "macro_f1": 0.7995571980043178,
+  "wilson95": [
+   0.8385713322422924,
+   0.9057430661595925
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 64,
+    "LOW": 7,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 2,
+    "LOW": 88,
+    "MODERATE": 13,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 9,
+    "MODERATE": 165,
+    "HIGH": 10
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 4,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9014084507042254,
+   "LOW": 0.8543689320388349,
+   "MODERATE": 0.8967391304347826,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 1495,
+  "accuracy": 0.8461538461538461,
+  "macro_f1": 0.859907249726066,
+  "wilson95": [
+   0.8269789890820185,
+   0.8635542867491299
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 261,
+    "LOW": 35,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 46,
+    "LOW": 421,
+    "MODERATE": 40,
+    "HIGH": 2
+   },
+   "MODERATE": {
+    "MINIMAL": 4,
+    "LOW": 78,
+    "MODERATE": 430,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 1,
+    "LOW": 0,
+    "MODERATE": 13,
+    "HIGH": 153
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8817567567567568,
+   "LOW": 0.8271119842829077,
+   "MODERATE": 0.8221797323135756,
+   "HIGH": 0.9161676646706587
+  }
+ },
+ "cpu_p50_ms": 2.94,
+ "cpu_p99_ms": 3.2
+}

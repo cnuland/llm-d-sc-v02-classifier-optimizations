@@ -1,0 +1,232 @@
+{
+ "tag": "co-j2-cw-esc",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 13451,
+ "epochs": 6,
+ "source": "cost-v2:5970+cost-real:6697+cost-real-contested:2279",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 1.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "LOW": 4779,
+  "MINIMAL": 2638,
+  "MODERATE": 4499,
+  "HIGH": 1535
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9665178571428572,
+  "wilson95": [
+   0.8863601247107462,
+   0.9908108735098498
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 2,
+    "HIGH": 13
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8548009367681498,
+  "macro_f1": 0.8062395094068923,
+  "wilson95": [
+   0.8182204198014873,
+   0.8850542871905951
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 72,
+    "LOW": 13,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 2,
+    "LOW": 94,
+    "MODERATE": 19,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 5,
+    "MODERATE": 182,
+    "HIGH": 15
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 5,
+    "HIGH": 17
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8372093023255814,
+   "LOW": 0.8173913043478261,
+   "MODERATE": 0.896551724137931,
+   "HIGH": 0.7391304347826086
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5238095238095238,
+  "macro_f1": 0.49248250876001215,
+  "wilson95": [
+   0.4486014310801917,
+   0.5979530702745445
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 12,
+    "LOW": 13,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 16,
+    "LOW": 36,
+    "MODERATE": 17,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 13,
+    "MODERATE": 33,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 9,
+    "HIGH": 7
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.48,
+   "LOW": 0.5217391304347826,
+   "MODERATE": 0.5689655172413793,
+   "HIGH": 0.4375
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.8733153638814016,
+  "macro_f1": 0.7890369580668088,
+  "wilson95": [
+   0.8355999104062676,
+   0.9033789009102994
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 65,
+    "LOW": 5,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 1,
+    "LOW": 87,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 5,
+    "MODERATE": 164,
+    "HIGH": 14
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 4,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9154929577464789,
+   "LOW": 0.8446601941747572,
+   "MODERATE": 0.8913043478260869,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 1495,
+  "accuracy": 0.8448160535117056,
+  "macro_f1": 0.8589398750558149,
+  "wilson95": [
+   0.8255801286724153,
+   0.8622844195226708
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 260,
+    "LOW": 36,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 48,
+    "LOW": 410,
+    "MODERATE": 49,
+    "HIGH": 2
+   },
+   "MODERATE": {
+    "MINIMAL": 4,
+    "LOW": 69,
+    "MODERATE": 435,
+    "HIGH": 15
+   },
+   "HIGH": {
+    "MINIMAL": 1,
+    "LOW": 0,
+    "MODERATE": 8,
+    "HIGH": 158
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8783783783783784,
+   "LOW": 0.8055009823182712,
+   "MODERATE": 0.8317399617590823,
+   "HIGH": 0.9461077844311377
+  }
+ },
+ "cpu_p50_ms": 5.64,
+ "cpu_p99_ms": 6.98
+}

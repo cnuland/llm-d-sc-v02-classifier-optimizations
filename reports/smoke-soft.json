@@ -1,0 +1,184 @@
+{
+ "tag": "smoke-soft",
+ "signal": "complexity",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 21171,
+ "epochs": 1,
+ "source": "complexity-v2:5566+complexity-real:15600+complexity-real-contested:2358",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 2e-05,
+ "train_prior": {
+  "COMPLEX": 2092,
+  "SIMPLE": 5094,
+  "MEDIUM": 12055,
+  "REASONING": 1930
+ },
+ "heldout-v1": {
+  "n": 80,
+  "accuracy": 0.875,
+  "macro_f1": 0.8766509770360861,
+  "wilson95": [
+   0.7849700281693438,
+   0.9306651696322249
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 20,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 1,
+    "MEDIUM": 18,
+    "COMPLEX": 1,
+    "REASONING": 0
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 4,
+    "COMPLEX": 16,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 3,
+    "COMPLEX": 1,
+    "REASONING": 16
+   }
+  },
+  "recall": {
+   "SIMPLE": 1.0,
+   "MEDIUM": 0.9,
+   "COMPLEX": 0.8,
+   "REASONING": 0.8
+  }
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.8205741626794258,
+  "macro_f1": 0.7545845451936066,
+  "wilson95": [
+   0.7809215835807595,
+   0.8543879733714235
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 63,
+    "MEDIUM": 18,
+    "COMPLEX": 1,
+    "REASONING": 1
+   },
+   "MEDIUM": {
+    "SIMPLE": 14,
+    "MEDIUM": 211,
+    "COMPLEX": 7,
+    "REASONING": 6
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 17,
+    "COMPLEX": 16,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 5,
+    "MEDIUM": 3,
+    "COMPLEX": 3,
+    "REASONING": 53
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.7590361445783133,
+   "MEDIUM": 0.8865546218487395,
+   "COMPLEX": 0.48484848484848486,
+   "REASONING": 0.828125
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.5795454545454546,
+  "macro_f1": 0.5164788749137827,
+  "wilson95": [
+   0.5056799416447504,
+   0.6500126233680166
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 13,
+    "MEDIUM": 13,
+    "COMPLEX": 0,
+    "REASONING": 4
+   },
+   "MEDIUM": {
+    "SIMPLE": 22,
+    "MEDIUM": 70,
+    "COMPLEX": 4,
+    "REASONING": 1
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 22,
+    "COMPLEX": 10,
+    "REASONING": 1
+   },
+   "REASONING": {
+    "SIMPLE": 4,
+    "MEDIUM": 3,
+    "COMPLEX": 0,
+    "REASONING": 9
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.43333333333333335,
+   "MEDIUM": 0.7216494845360825,
+   "COMPLEX": 0.30303030303030304,
+   "REASONING": 0.5625
+  }
+ },
+ "val-internal": {
+  "n": 2353,
+  "accuracy": 0.8380790480237994,
+  "macro_f1": 0.8163300489870777,
+  "wilson95": [
+   0.8226452498274243,
+   0.8524107233868977
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 473,
+    "MEDIUM": 142,
+    "COMPLEX": 3,
+    "REASONING": 1
+   },
+   "MEDIUM": {
+    "SIMPLE": 89,
+    "MEDIUM": 1172,
+    "COMPLEX": 16,
+    "REASONING": 10
+   },
+   "COMPLEX": {
+    "SIMPLE": 4,
+    "MEDIUM": 77,
+    "COMPLEX": 147,
+    "REASONING": 5
+   },
+   "REASONING": {
+    "SIMPLE": 18,
+    "MEDIUM": 12,
+    "COMPLEX": 4,
+    "REASONING": 180
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.7641357027463651,
+   "MEDIUM": 0.9106449106449106,
+   "COMPLEX": 0.630901287553648,
+   "REASONING": 0.8411214953271028
+  }
+ },
+ "cpu_p50_ms": 5.48,
+ "cpu_p99_ms": 6.54
+}

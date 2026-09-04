@@ -1,0 +1,345 @@
+{
+ "tag": "complexity-embed-minilm-mix-reanchor",
+ "signal": "complexity",
+ "arch": "embed",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 19047,
+ "epochs": 3,
+ "source": "complexity-v2:5566+complexity-real:15598",
+ "train_prior": {
+  "MEDIUM": 10702,
+  "SIMPLE": 4515,
+  "COMPLEX": 1937,
+  "REASONING": 1893
+ },
+ "heldout-v1": {
+  "n": 80,
+  "accuracy": 0.8625,
+  "macro_f1": 0.8505952380952382,
+  "wilson95": [
+   0.7703270280036946,
+   0.9214536632044886
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 20,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 2,
+    "MEDIUM": 10,
+    "COMPLEX": 7,
+    "REASONING": 1
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 20,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 1,
+    "REASONING": 19
+   }
+  },
+  "recall": {
+   "SIMPLE": 1.0,
+   "MEDIUM": 0.5,
+   "COMPLEX": 1.0,
+   "REASONING": 0.95
+  }
+ },
+ "heldout-v1[re-anchored]": {
+  "n": 80,
+  "accuracy": 0.5,
+  "macro_f1": 0.37142857142857144,
+  "wilson95": [
+   0.392972274311075,
+   0.607027725688925
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 20,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 2,
+    "MEDIUM": 0,
+    "COMPLEX": 3,
+    "REASONING": 15
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 20
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 20
+   }
+  },
+  "recall": {
+   "SIMPLE": 1.0,
+   "MEDIUM": 0.0,
+   "COMPLEX": 0.0,
+   "REASONING": 1.0
+  }
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.5861244019138756,
+  "macro_f1": 0.6097744775651049,
+  "wilson95": [
+   0.5383321044788345,
+   0.6323480750008565
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 70,
+    "MEDIUM": 8,
+    "COMPLEX": 2,
+    "REASONING": 3
+   },
+   "MEDIUM": {
+    "SIMPLE": 28,
+    "MEDIUM": 86,
+    "COMPLEX": 107,
+    "REASONING": 17
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 3,
+    "COMPLEX": 29,
+    "REASONING": 1
+   },
+   "REASONING": {
+    "SIMPLE": 3,
+    "MEDIUM": 0,
+    "COMPLEX": 1,
+    "REASONING": 60
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.8433734939759037,
+   "MEDIUM": 0.36134453781512604,
+   "COMPLEX": 0.8787878787878788,
+   "REASONING": 0.9375
+  }
+ },
+ "real-gold[re-anchored]": {
+  "n": 418,
+  "accuracy": 0.3014354066985646,
+  "macro_f1": 0.27254531144718663,
+  "wilson95": [
+   0.2594156731178843,
+   0.3470716908594948
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 64,
+    "MEDIUM": 1,
+    "COMPLEX": 12,
+    "REASONING": 6
+   },
+   "MEDIUM": {
+    "SIMPLE": 42,
+    "MEDIUM": 1,
+    "COMPLEX": 22,
+    "REASONING": 173
+   },
+   "COMPLEX": {
+    "SIMPLE": 1,
+    "MEDIUM": 0,
+    "COMPLEX": 2,
+    "REASONING": 30
+   },
+   "REASONING": {
+    "SIMPLE": 1,
+    "MEDIUM": 2,
+    "COMPLEX": 2,
+    "REASONING": 59
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.7710843373493976,
+   "MEDIUM": 0.004201680672268907,
+   "COMPLEX": 0.06060606060606061,
+   "REASONING": 0.921875
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.48295454545454547,
+  "macro_f1": 0.5063879937940088,
+  "wilson95": [
+   0.41028317494954947,
+   0.5563541325477147
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 15,
+    "MEDIUM": 9,
+    "COMPLEX": 0,
+    "REASONING": 6
+   },
+   "MEDIUM": {
+    "SIMPLE": 29,
+    "MEDIUM": 25,
+    "COMPLEX": 34,
+    "REASONING": 9
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 2,
+    "COMPLEX": 31,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 2,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 14
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.5,
+   "MEDIUM": 0.25773195876288657,
+   "COMPLEX": 0.9393939393939394,
+   "REASONING": 0.875
+  }
+ },
+ "real-contested[re-anchored]": {
+  "n": 176,
+  "accuracy": 0.19318181818181818,
+  "macro_f1": 0.19527731092436978,
+  "wilson95": [
+   0.1416639289880205,
+   0.25780760596273616
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 18,
+    "MEDIUM": 0,
+    "COMPLEX": 4,
+    "REASONING": 8
+   },
+   "MEDIUM": {
+    "SIMPLE": 21,
+    "MEDIUM": 3,
+    "COMPLEX": 18,
+    "REASONING": 55
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 33
+   },
+   "REASONING": {
+    "SIMPLE": 1,
+    "MEDIUM": 2,
+    "COMPLEX": 0,
+    "REASONING": 13
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.6,
+   "MEDIUM": 0.030927835051546393,
+   "COMPLEX": 0.0,
+   "REASONING": 0.8125
+  }
+ },
+ "val-internal": {
+  "n": 2117,
+  "accuracy": 0.6126594237128011,
+  "macro_f1": 0.6609027409566467,
+  "wilson95": [
+   0.5917215505785539,
+   0.6331891641113127
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 459,
+    "MEDIUM": 49,
+    "COMPLEX": 6,
+    "REASONING": 12
+   },
+   "MEDIUM": {
+    "SIMPLE": 104,
+    "MEDIUM": 447,
+    "COMPLEX": 593,
+    "REASONING": 25
+   },
+   "COMPLEX": {
+    "SIMPLE": 2,
+    "MEDIUM": 14,
+    "COMPLEX": 205,
+    "REASONING": 7
+   },
+   "REASONING": {
+    "SIMPLE": 5,
+    "MEDIUM": 1,
+    "COMPLEX": 2,
+    "REASONING": 186
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.8726235741444867,
+   "MEDIUM": 0.3823781009409752,
+   "COMPLEX": 0.8991228070175439,
+   "REASONING": 0.9587628865979382
+  }
+ },
+ "val-internal[re-anchored]": {
+  "n": 2117,
+  "accuracy": 0.29522909777987716,
+  "macro_f1": 0.2556171439382683,
+  "wilson95": [
+   0.2761828929245276,
+   0.31501712880269606
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 431,
+    "MEDIUM": 4,
+    "COMPLEX": 67,
+    "REASONING": 24
+   },
+   "MEDIUM": {
+    "SIMPLE": 188,
+    "MEDIUM": 5,
+    "COMPLEX": 91,
+    "REASONING": 885
+   },
+   "COMPLEX": {
+    "SIMPLE": 4,
+    "MEDIUM": 1,
+    "COMPLEX": 4,
+    "REASONING": 219
+   },
+   "REASONING": {
+    "SIMPLE": 3,
+    "MEDIUM": 0,
+    "COMPLEX": 6,
+    "REASONING": 185
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.8193916349809885,
+   "MEDIUM": 0.00427715996578272,
+   "COMPLEX": 0.017543859649122806,
+   "REASONING": 0.9536082474226805
+  }
+ },
+ "cpu_p50_ms": 3.42,
+ "cpu_p99_ms": 3.84
+}

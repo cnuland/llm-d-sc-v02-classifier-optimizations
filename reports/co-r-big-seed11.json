@@ -1,0 +1,232 @@
+{
+ "tag": "co-r-big-seed11",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 85942,
+ "epochs": 3,
+ "source": "cost-v2:5970+cost-real:43717+cost-real-contested:15805+cost-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "LOW": 34375,
+  "MODERATE": 33303,
+  "MINIMAL": 15322,
+  "HIGH": 2942
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9665178571428572,
+  "wilson95": [
+   0.8863601247107462,
+   0.9908108735098498
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 2,
+    "HIGH": 13
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8735362997658079,
+  "macro_f1": 0.8200187628381813,
+  "wilson95": [
+   0.8386445351566164,
+   0.9017667900264671
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 74,
+    "LOW": 11,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 96,
+    "MODERATE": 16,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 3,
+    "MODERATE": 187,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 7,
+    "HIGH": 16
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8604651162790697,
+   "LOW": 0.8347826086956521,
+   "MODERATE": 0.9211822660098522,
+   "HIGH": 0.6956521739130435
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5952380952380952,
+  "macro_f1": 0.5556772237196765,
+  "wilson95": [
+   0.5196880914809959,
+   0.666529913937948
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 13,
+    "LOW": 12,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 14,
+    "LOW": 40,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 7,
+    "MODERATE": 39,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 8,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.52,
+   "LOW": 0.5797101449275363,
+   "MODERATE": 0.6724137931034483,
+   "HIGH": 0.5
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.8867924528301887,
+  "macro_f1": 0.8028557169882332,
+  "wilson95": [
+   0.8505083048797812,
+   0.9151484418633764
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 66,
+    "LOW": 4,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 86,
+    "MODERATE": 14,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 3,
+    "MODERATE": 169,
+    "HIGH": 12
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 5,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9295774647887324,
+   "LOW": 0.8349514563106796,
+   "MODERATE": 0.9184782608695652,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 9550,
+  "accuracy": 0.8161256544502618,
+  "macro_f1": 0.8085237304670012,
+  "wilson95": [
+   0.8082295554109881,
+   0.8237675252188602
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 1442,
+    "LOW": 240,
+    "MODERATE": 13,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 420,
+    "LOW": 2924,
+    "MODERATE": 422,
+    "HIGH": 4
+   },
+   "MODERATE": {
+    "MINIMAL": 13,
+    "LOW": 505,
+    "MODERATE": 3163,
+    "HIGH": 52
+   },
+   "HIGH": {
+    "MINIMAL": 2,
+    "LOW": 4,
+    "MODERATE": 81,
+    "HIGH": 265
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8507374631268436,
+   "LOW": 0.7755968169761274,
+   "MODERATE": 0.8473077953388696,
+   "HIGH": 0.7528409090909091
+  }
+ },
+ "cpu_p50_ms": 2.89,
+ "cpu_p99_ms": 3.14
+}

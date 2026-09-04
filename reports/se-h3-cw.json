@@ -1,0 +1,346 @@
+{
+ "tag": "se-h3-cw",
+ "signal": "sensitivity",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 19209,
+ "epochs": 6,
+ "source": "sensitivity-v2:6783+sensitivity-real:8361+sensitivity-enterprise:5582+sensitivity-real-contested:618",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": true,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "INTERNAL": 4040,
+  "PUBLIC": 9045,
+  "REGULATED": 2303,
+  "CONFIDENTIAL": 2127,
+  "NEVER_EGRESS": 1694
+ },
+ "heldout-v1": {
+  "n": 75,
+  "accuracy": 0.9066666666666666,
+  "macro_f1": 0.9042873033529318,
+  "wilson95": [
+   0.819651161993122,
+   0.9540520606710551
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 15,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 1,
+    "INTERNAL": 3,
+    "CONFIDENTIAL": 10,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 1
+   },
+   "REGULATED": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 15,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 2,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 13
+   }
+  },
+  "recall": {
+   "PUBLIC": 1.0,
+   "INTERNAL": 1.0,
+   "CONFIDENTIAL": 0.6666666666666666,
+   "REGULATED": 1.0,
+   "NEVER_EGRESS": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.8591549295774648,
+  "macro_f1": 0.5326245210727969,
+  "wilson95": [
+   0.8138896822019139,
+   0.8948334488534999
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 217,
+    "INTERNAL": 19,
+    "CONFIDENTIAL": 2,
+    "REGULATED": 4,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 3,
+    "INTERNAL": 21,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 1,
+    "NEVER_EGRESS": 1
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 3,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 2,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 1,
+    "INTERNAL": 2,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 4,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 1,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 1
+   }
+  },
+  "recall": {
+   "PUBLIC": 0.8966942148760331,
+   "INTERNAL": 0.7777777777777778,
+   "CONFIDENTIAL": 0.16666666666666666,
+   "REGULATED": 0.5714285714285714,
+   "NEVER_EGRESS": 0.5
+  }
+ },
+ "real-contested": {
+  "n": 119,
+  "accuracy": 0.5042016806722689,
+  "macro_f1": 0.35452607655997487,
+  "wilson95": [
+   0.41565273000948033,
+   0.5924878347503404
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 32,
+    "INTERNAL": 18,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 16,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 11,
+    "INTERNAL": 10,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 2,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 1,
+    "INTERNAL": 2,
+    "CONFIDENTIAL": 1,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 6,
+    "INTERNAL": 1,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 17,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   }
+  },
+  "recall": {
+   "PUBLIC": 0.47761194029850745,
+   "INTERNAL": 0.4166666666666667,
+   "CONFIDENTIAL": 0.25,
+   "REGULATED": 0.7083333333333334,
+   "NEVER_EGRESS": 0.0
+  }
+ },
+ "enterprise-gold": {
+  "n": 744,
+  "accuracy": 0.6827956989247311,
+  "macro_f1": 0.5832274158146881,
+  "wilson95": [
+   0.648488075689656,
+   0.7152253096047698
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 46,
+    "INTERNAL": 23,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 5,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 5,
+    "INTERNAL": 264,
+    "CONFIDENTIAL": 78,
+    "REGULATED": 46,
+    "NEVER_EGRESS": 4
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 1,
+    "INTERNAL": 18,
+    "CONFIDENTIAL": 110,
+    "REGULATED": 21,
+    "NEVER_EGRESS": 4
+   },
+   "REGULATED": {
+    "PUBLIC": 1,
+    "INTERNAL": 13,
+    "CONFIDENTIAL": 9,
+    "REGULATED": 86,
+    "NEVER_EGRESS": 5
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 2,
+    "REGULATED": 1,
+    "NEVER_EGRESS": 2
+   }
+  },
+  "recall": {
+   "PUBLIC": 0.6216216216216216,
+   "INTERNAL": 0.6649874055415617,
+   "CONFIDENTIAL": 0.7142857142857143,
+   "REGULATED": 0.7543859649122807,
+   "NEVER_EGRESS": 0.4
+  }
+ },
+ "entsec-gold": {
+  "n": 707,
+  "accuracy": 0.7637906647807637,
+  "macro_f1": 0.6731009726444783,
+  "wilson95": [
+   0.7311073258702498,
+   0.7936227968462597
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 44,
+    "INTERNAL": 21,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 3,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 1,
+    "INTERNAL": 307,
+    "CONFIDENTIAL": 31,
+    "REGULATED": 23,
+    "NEVER_EGRESS": 11
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 0,
+    "INTERNAL": 8,
+    "CONFIDENTIAL": 13,
+    "REGULATED": 2,
+    "NEVER_EGRESS": 2
+   },
+   "REGULATED": {
+    "PUBLIC": 1,
+    "INTERNAL": 25,
+    "CONFIDENTIAL": 19,
+    "REGULATED": 68,
+    "NEVER_EGRESS": 7
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 2,
+    "CONFIDENTIAL": 7,
+    "REGULATED": 4,
+    "NEVER_EGRESS": 108
+   }
+  },
+  "recall": {
+   "PUBLIC": 0.6470588235294118,
+   "INTERNAL": 0.8230563002680965,
+   "CONFIDENTIAL": 0.52,
+   "REGULATED": 0.5666666666666667,
+   "NEVER_EGRESS": 0.8925619834710744
+  }
+ },
+ "val-internal": {
+  "n": 2135,
+  "accuracy": 0.9199063231850118,
+  "macro_f1": 0.9066057586954941,
+  "wilson95": [
+   0.9076237241018241,
+   0.9306805243287284
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 937,
+    "INTERNAL": 45,
+    "CONFIDENTIAL": 2,
+    "REGULATED": 5,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 16,
+    "INTERNAL": 399,
+    "CONFIDENTIAL": 26,
+    "REGULATED": 10,
+    "NEVER_EGRESS": 3
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 1,
+    "INTERNAL": 19,
+    "CONFIDENTIAL": 196,
+    "REGULATED": 2,
+    "NEVER_EGRESS": 6
+   },
+   "REGULATED": {
+    "PUBLIC": 1,
+    "INTERNAL": 17,
+    "CONFIDENTIAL": 8,
+    "REGULATED": 224,
+    "NEVER_EGRESS": 4
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 0,
+    "INTERNAL": 5,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 1,
+    "NEVER_EGRESS": 208
+   }
+  },
+  "recall": {
+   "PUBLIC": 0.9474216380182002,
+   "INTERNAL": 0.8788546255506607,
+   "CONFIDENTIAL": 0.875,
+   "REGULATED": 0.8818897637795275,
+   "NEVER_EGRESS": 0.9719626168224299
+  }
+ },
+ "cpu_p50_ms": 2.94,
+ "cpu_p99_ms": 3.2
+}

@@ -1,0 +1,181 @@
+{
+ "tag": "probe-cx-head-mbert",
+ "signal": "complexity",
+ "arch": "head",
+ "base": "answerdotai/ModernBERT-base",
+ "train_rows": 2034,
+ "epochs": 3,
+ "source": "complexity-v2:2260",
+ "train_prior": {
+  "SIMPLE": 446,
+  "REASONING": 529,
+  "MEDIUM": 553,
+  "COMPLEX": 506
+ },
+ "heldout-v1": {
+  "n": 80,
+  "accuracy": 0.55,
+  "macro_f1": 0.45859213250517605,
+  "wilson95": [
+   0.4411931301173402,
+   0.6542248962562025
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 19,
+    "MEDIUM": 1,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 0,
+    "MEDIUM": 20,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 19,
+    "COMPLEX": 1,
+    "REASONING": 0
+   },
+   "REASONING": {
+    "SIMPLE": 7,
+    "MEDIUM": 9,
+    "COMPLEX": 0,
+    "REASONING": 4
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.95,
+   "MEDIUM": 1.0,
+   "COMPLEX": 0.05,
+   "REASONING": 0.2
+  }
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.5741626794258373,
+  "macro_f1": 0.5349238717605196,
+  "wilson95": [
+   0.52629564660706,
+   0.6206789523893407
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 53,
+    "MEDIUM": 21,
+    "COMPLEX": 4,
+    "REASONING": 5
+   },
+   "MEDIUM": {
+    "SIMPLE": 33,
+    "MEDIUM": 117,
+    "COMPLEX": 41,
+    "REASONING": 47
+   },
+   "COMPLEX": {
+    "SIMPLE": 1,
+    "MEDIUM": 12,
+    "COMPLEX": 14,
+    "REASONING": 6
+   },
+   "REASONING": {
+    "SIMPLE": 4,
+    "MEDIUM": 4,
+    "COMPLEX": 0,
+    "REASONING": 56
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.6385542168674698,
+   "MEDIUM": 0.49159663865546216,
+   "COMPLEX": 0.42424242424242425,
+   "REASONING": 0.875
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.3977272727272727,
+  "macro_f1": 0.3878147424009837,
+  "wilson95": [
+   0.3283465846180823,
+   0.4714772603655031
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 14,
+    "MEDIUM": 8,
+    "COMPLEX": 0,
+    "REASONING": 8
+   },
+   "MEDIUM": {
+    "SIMPLE": 35,
+    "MEDIUM": 34,
+    "COMPLEX": 15,
+    "REASONING": 13
+   },
+   "COMPLEX": {
+    "SIMPLE": 1,
+    "MEDIUM": 15,
+    "COMPLEX": 11,
+    "REASONING": 6
+   },
+   "REASONING": {
+    "SIMPLE": 5,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 11
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.4666666666666667,
+   "MEDIUM": 0.35051546391752575,
+   "COMPLEX": 0.3333333333333333,
+   "REASONING": 0.6875
+  }
+ },
+ "val-internal": {
+  "n": 226,
+  "accuracy": 0.9646017699115044,
+  "macro_f1": 0.9642053631744353,
+  "wilson95": [
+   0.9317164784470457,
+   0.9819562422440735
+  ],
+  "confusion": {
+   "SIMPLE": {
+    "SIMPLE": 47,
+    "MEDIUM": 2,
+    "COMPLEX": 0,
+    "REASONING": 0
+   },
+   "MEDIUM": {
+    "SIMPLE": 1,
+    "MEDIUM": 55,
+    "COMPLEX": 2,
+    "REASONING": 1
+   },
+   "COMPLEX": {
+    "SIMPLE": 0,
+    "MEDIUM": 1,
+    "COMPLEX": 52,
+    "REASONING": 1
+   },
+   "REASONING": {
+    "SIMPLE": 0,
+    "MEDIUM": 0,
+    "COMPLEX": 0,
+    "REASONING": 64
+   }
+  },
+  "recall": {
+   "SIMPLE": 0.9591836734693877,
+   "MEDIUM": 0.9322033898305084,
+   "COMPLEX": 0.9629629629629629,
+   "REASONING": 1.0
+  }
+ },
+ "cpu_p50_ms": 16.15,
+ "cpu_p99_ms": 17.14
+}

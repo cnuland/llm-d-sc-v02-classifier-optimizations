@@ -1,0 +1,23 @@
+# 13 GB of fine-tuned checkpoints; the published ones live on HuggingFace
+models/
+.venv/
+__pycache__/
+*.pyc
+
+# Raw LLM response cache -- large, and it contains the synthetic credentials
+# generated for the NEVER_EGRESS tier, which trip secret scanners.
+data/.llmcache/
+
+# Corpora are excluded rather than shipped: 200 MB, derived from WildChat under
+# its own licence, and several files contain synthetic API keys and private keys
+# BY DESIGN (they are the sensitivity taxonomy's top tier). Every generator and
+# labeller needed to rebuild them is in harness/.
+data/eval/
+data/train/
+data/sdg/
+data/.embcache/
+data/*.json
+
+# clone of vLLM Semantic Router, kept locally for reference only
+research/vsr/
+research/

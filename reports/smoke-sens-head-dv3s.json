@@ -1,0 +1,103 @@
+{
+ "tag": "smoke-sens-head-dv3s",
+ "signal": "sensitivity",
+ "arch": "head",
+ "base": "microsoft/deberta-v3-small",
+ "train_rows": 1764,
+ "epochs": 2,
+ "source": "sensitivity-train.jsonl",
+ "heldout-v1": {
+  "n": 75,
+  "accuracy": 0.2,
+  "macro_f1": 0.06666666666666668,
+  "wilson95": [
+   0.12512038203120296,
+   0.3041149455116171
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 15,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   }
+  }
+ },
+ "val-internal": {
+  "n": 196,
+  "accuracy": 0.19387755102040816,
+  "macro_f1": 0.06495726495726496,
+  "wilson95": [
+   0.14463500695818793,
+   0.25488941638509993
+  ],
+  "confusion": {
+   "PUBLIC": {
+    "PUBLIC": 38,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "INTERNAL": {
+    "PUBLIC": 40,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "CONFIDENTIAL": {
+    "PUBLIC": 41,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "REGULATED": {
+    "PUBLIC": 40,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   },
+   "NEVER_EGRESS": {
+    "PUBLIC": 37,
+    "INTERNAL": 0,
+    "CONFIDENTIAL": 0,
+    "REGULATED": 0,
+    "NEVER_EGRESS": 0
+   }
+  }
+ },
+ "cpu_p50_ms": 37.52,
+ "cpu_p99_ms": 39.69
+}

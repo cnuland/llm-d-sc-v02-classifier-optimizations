@@ -1,0 +1,232 @@
+{
+ "tag": "co-h1-hard",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 13451,
+ "epochs": 6,
+ "source": "cost-v2:5970+cost-real:6697+cost-real-contested:2279",
+ "maxlen": 256,
+ "soft_targets": false,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "LOW": 4779,
+  "MINIMAL": 2638,
+  "MODERATE": 4499,
+  "HIGH": 1535
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.95,
+  "macro_f1": 0.9498326513586526,
+  "wilson95": [
+   0.8629926537490016,
+   0.9828508088208587
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 1,
+    "LOW": 14,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 2,
+    "HIGH": 13
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 0.9333333333333333,
+   "MODERATE": 1.0,
+   "HIGH": 0.8666666666666667
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8337236533957846,
+  "macro_f1": 0.7866070974689807,
+  "wilson95": [
+   0.7954643553470767,
+   0.8660316561801297
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 67,
+    "LOW": 19,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 2,
+    "LOW": 88,
+    "MODERATE": 24,
+    "HIGH": 1
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 5,
+    "MODERATE": 184,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 6,
+    "HIGH": 17
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.7790697674418605,
+   "LOW": 0.7652173913043478,
+   "MODERATE": 0.9064039408866995,
+   "HIGH": 0.7391304347826086
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5773809523809523,
+  "macro_f1": 0.5307557932263814,
+  "wilson95": [
+   0.5017727861422681,
+   0.6495293432606237
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 7,
+    "LOW": 17,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 10,
+    "LOW": 40,
+    "MODERATE": 18,
+    "HIGH": 1
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 10,
+    "MODERATE": 41,
+    "HIGH": 7
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 7,
+    "HIGH": 9
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.28,
+   "LOW": 0.5797101449275363,
+   "MODERATE": 0.7068965517241379,
+   "HIGH": 0.5625
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.8490566037735849,
+  "macro_f1": 0.7688303624480095,
+  "wilson95": [
+   0.8090615190725702,
+   0.8818970084761332
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 61,
+    "LOW": 10,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 3,
+    "LOW": 80,
+    "MODERATE": 20,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 5,
+    "MODERATE": 166,
+    "HIGH": 12
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 5,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8591549295774648,
+   "LOW": 0.7766990291262136,
+   "MODERATE": 0.9021739130434783,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 1495,
+  "accuracy": 0.8494983277591973,
+  "macro_f1": 0.8625283470258724,
+  "wilson95": [
+   0.8304782485395706,
+   0.8667268463817338
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 253,
+    "LOW": 42,
+    "MODERATE": 1,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 34,
+    "LOW": 423,
+    "MODERATE": 50,
+    "HIGH": 2
+   },
+   "MODERATE": {
+    "MINIMAL": 3,
+    "LOW": 67,
+    "MODERATE": 438,
+    "HIGH": 15
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 11,
+    "HIGH": 156
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8547297297297297,
+   "LOW": 0.831041257367387,
+   "MODERATE": 0.8374760994263862,
+   "HIGH": 0.9341317365269461
+  }
+ },
+ "cpu_p50_ms": 2.93,
+ "cpu_p99_ms": 3.17
+}

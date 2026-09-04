@@ -1,0 +1,232 @@
+{
+ "tag": "co-j1-cw",
+ "signal": "cost",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 13451,
+ "epochs": 6,
+ "source": "cost-v2:5970+cost-real:6697+cost-real-contested:2279",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "LOW": 4779,
+  "MINIMAL": 2638,
+  "MODERATE": 4499,
+  "HIGH": 1535
+ },
+ "heldout-v1": {
+  "n": 60,
+  "accuracy": 0.95,
+  "macro_f1": 0.9494949494949495,
+  "wilson95": [
+   0.8629926537490016,
+   0.9828508088208587
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 15,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 0,
+    "LOW": 15,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 15,
+    "HIGH": 0
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 3,
+    "HIGH": 12
+   }
+  },
+  "recall": {
+   "MINIMAL": 1.0,
+   "LOW": 1.0,
+   "MODERATE": 1.0,
+   "HIGH": 0.8
+  }
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.8501170960187353,
+  "macro_f1": 0.8040366429491567,
+  "wilson95": [
+   0.813144592561589,
+   0.8808459598827432
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 73,
+    "LOW": 13,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 6,
+    "LOW": 92,
+    "MODERATE": 17,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 8,
+    "MODERATE": 181,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 5,
+    "HIGH": 17
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8488372093023255,
+   "LOW": 0.8,
+   "MODERATE": 0.8916256157635468,
+   "HIGH": 0.7391304347826086
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.5297619047619048,
+  "macro_f1": 0.4937390967241713,
+  "wilson95": [
+   0.4544674219942754,
+   0.6037257046991444
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 12,
+    "LOW": 13,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 17,
+    "LOW": 38,
+    "MODERATE": 13,
+    "HIGH": 1
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 14,
+    "MODERATE": 32,
+    "HIGH": 11
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 0,
+    "MODERATE": 9,
+    "HIGH": 7
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.48,
+   "LOW": 0.5507246376811594,
+   "MODERATE": 0.5517241379310345,
+   "HIGH": 0.4375
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.8679245283018868,
+  "macro_f1": 0.784771882323241,
+  "wilson95": [
+   0.829671495973512,
+   0.8986361411724185
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 66,
+    "LOW": 5,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 4,
+    "LOW": 85,
+    "MODERATE": 14,
+    "HIGH": 0
+   },
+   "MODERATE": {
+    "MINIMAL": 1,
+    "LOW": 7,
+    "MODERATE": 163,
+    "HIGH": 13
+   },
+   "HIGH": {
+    "MINIMAL": 0,
+    "LOW": 1,
+    "MODERATE": 4,
+    "HIGH": 8
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.9295774647887324,
+   "LOW": 0.8252427184466019,
+   "MODERATE": 0.8858695652173914,
+   "HIGH": 0.6153846153846154
+  }
+ },
+ "val-internal": {
+  "n": 1495,
+  "accuracy": 0.8434782608695652,
+  "macro_f1": 0.8570140892133878,
+  "wilson95": [
+   0.8241817425741241,
+   0.8610140779848997
+  ],
+  "confusion": {
+   "MINIMAL": {
+    "MINIMAL": 264,
+    "LOW": 32,
+    "MODERATE": 0,
+    "HIGH": 0
+   },
+   "LOW": {
+    "MINIMAL": 53,
+    "LOW": 411,
+    "MODERATE": 43,
+    "HIGH": 2
+   },
+   "MODERATE": {
+    "MINIMAL": 4,
+    "LOW": 74,
+    "MODERATE": 430,
+    "HIGH": 15
+   },
+   "HIGH": {
+    "MINIMAL": 1,
+    "LOW": 0,
+    "MODERATE": 10,
+    "HIGH": 156
+   }
+  },
+  "recall": {
+   "MINIMAL": 0.8918918918918919,
+   "LOW": 0.8074656188605108,
+   "MODERATE": 0.8221797323135756,
+   "HIGH": 0.9341317365269461
+  }
+ },
+ "cpu_p50_ms": 6.13,
+ "cpu_p99_ms": 7.4
+}
