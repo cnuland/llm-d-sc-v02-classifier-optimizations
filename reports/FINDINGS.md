@@ -3199,3 +3199,59 @@ another.
 matched-containment comparison reverses on it — that comparison is what decided
 against bge-base and has not yet been run here. Pending, and the recommendation
 is provisional until it is.
+
+## 88. All three domains now have a deployed decision at 95%+, trained directly
+
+Rounds AD and AE trained the router's real decisions rather than the tier
+taxonomies. Every figure below carries its majority baseline and per-class
+recall, because §79 showed a 99.65% result on this project's own data that meant
+the model almost never fired.
+
+| domain | decision | eval | n | **accuracy** | majority | minority-class recall |
+|---|---|---|---:|---:|---:|---:|
+| complexity | is reasoning needed | refined gold | 376 | **96.54%** | 85.64% | YES 98.15% |
+| cost | short vs long generation | refined gold | 371 | **95.69%** | 53.10% | SHORT 91.95% |
+| sensitivity | block at NEVER_EGRESS | entsec gold | 707 | **95.05%** (median of 3) | 82.89% | BLOCK 85.12% |
+
+**The cost result is the strongest of the three and the least flattering-looking.**
+Its majority baseline is 53.10%, so no majority-class shortcut exists: 95.69% is
++42.6 points over chance, with LONG recall 98.98% and SHORT recall 91.95%. It
+also replicates on a second independent eval — `genlen-volume-gold`, 727 rows,
+92.30% against a 59.28% baseline — which none of the other decisions has.
+
+The reasoning decision clears its baseline by 10.9 points with 98.15% recall on a
+class that is 3.2% of the training corpus. Egress clears by 12.2 points.
+
+**Where they are weakest, stated:** on rows the jury split, reasoning scores
+89.77% against a 90.91% baseline (below it) and genlen 84.52% against 55.95%
+(well above). Contested rows are 30% of the complexity eval, so the reasoning
+figure is a real limitation rather than a rounding note.
+
+**Relation to the tier numbers.** These do not replace tier-exact accuracy; they
+measure something different and narrower. Tier-exact on the shipped taxonomies is
+0.8963 / 0.8976 / 0.8034 and §69's ceilings still apply to it. What §75 argued and
+this confirms is that the taxonomy is finer than the branch the router takes, so
+tier-exact has been charging the classifier for distinctions the deployment
+discards.
+
+## 89. Round AB complete: the v2-rubric relabel moved complexity by exactly zero
+
+Three seeds, against the five-run incumbent median of 0.9016:
+
+| | refined gold |
+|---|---:|
+| cx-ab-v2rubric-seed11 | 0.9016 |
+| cx-ab-v2rubric-seed22 | 0.9043 |
+| cx-ab-v2rubric-seed33 | 0.9016 |
+| **median** | **0.9016** |
+| incumbent median | 0.9016 |
+| **delta** | **0.0000** |
+
+§65 predicted "at or below the 1.06-point floor" from corpus-wide labeller
+agreement moving 87.5% -> 87.7%, recorded before the retrain. The outcome is
+zero to four decimal places.
+
+**A 59,582-prompt relabel and a three-seed retrain — roughly a day of wall clock —
+were correctly called in advance by 500 labelled rows.** That protocol is the
+transferable result: A/B a rubric on a RANDOM sample, and if corpus agreement
+does not move, do not spend the relabel.
