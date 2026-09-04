@@ -7,7 +7,7 @@ enterprise traffic. Companion to
 which covers throughput and latency; this repo is about whether the router is
 *right*, not how fast it is wrong.
 
-**[`reports/FINDINGS.md`](reports/FINDINGS.md) is the substance** — 71 numbered
+**[`reports/FINDINGS.md`](reports/FINDINGS.md) is the substance** — 72 numbered
 sections, every experiment including the ones that failed, with the measurement
 that settled each. Negative results are kept deliberately: about two thirds of
 what is recorded here is something that did **not** work, and several entries

@@ -2590,3 +2590,45 @@ extrapolated from the hard subset.
 unanimous rows against bag-of-words' 67.5%, so the model is NOT merely missing
 keywords. This finding is about rubric validity and juror agreement, not a
 diagnosis of the model's residual error.
+
+## 71. Cost rubric v2: +22.2 on contested rows, +0.8 on the population — the paired design pays
+
+§70 rewrote the cost rubric around what is actually present in the traffic: an
+explicit size spec decided first from a numeric table, then artifact type, with
+HIGH re-centred on huge REQUESTED OUTPUT rather than huge supplied input.
+
+§65's lesson applied — both samples measured, not one extrapolated:
+
+| sample | v1 | v2 | delta |
+|---|---:|---:|---:|
+| **random 500 prompts (population)** | 75.0% | 75.8% | **+0.8** |
+| contested 400 prompts (hard subset) | 37.2% | **59.5%** | **+22.2** |
+
+**+22.2 points on the rows that were previously coin-flips is the largest rubric
+effect measured in this project — and it moves the corpus by 0.8.** Had only the
+contested sample been run, this would have been reported as a breakthrough, for
+the second time, in exactly the way §65 retracted. The paired design cost one
+extra labelling run and prevented a repeat.
+
+The residual tables say precisely what v2 fixed and what it broke:
+
+| boundary | v1 random | v2 random | v1 contested | v2 contested |
+|---|---:|---:|---:|---:|
+| LOW/MINIMAL | 46 | **31** | 86 | **41** |
+| MODERATE/LOW | 49 | **62** | 115 | 94 |
+| HIGH/MODERATE | 5 | 13 | — | 7 |
+
+**v2's size-spec table fixed MINIMAL/LOW** (−33% on the population, −52% on
+contested) — that was the change naming multiple-choice, recall and image prompts
+as MINIMAL. **v2's artifact-type ladder made LOW/MODERATE worse on the
+population** (+27%), and HIGH/MODERATE worse in both samples: re-centring HIGH on
+requested output pulled some MODERATE rows up with it.
+
+So the net +0.8 is two real effects cancelling, not a null. The next iteration is
+narrow and specified by this table: **keep the size-spec table and the MINIMAL
+clarification, revert the artifact-type ladder toward v1's wording, and tighten
+the HIGH threshold so long articles stay MODERATE.**
+
+Generalisation worth keeping: a rubric rewrite is not one intervention. Report
+per-boundary residuals, because a headline delta can be two changes of opposite
+sign, and only the per-boundary view tells you which half to keep.
