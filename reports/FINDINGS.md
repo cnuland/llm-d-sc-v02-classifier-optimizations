@@ -3001,3 +3001,40 @@ comparison still has MiniLM+escalate-0.0 winning 2 of 3 gates at a fifth of bge'
 latency (6.1 ms vs 21.9 ms). Tier-exact accuracy and gate behaviour disagree here,
 and the gate is what the router runs on. bge is the better *classifier*; MiniLM is
 the better *component*.
+
+## 81. A harness defect hid three failed runs — round scripts discarded their own tracebacks
+
+Round Z (hierarchy-aware SupCon) printed four arm headers and no results. The
+`|| echo "  FAILED"` guard never fired, and `models/se-z-supcon*/` contained only
+an empty `_ck` directory.
+
+The pattern every `round_*.sh` used:
+
+```
+python train.py ... 2>&1 | grep -E "^\[|entsec-gold|trained in" || echo "  FAILED"
+```
+
+It loses failures twice. stderr is merged into the pipe and then thrown away by a
+grep that does not match tracebacks — and the `|| echo FAILED` cannot fire,
+because grep DOES match the `[transformers] LOAD REPORT` banner on `^\[`, so the
+pipeline always exits 0. **Three arms died silently and the log looked like they
+had simply produced nothing.**
+
+Fixed with `harness/runarm.sh`, which writes full output to `/tmp/arm-<tag>.log`,
+prints the summary lines, and on non-zero exit prints the tail of the real log.
+
+**What actually killed the arms is NOT established, and I am not going to guess.**
+The evidence rules out the obvious answer: no jetsam or `memorystatus` entries in
+the system log, ~31 GB free, total RSS across all trainers ~10.6 GB of 128 GB.
+Re-running arm 1 in isolation works — it is 5% through a normal 75-minute run.
+And Round Z's FOURTH arm never died at all; it was still training when the round
+script was killed. Arms 1-3 failing while arm 4 survived is not consistent with a
+deterministic bug in the SupCon loss, and not obviously consistent with resource
+exhaustion either. Recorded as unexplained.
+
+**The operational lesson is separate and is confirmed.** Each `queue_*.sh` waiter
+watches the round before it, so killing one round cascaded the next two into life
+simultaneously and produced eight concurrent trainers on a 16-core machine. A
+chain of waiters is a chain of triggers, and interrupting it anywhere fires
+everything downstream. Waiters are now disarmed and rounds are launched
+deliberately.
