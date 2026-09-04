@@ -234,7 +234,13 @@ def train_head(base, tr, va, labels, out, epochs=4, bs=32, lr=2e-5, seed=2026090
                     "soft targets requested but absent from the batch — check "
                     "remove_unused_columns; silently falling back to hard labels "
                     "is how this went unnoticed for a whole round of experiments")
-            outputs = model(**inputs, output_hidden_states=(supcon > 0))
+            # Hidden states are only needed for the contrastive term, which is a
+            # TRAINING loss. Requesting them during evaluation made Trainer
+            # accumulate 13 layers x batch x seq x hidden per eval batch on the
+            # accelerator, which is what killed every SupCon arm: they trained
+            # fine and died partway through the eval loop leaving an empty _ck.
+            outputs = model(**inputs,
+                            output_hidden_states=(supcon > 0 and model.training))
             logits = outputs.logits
             W = (torch.tensor(cw, device=logits.device) if cw else None)
             if q is None:

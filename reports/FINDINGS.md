@@ -3466,3 +3466,38 @@ variant, and now the boundary they were literally built for). §77's separabilit
 explanation covers all three: the pair corpora sit 97-98% distinguishable from
 the eval distribution, and distance from the target distribution predicts
 uselessness regardless of how well-aimed the content is.
+
+## 97. The SupCon crashes were an eval-time OOM in my own integration
+
+§81 recorded three Round Z arms dying silently and left the cause unexplained,
+noting the evidence ruled out system-level OOM (no jetsam entries, 31 GB free).
+The isolated re-run died too — further along, partway through the eval loop, again
+leaving only an empty `_ck` — which is what identified it.
+
+The bug is one line:
+
+```python
+outputs = model(**inputs, output_hidden_states=(supcon > 0))
+```
+
+`compute_loss` runs during EVALUATION as well as training, so this requested 13
+layers of hidden states per eval batch. HF Trainer accumulates eval outputs on the
+accelerator, and hidden states are batch x seq x hidden x layers — orders of
+magnitude larger than logits. The accumulation grows until the process dies. It
+is not visible in system memory statistics because it is accelerator memory, which
+is why §81's check came back clean and the cause looked mysterious.
+
+It also explains the pattern §81 could not: **arms died at different points**
+(some early, the isolated re-run at 74% of an eval loop) because the failure
+depends on accumulated eval batches, not on a deterministic code path. And Round
+Z's fourth arm survived because it was still TRAINING when the round was killed —
+it had not reached evaluation yet.
+
+Fixed with `output_hidden_states=(supcon > 0 and model.training)`. The
+hierarchy-aware contrastive loss (§Z) is now testable and has never actually been
+measured.
+
+**§81's operational lesson stands and its diagnosis was wrong.** "Unexplained" was
+the honest label at the time, and keeping the arms' failure visible is what made
+the re-run diagnosable — but the cause was mine, in the mechanism under test,
+not in the environment.
