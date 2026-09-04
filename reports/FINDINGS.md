@@ -2923,3 +2923,50 @@ wins says which pressure dominates.
 95.8% distinguishable from real traffic. real-gold is reported on every arm so
 the cost of that tuning is visible. Notably x2 already shows the trade running
 the other way — uniform balancing HELPED real-gold by 1.06 while hurting entsec.
+
+## 79. The egress gate reaches ~95.5% — and the dedicated model only wins where it matters
+
+Round AD trained the binary egress decision directly. Headline on entsec-gold
+(n=707, BLOCK=121, **majority baseline 82.89%**):
+
+| model | argmax accuracy | containment | over-block |
+|---|---:|---:|---:|
+| binary egress (`eg-ad1-cw-seed11`) | 95.33% | 85.12% | 2.56% |
+| **5-way esc0.0, folded** | **95.62%** | 89.26% | 3.07% |
+| 5-way v2 (shipped), folded | 95.05% | **90.08%** | 3.92% |
+
+**All three sit at ~95.5%, clearing the majority baseline by 12+ points.** Training
+the decision directly bought nothing at argmax — the existing sensitivity model,
+folded, is fractionally the best of the three.
+
+**Accuracy is the wrong headline here and the binary model shows why.** It has the
+HIGHEST accuracy of the trio at argmax while containing the LEAST (85.12% vs
+90.08%): it is more willing to let sensitive content through, which on a 17%-BLOCK
+eval buys accuracy. Over-block at matched containment, per §60:
+
+| model | @85% | @90% | @95% | @99% |
+|---|---:|---:|---:|---:|
+| binary egress | 1.88% | 3.58% | **8.87%** | **48.98%** |
+| 5-way folded | **1.54%** | **3.07%** | 10.41% | 79.01% |
+| 5-way v2 shipped | 2.73% | 3.92% | 10.75% | 85.32% |
+
+**The curves cross.** Below 90% containment the folded 5-way model is cheaper;
+at 95% and above the dedicated binary model is, and at 99% containment it
+over-blocks **49% against 79%** — a 30-point difference in how much legitimate
+traffic gets stopped to catch the last few percent of secrets.
+
+A security gate operates at high containment. **So the binary model is the right
+one to deploy, and the reason is the opposite of its headline number.**
+
+**A trap worth recording, because the numbers were sitting right there.** The
+binary model scores **99.65% on real-gold and 99.46% on enterprise-gold**. Both
+are worthless: those evals contain 2 and 5 BLOCK rows respectively, majority
+baselines are 99.30% and 99.33%, and BLOCK recall is 1/2 and 1/5. Reported without
+the baseline column, "99.65% on real traffic" is the most impressive figure
+produced anywhere in this project and it means the model almost never fires.
+entsec is the only eval with enough BLOCK mass (121 rows) to say anything.
+
+**Against the standing goal, stated precisely.** This is ~95.5% — mid 90s, not
+high 90s — on one real deployed decision, measured against a synthetic eval that
+§77 found 95.8% distinguishable from real traffic. It is the best-supported
+number in this project and it is not "high 90s across all domains".
