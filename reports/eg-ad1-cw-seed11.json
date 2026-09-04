@@ -1,0 +1,114 @@
+{
+ "tag": "eg-ad1-cw-seed11",
+ "signal": "egress",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "source": "egress-v2+egress-real+egress-enterprise+egress-real-contested",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "epochs": 3,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "ordinal": false,
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.9964788732394366,
+  "macro_f1": 0.8324483775811209,
+  "wilson95": [
+   0.9803273246785605,
+   0.9993781800156881
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 282,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 1,
+    "BLOCK": 1
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.5
+  }
+ },
+ "real-contested": {
+  "n": 119,
+  "accuracy": 1.0,
+  "macro_f1": 0.5,
+  "wilson95": [
+   0.9687272064186726,
+   1.0
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 119,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 0
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.0
+  }
+ },
+ "enterprise-gold": {
+  "n": 744,
+  "accuracy": 0.9946236559139785,
+  "macro_f1": 0.6653171390013496,
+  "wilson95": [
+   0.986258279429568,
+   0.9979073513671142
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 739,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 4,
+    "BLOCK": 1
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.2
+  }
+ },
+ "entsec-gold": {
+  "n": 707,
+  "accuracy": 0.9533239038189534,
+  "macro_f1": 0.916919789904745,
+  "wilson95": [
+   0.9351743430446778,
+   0.9665736694520587
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 571,
+    "BLOCK": 15
+   },
+   "BLOCK": {
+    "ALLOW": 18,
+    "BLOCK": 103
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9744027303754266,
+   "BLOCK": 0.8512396694214877
+  }
+ },
+ "cpu_p50_ms": 7.7,
+ "cpu_p99_ms": 23.32,
+ "train_rows": 744,
+ "seed_note": "PUBLISHED SEED IS THE FIRST ONE RUN (11), not the best. Three arms:\n  seed 11, class-weighted   entsec 0.9533\n  seed 22, class-weighted   entsec 0.9434\n  seed 11, no class weight  entsec 0.9505\n  median 0.9505\n\nWHAT THIS MODEL IS. The binary egress gate: does this request contain live credentials or legally privileged material -- BLOCK -- or not -- ALLOW? It is the NEVER_EGRESS threshold of the five-tier sensitivity ladder, trained directly. Of every taxonomy fold measured in this project, this is the only one whose three-model jury agreement reaches the high 90s (96.4%), which is why a high-90s model score is a real target here rather than an artifact of grading against noisy labels.\n\nACCURACY IS THE WRONG HEADLINE AND THIS MODEL SHOWS WHY. Majority baseline is 82.89%. BLOCK recall -- what fraction of secret or privileged content is actually stopped -- is 85.12% at argmax, with 2.56% over-block. The five-tier model folded onto the same decision has HIGHER containment (89-90%) at LOWER accuracy. At matched containment the two cross: below 90% containment the folded model is cheaper, at 95% and above this one is, and at 99% containment it over-blocks 49% against 79%. A security gate runs at high containment, so this is the right model for that use -- for the opposite of the reason its headline number suggests.\n\nDO NOT QUOTE ITS OTHER EVALS. This model scores 99.65% on real-gold and 99.46% on enterprise-gold. Both are worthless: those sets contain 2 and 5 BLOCK rows, majority baselines are 99.30% and 99.33%, and BLOCK recall is 1/2 and 1/5. entsec is the only eval here with enough BLOCK mass (121 rows) to say anything.\n\nSCOPE LIMIT. entsec is a SYNTHETIC enterprise eval, 95.8% distinguishable from real assistant traffic. It exists because real consumer traffic is ~93% PUBLIC and cannot exercise these tiers at all."
+}

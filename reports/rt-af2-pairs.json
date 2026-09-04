@@ -1,0 +1,119 @@
+{
+ "tag": "rt-af2-pairs",
+ "signal": "route",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 111556,
+ "epochs": 3,
+ "source": "route-v2:5566+route-real:52212+route-active:7326+route-distill:30000+route-real-contested:7294+route-pair-MEDIUM-COMPLEX:21554",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SMALL": 99437,
+  "LARGE": 12119
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9282296650717703,
+  "macro_f1": 0.9046097672295756,
+  "wilson95": [
+   0.8993921061453848,
+   0.9492676751564119
+  ],
+  "confusion": {
+   "LARGE": {
+    "LARGE": 90,
+    "SMALL": 7
+   },
+   "SMALL": {
+    "LARGE": 23,
+    "SMALL": 298
+   }
+  },
+  "recall": {
+   "LARGE": 0.9278350515463918,
+   "SMALL": 0.9283489096573209
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.7670454545454546,
+  "macro_f1": 0.7474715660542433,
+  "wilson95": [
+   0.699296990368156,
+   0.8233851921747041
+  ],
+  "confusion": {
+   "LARGE": {
+    "LARGE": 43,
+    "SMALL": 6
+   },
+   "SMALL": {
+    "LARGE": 35,
+    "SMALL": 92
+   }
+  },
+  "recall": {
+   "LARGE": 0.8775510204081632,
+   "SMALL": 0.7244094488188977
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9281914893617021,
+  "macro_f1": 0.8942577103752851,
+  "wilson95": [
+   0.8975388081542668,
+   0.9501829790328133
+  ],
+  "confusion": {
+   "LARGE": {
+    "LARGE": 68,
+    "SMALL": 5
+   },
+   "SMALL": {
+    "LARGE": 22,
+    "SMALL": 281
+   }
+  },
+  "recall": {
+   "LARGE": 0.9315068493150684,
+   "SMALL": 0.9273927392739274
+  }
+ },
+ "val-internal": {
+  "n": 12396,
+  "accuracy": 0.9593417231364957,
+  "macro_f1": 0.901709982601131,
+  "wilson95": [
+   0.9557202674091277,
+   0.9626785611694567
+  ],
+  "confusion": {
+   "LARGE": {
+    "LARGE": 1200,
+    "SMALL": 102
+   },
+   "SMALL": {
+    "LARGE": 402,
+    "SMALL": 10692
+   }
+  },
+  "recall": {
+   "LARGE": 0.9216589861751152,
+   "SMALL": 0.9637641968631693
+  }
+ },
+ "cpu_p50_ms": 3.91,
+ "cpu_p99_ms": 9.12
+}

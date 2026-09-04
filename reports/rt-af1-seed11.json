@@ -3,25 +3,18 @@
  "signal": "route",
  "arch": "head",
  "base": "sentence-transformers/all-MiniLM-L6-v2",
- "train_rows": 92158,
- "epochs": 3,
- "source": "route-v2:5566+route-real:52212+route-active:7326+route-distill:30000+route-real-contested:7294",
+ "source": "route-v2+route-real+route-active+route-distill+route-real-contested",
  "maxlen": 256,
  "soft_targets": true,
  "lr": 5e-05,
- "ordinal": false,
+ "epochs": 3,
  "class_weighted": true,
  "escalate": 0.0,
- "supcon": 0.0,
- "supcon_tau": 0.1,
  "lora_rank": 0,
  "weight_decay": 0.01,
  "scheduler": "linear",
  "warmup_ratio": 0.1,
- "train_prior": {
-  "SMALL": 82809,
-  "LARGE": 9349
- },
+ "ordinal": false,
  "real-gold": {
   "n": 418,
   "accuracy": 0.9330143540669856,
@@ -91,29 +84,8 @@
    "SMALL": 0.9372937293729373
   }
  },
- "val-internal": {
-  "n": 10240,
-  "accuracy": 0.95869140625,
-  "macro_f1": 0.8939434276312246,
-  "wilson95": [
-   0.9546617962113059,
-   0.9623769834590085
-  ],
-  "confusion": {
-   "LARGE": {
-    "LARGE": 908,
-    "SMALL": 133
-   },
-   "SMALL": {
-    "LARGE": 290,
-    "SMALL": 8909
-   }
-  },
-  "recall": {
-   "LARGE": 0.8722382324687801,
-   "SMALL": 0.968474834221111
-  }
- },
- "cpu_p50_ms": 23.24,
- "cpu_p99_ms": 89.67
+ "cpu_p50_ms": 7.24,
+ "cpu_p99_ms": 19.12,
+ "train_rows": 418,
+ "seed_note": "PUBLISHED SEED IS THE FIRST ONE RUN (11), not the best. Both seeds:\n  seed 11  refined gold 0.9335   real gold 0.9330\n  seed 22  refined gold 0.9202   real gold 0.9187\n  median   0.9269\n\nWHAT THIS MODEL IS. The backend routing decision the deployed llm-d-sc/Praxis table actually makes: SIMPLE/MEDIUM -> the small model, COMPLEX/REASONING -> the large one. It is not a four-tier complexity classifier. A tier classifier saying MEDIUM where the jury said SIMPLE picks the same backend and has made no routing error; tier-exact accuracy charges it for one anyway. Folding a 4-way model's output onto this decision scores 88.22%; training it directly scores 93.35%.\n\nTHIS DECISION FIRES ON EVERY REQUEST, which is why it is worth a dedicated model even though its accuracy is the lowest of the four gates in this family.\n\nREAD THE BASELINE AND THE MINORITY CLASS. Majority baseline on refined gold is 80.59% (always answer SMALL). 93.35% clears it by 12.8 points, and LARGE recall is 91.78% on a class that is 19.4% of the eval -- the minority class is doing real work. LARGE precision is 77.91%, i.e. about 6% of small requests are over-routed to the large model. That is a cost trade, and the direction most deployments prefer to the reverse; move the threshold if yours does not.\n\nWEAKEST POINT, STATED. On the 176 rows where the three-model jury SPLIT, it scores 77.84% against a 72.16% baseline -- clear of chance but 15 points below its clean-subset figure. Contested rows are about 30% of real traffic here."
 }

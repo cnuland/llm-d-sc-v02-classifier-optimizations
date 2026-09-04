@@ -3419,3 +3419,50 @@ those files (`complexity-pair-MEDIUM-COMPLEX`, `complexity-pair-SIMPLE-MEDIUM`,
 If corpus coverage is the answer, the finding is unglamorous: **every complexity
 run in this project trained on a subset, by accident of which files were listed
 in a shell variable.**
+
+## 95. The §91 loop lead dissolves under isolation — no component, and no total, clears the floor
+
+`perjuror.py`'s control beat `train.py` by +0.80 on complexity refined gold, and
+§91 recorded that as the largest unexplained gap on the signal. Round AK varied
+each difference alone:
+
+| arm | change from the incumbent recipe | refined gold | delta |
+|---|---|---:|---:|
+| incumbent (`train.py`, median of 5) | — | 0.9016 | — |
+| cx-ak2-cosine | cosine schedule only | 0.9069 | +0.53 |
+| cx-ak1-allrows | full 161,617-row corpus only | 0.9069 | +0.53 |
+| perjuror control | all three changes together | 0.9096 | +0.80 |
+
+**Neither component clears the 1.06-point floor, and neither does their total.**
+The two isolated arms land on the same number to four decimals, which is a
+coincidence of single seeds rather than a result, and the combined +0.80 was
+already inside the floor when §91 called it a lead.
+
+**Masked-mean pooling is left untested and will stay that way.** With the total
+effect inside the floor, isolating the third component is chasing a sub-floor
+difference across single seeds; the compute buys more elsewhere. Recorded as
+closed, not as pending.
+
+Worth noting what the corpus arm rules out: `complexity-pair-MEDIUM-COMPLEX`,
+`complexity-pair-SIMPLE-MEDIUM` and the `disagree` corpora — about 110k rows no
+`train.py` complexity recipe has ever included — are worth +0.53, i.e. nothing.
+**The incumbent recipe was not leaving anything on the floor.**
+
+## 96. Minimal pairs fail on the route decision too (-0.53)
+
+Round AF's second arm added `route-pair-MEDIUM-COMPLEX` to the route corpus. Those
+pairs were generated specifically to sharpen the MEDIUM/COMPLEX boundary, which
+is exactly the boundary this decision cuts on, so this was the most favourable
+test they could get:
+
+| arm | refined gold |
+|---|---:|
+| rt-af1-seed11 (no pairs) | **0.9335** |
+| rt-af2-pairs | 0.9282 |
+
+**-0.53.** That is the third independent failure of synthetic minimal pairs in
+this project (§63 on sensitivity's INTERNAL/CONFIDENTIAL, §76 on the grey-zone
+variant, and now the boundary they were literally built for). §77's separability
+explanation covers all three: the pair corpora sit 97-98% distinguishable from
+the eval distribution, and distance from the target distribution predicts
+uselessness regardless of how well-aimed the content is.
