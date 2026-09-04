@@ -2772,3 +2772,59 @@ one worth reporting as unfinished.
 fine; §69's ceilings stand and tier-exact accuracy on them will not reach the high
 90s. It claims the taxonomy is finer than the decision, so tier-exact accuracy
 has been charging the classifier for distinctions the router discards.
+
+## 76. My own §63 hypothesis is FALSIFIED — agreement was confounded with separability
+
+§63 explained the minimal-pair corpus's failure by its 98.4% blind-check
+agreement: "a synthetic corpus whose agreement sits far above the real
+distribution's is off-distribution by construction", and prescribed treating
+agreement as a target band rather than a maximand.
+
+`harness/build_train_greyzone.py` was built to test exactly that, and it hit the
+target: unconditioned enterprise scenes steered at situations that can land
+either side of INTERNAL/CONFIDENTIAL, tier never named, **blind agreement 81.1%,
+squarely inside the 75-85% band**, 2,075 rows, 1,424 CONFIDENTIAL / 507 INTERNAL.
+
+Same frozen-probe A/B that rejected the minimal pairs:
+
+| arm | n | MiniLM bal | e5 bal | CONF recall (MiniLM) |
+|---|---:|---:|---:|---:|
+| A base corpus only, size-matched | 1,014 | **63.66%** | **64.03%** | 47.27% |
+| B minimal-pair SDG (§63) | 567 | 51.19% | 58.82% | 49.09% |
+| **C grey-zone SDG (on-band)** | 1,014 | 56.07% | 60.04% | **21.82%** |
+| D base 3000/class | 6,000 | **69.51%** | **70.69%** | 60.00% |
+| E base 3000/class + all grey-zone | 7,931 | 64.31% | 69.20% | 43.64% |
+
+**It fails too — 7.6 points worse than real rows at matched size, and adding it
+to the base corpus costs 5.2 points.** Landing in the agreement band bought
+nothing. The hypothesis predicted a specific outcome and got the opposite one.
+
+The competing explanation was already in §64 and I did not test it against mine.
+Separability from the eval, same probe:
+
+| corpus | blind agreement | separability | does it help? |
+|---|---:|---:|---|
+| enterprise (31,168 rows) | — | **78.1%** | yes — historically the largest data gain on this signal |
+| grey-zone (2,075) | **81.1%** on band | 94.8% | no, -5.2 |
+| minimal pairs (567) | 98.4% off band | 98.2% | no, -8.0 |
+| v2 synthetic (6,783) | — | 93.2% | marginal |
+
+**Agreement and separability were confounded in §63, and the grey-zone corpus
+decouples them: right agreement, wrong distribution, still useless.**
+Separability is the operative variable. §63's rule is withdrawn and replaced:
+
+> A synthetic corpus helps in proportion to how INDISTINGUISHABLE it is from the
+> evaluation distribution. Measure separability before training on it; agreement
+> is not a substitute and, on this evidence, not predictive at all.
+
+**What actually differs between the generator that works and the one that does
+not** is not the prompt template — both use unconditioned scenes and never name
+the tier. It is pool breadth: `sensitivity-enterprise.jsonl` accumulated 31,168
+rows across many runs over 39 roles x 10 settings x 16 moments, while the
+grey-zone run drew 2,075 rows from 22 x 14 x 18 in a single pass with an added
+"vary the stakes" instruction. A narrower, more homogeneous pool is more
+separable. That is the natural next hypothesis and it is **untested** — recorded
+as a hypothesis, not a finding, which is the mistake §63 made.
+
+Corpus retained at `data/train/sensitivity-greyzone.jsonl`, NOT added to any
+training arm.
