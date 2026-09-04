@@ -2970,3 +2970,34 @@ entsec is the only eval with enough BLOCK mass (121 rows) to say anything.
 high 90s — on one real deployed decision, measured against a synthetic eval that
 §77 found 95.8% distinguishable from real traffic. It is the best-supported
 number in this project and it is not "high 90s across all domains".
+
+## 80. Round X complete: the encoder effect is real (+4.5) and §50 is overturned
+
+The full factorial, entsec-gold:
+
+| encoder | corpus | schedule | entsec | real-gold |
+|---|---|---|---:|---:|
+| bge-base | natural | 3ep/3e-5 | **0.8119** | 0.8838 |
+| bge-base | uniform balance | 3ep/3e-5 | 0.7808 | **0.8944** |
+| MiniLM-L6 | uniform balance | 3ep/3e-5 | 0.7355 | 0.8732 |
+| MiniLM-L6 | natural | 4ep/5e-5 | 0.7808 (median) | 0.8750 (median) |
+
+**§67's confound is resolved.** The bge-vs-MiniLM comparison on the balanced
+corpus holds encoder schedule AND corpus exactly constant: **+4.53 points for
+bge**, matching the +3.11 seen on the natural corpus. The gain is the encoder,
+not the 3ep/3e-5 schedule I introduced alongside it.
+
+**§50's "bigger is worse on sensitivity" is overturned for this encoder.** It was
+measured on ModernBERT; bge-base gains 3-4.5 points wherever it is compared
+fairly. Round AC's remaining cell (MiniLM/natural/3ep) would close the 2x2
+exactly but is no longer load-bearing.
+
+**Balancing hurts both encoders on entsec and helps both on real-gold** — bge
+-3.11/+1.06, MiniLM -4.53/-0.18 — which is the signature of a prior effect rather
+than a capacity effect, and is what Round AG is now measuring directly.
+
+**This does not change the deployment recommendation.** §68's matched-containment
+comparison still has MiniLM+escalate-0.0 winning 2 of 3 gates at a fifth of bge's
+latency (6.1 ms vs 21.9 ms). Tier-exact accuracy and gate behaviour disagree here,
+and the gate is what the router runs on. bge is the better *classifier*; MiniLM is
+the better *component*.
