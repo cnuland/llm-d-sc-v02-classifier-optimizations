@@ -3096,3 +3096,51 @@ problem.
 majority baseline 82.89%. The gate result is stable across seeds; publication
 waits on the containment comparison in §79 being re-run on the median model
 rather than the better one.
+
+## 85. Two independent labelling processes agree on 81% of rows — and the model is 6.4 points better there
+
+§83 said a single juror re-sampled is more coherent than the panel. The obvious
+follow-up: build a gold that way and see what changes. One juror
+(`claude-sonnet-5`), three samples, majority vote, over all 594 complexity eval
+rows (`harness/selfconsistency_gold.py`). A majority formed for 594/594; only 2
+rows were three-way splits.
+
+| | |
+|---|---:|
+| self-consistency gold agrees with PANEL gold | **81.1%** (482/594) |
+| top disagreements | MEDIUM->COMPLEX 36, MEDIUM->SIMPLE 17, COMPLEX->MEDIUM 16 |
+
+Model `cx-v-resolved-seed11` scored against each:
+
+| target | n | accuracy |
+|---|---:|---:|
+| PANEL gold (3 models, 1 sample each) | 594 | 0.8182 |
+| SELF-CONSISTENCY gold (1 model, 3 samples) | 594 | 0.7912 |
+| **rows where BOTH golds agree** | **482** | **0.8817** |
+
+**Switching to the more coherent rater does NOT raise measured accuracy — it
+lowers it by 2.7 points.** That is unsurprising in hindsight: the model was
+trained on panel-derived labels, so it reproduces the panel. It is worth stating
+because §83 could easily be over-read as "use one juror and the numbers go up".
+They go down.
+
+**What agreement BETWEEN the two processes buys is a noise detector.** On the 482
+rows where a 3-model panel and a 3-sample self-consistency vote independently
+concur, the model scores **0.8817 against 0.8182 overall — +6.35 points**. The
+112 rows (18.9%) where the processes disagree carry all of that gap.
+
+This is a better-grounded ceiling estimate than §69's, because it is built from
+two labelling procedures that differ in *kind* — across-model versus
+within-model — rather than from unanimity inside one panel, which §83 showed is
+partly sampling luck.
+
+**And it does not rescue the high-90s target.** With the cleanest labels this
+project can construct, complexity's model sits at 88.2%. The gap to the high 90s
+is not all label noise.
+
+**Not pursued: retraining on the both-agree subset.** Label cleaning has been
+tried on complexity twice already — tie-resolved labels at +0.27 (§53) and the
+v2-rubric relabel at +0.13 (§65/AB) — both inside the 1.06-point floor. A third
+attempt with a better noise detector is a reasonable idea with a poor prior, and
+the compute is better spent on the per-annotator heads, which attack the
+structure §83 identified rather than the noise.
