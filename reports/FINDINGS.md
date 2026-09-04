@@ -2828,3 +2828,62 @@ as a hypothesis, not a finding, which is the mistake §63 made.
 
 Corpus retained at `data/train/sensitivity-greyzone.jsonl`, NOT added to any
 training arm.
+
+## 77. Pool breadth is a small real effect (3.4 pts) — and the separability rule needed a circularity check
+
+**The controlled test §76 called for.** Same generator, same prompt template, same
+160 scenes and ~1,280 rows, single pass each. Only the pool differs:
+
+| arm | pool | distinct combos in 160 scenes | separability vs entsec |
+|---|---|---:|---:|
+| NARROW | 6x3x4 = 72 | 66 | 92.8% |
+| WIDE | 1200x160x60 = 11.5M | 160 | **89.4%** |
+| *grey-zone (§76), for scale* | 22x14x18 | — | 95.3% |
+| *enterprise, capped to same n* | — | — | **79.3%** |
+
+Breadth is real and **small: 3.4 points** from a 160,000-fold increase in
+available combinations. It explains a fifth of the ~13-point gap to the corpus
+that works. The pool-breadth hypothesis is confirmed in sign and rejected as the
+explanation. Note the enterprise figure is capped to the same n=949, so corpus
+size is not the confound either.
+
+**Which forced a check I should have run before trusting the metric at all.**
+`entsec` is itself SYNTHETIC — an unconditioned enterprise generator very like
+the one that produced `sensitivity-enterprise.jsonl`. If those share a lineage,
+"separability from the eval" could be measuring shared provenance rather than
+realism. The non-circular reference is WildChat: real assistant traffic nobody
+here generated.
+
+| corpus | vs entsec (synthetic) | vs REAL traffic |
+|---|---:|---:|
+| sensitivity-enterprise.jsonl | **74.8%** | 96.8% |
+| breadth-wide.jsonl | 86.9% | 97.9% |
+| sensitivity-greyzone.jsonl | 93.9% | 99.0% |
+| sensitivity-boundary.jsonl | 97.8% | 99.0% |
+| sensitivity-real.jsonl (WildChat) | 97.0% | **66.2%** |
+| **entsec eval itself** | — | **95.8%** |
+
+**The two evaluation sets are 95.8% distinguishable from each other.** Every
+corpus that scores well against entsec scores badly against real traffic, and the
+one WildChat-derived corpus inverts perfectly (97.0% / 66.2%).
+
+The rule survives, sharpened and no longer circular: **separability predicts
+helpfulness ON THE DISTRIBUTION IT IS MEASURED AGAINST.** It is a domain-match
+metric, correctly behaved. §76's ranking was right about entsec and says nothing
+about production.
+
+**But the caveat this exposes is larger than the finding.** Sensitivity has been
+optimised end to end against a synthetic eval that is 95.8% distinguishable from
+real assistant traffic. That was a deliberate trade — WildChat is ~93% PUBLIC and
+literally cannot measure the tiers that gate egress, which is why entsec was built
+(§10) — and it is recorded in the model cards. It is still worth stating plainly
+in one place:
+
+> **The sensitivity numbers in this report describe enterprise-*like* synthetic
+> traffic. There is no real enterprise corpus here to validate them against, and
+> the one real corpus available is a different distribution. Complexity and cost
+> are measured on real traffic; sensitivity is not.**
+
+That is the largest open risk in this project, and no amount of further
+optimisation against entsec reduces it. Reducing it needs real enterprise
+prompts, which is an access problem rather than a modelling one.
