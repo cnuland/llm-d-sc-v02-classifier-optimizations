@@ -3255,3 +3255,52 @@ zero to four decimal places.
 were correctly called in advance by 500 labelled rows.** That protocol is the
 transferable result: A/B a rubric on a RANDOM sample, and if corpus agreement
 does not move, do not spend the relabel.
+
+## 90. The two sensitivity wins stack — 0.8204, and a clean accuracy/latency ladder
+
+§66 (remove tier escalation) and §80 (bge-base instead of MiniLM) act on
+different parts of the system, one on the loss and one on the representation, so
+Round AI tested whether they compose. They do:
+
+| model | encoder | escalate | entsec-gold | real-gold | p50 |
+|---|---|---:|---:|---:|---:|
+| shipped v2 | MiniLM-L6 | 1.0 | 0.7793 | 0.8873 | 8.38 ms |
+| v2.1 (published) | MiniLM-L6 | 0.0 | 0.8034 | 0.8627 | 8.38 ms |
+| bge-small | bge-small | 0.0 | 0.8119 | 0.8803 | 13.94 ms |
+| bge-base | bge-base | 1.0 | 0.8119 | 0.8838 | 31.20 ms |
+| **bge-base** | **bge-base** | **0.0** | **0.8204** | **0.8908** | **31.20 ms** |
+
+**0.8204 is the best sensitivity number in the project, and it is best on real
+traffic too (0.8908) — the first time one model has led both evals.** Total gain
+over the shipped v2: **+4.11 points**, from two independent one-line changes.
+
+Encoder size gives a clean monotone ladder at escalate 0.0 — 0.7999 / 0.8119 /
+0.8204 for 8.38 / 13.94 / 31.20 ms — so this is a deployment menu rather than a
+single answer.
+
+**The gate comparison does NOT follow the accuracy ranking, again.** Over-block at
+matched containment (§60's rule), bge+esc0 versus MiniLM+esc0:
+
+| gate | 85% | 90% | 95% |
+|---|---|---|---|
+| CONFIDENTIAL | MiniLM 7.03% | **bge 12.70%** | MiniLM 24.26% |
+| REGULATED | MiniLM 9.44% | MiniLM 18.88% | MiniLM 35.41% |
+| NEVER_EGRESS | MiniLM 1.54% | **bge 2.39%** | **bge 8.19%** |
+
+**MiniLM wins 6 of 9 cells despite being 1.70 points worse on tier-exact
+accuracy.** But bge wins the two cells that matter most for a security gate — the
+NEVER_EGRESS boundary at 90% and 95% containment, where it over-blocks 2.39% and
+8.19% against MiniLM's 3.41% and 9.22%.
+
+So the recommendation is conditional and should be stated that way:
+
+- **egress gate run at high containment** -> bge-base + escalate 0.0
+- **REGULATED gating, or latency-bound CPU serving** -> MiniLM + escalate 0.0
+- **middle ground** -> bge-small, which matches bge-base's accuracy at 45% of its
+  cost (§87) and has not yet had its matched-containment comparison run
+
+This is the third time tier-exact accuracy and gate behaviour have disagreed
+(§68, §79, here). The pattern is consistent enough to state as a rule: **on an
+ordered taxonomy with a threshold gate, accuracy ranks models differently from
+the metric the deployment runs on, and the accuracy ranking is the wrong one to
+ship against.**
