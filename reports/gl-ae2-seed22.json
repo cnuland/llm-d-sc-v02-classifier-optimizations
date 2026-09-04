@@ -1,0 +1,90 @@
+{
+ "tag": "gl-ae2-seed22",
+ "signal": "genlen",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "source": "genlen-v2+genlen-real+genlen-real-contested+genlen-distill",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "epochs": 3,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "ordinal": false,
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.9508196721311475,
+  "macro_f1": 0.9505058700799789,
+  "wilson95": [
+   0.9259886816687914,
+   0.9676111935521714
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 220,
+    "SHORT": 6
+   },
+   "SHORT": {
+    "LONG": 15,
+    "SHORT": 186
+   }
+  },
+  "recall": {
+   "LONG": 0.9734513274336283,
+   "SHORT": 0.9253731343283582
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.8690476190476191,
+  "macro_f1": 0.8683760683760684,
+  "wilson95": [
+   0.8096876487202882,
+   0.9119071222781197
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 67,
+    "SHORT": 7
+   },
+   "SHORT": {
+    "LONG": 15,
+    "SHORT": 79
+   }
+  },
+  "recall": {
+   "LONG": 0.9054054054054054,
+   "SHORT": 0.8404255319148937
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.954177897574124,
+  "macro_f1": 0.9538763063016944,
+  "wilson95": [
+   0.9278492718098155,
+   0.9711971520662965
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 192,
+    "SHORT": 5
+   },
+   "SHORT": {
+    "LONG": 12,
+    "SHORT": 162
+   }
+  },
+  "recall": {
+   "LONG": 0.9746192893401016,
+   "SHORT": 0.9310344827586207
+  }
+ },
+ "cpu_p50_ms": 3.76,
+ "cpu_p99_ms": 8.2,
+ "train_rows": 427
+}

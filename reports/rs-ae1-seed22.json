@@ -1,0 +1,90 @@
+{
+ "tag": "rs-ae1-seed22",
+ "signal": "reasoning",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "source": "reasoning-v2+reasoning-real+reasoning-active+reasoning-distill+reasoning-real-contested",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "epochs": 3,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "ordinal": false,
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9665071770334929,
+  "macro_f1": 0.9399425287356322,
+  "wilson95": [
+   0.9445714460568496,
+   0.9799461927914764
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 341,
+    "YES": 13
+   },
+   "YES": {
+    "NO": 1,
+    "YES": 63
+   }
+  },
+  "recall": {
+   "NO": 0.963276836158192,
+   "YES": 0.984375
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.9261363636363636,
+  "macro_f1": 0.827801610596824,
+  "wilson95": [
+   0.8777383683888433,
+   0.9563289441795502
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 148,
+    "YES": 12
+   },
+   "YES": {
+    "NO": 1,
+    "YES": 15
+   }
+  },
+  "recall": {
+   "NO": 0.925,
+   "YES": 0.9375
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9707446808510638,
+  "macro_f1": 0.9443300356686184,
+  "wilson95": [
+   0.9483800234896994,
+   0.983587407144544
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 312,
+    "YES": 10
+   },
+   "YES": {
+    "NO": 1,
+    "YES": 53
+   }
+  },
+  "recall": {
+   "NO": 0.968944099378882,
+   "YES": 0.9814814814814815
+  }
+ },
+ "cpu_p50_ms": 7.31,
+ "cpu_p99_ms": 18.34,
+ "train_rows": 418
+}

@@ -3365,3 +3365,57 @@ closed unless someone wants to spend many seeds chasing a sub-floor effect.
 Note the absolute numbers here are low (0.86-0.87) because both arms train on
 20,000 rows rather than the full corpus; only the aj1-vs-aj2 difference is
 meaningful.
+
+## 93. The small-vs-large route closes the gap: 88.22% -> 93.35%
+
+§75 flagged the route decision as the one deployed branch not in the 90s, and the
+one that fires on EVERY request. Trained directly rather than folded from the
+4-way model (`rt-af1-seed11`):
+
+| eval | n | accuracy | majority | LARGE recall | SMALL recall |
+|---|---:|---:|---:|---:|---:|
+| refined gold | 376 | **93.35%** | 80.59% | 91.78% | 93.73% |
+| real gold | 418 | 93.30% | 76.79% | 91.75% | 93.77% |
+| real contested | 176 | 77.84% | 72.16% | 83.67% | 75.59% |
+
+**+5.13 over the folded 88.22%, and +12.8 over the majority baseline**, with the
+minority class (LARGE, 19.4% of the eval) at 91.78% recall — this is not a
+majority-class artifact. LARGE precision is 77.91%, so it over-routes about 6% of
+small requests to the large model: a cost trade, and the direction most
+deployments would choose over the reverse.
+
+**Every deployed decision is now above 93%**, trained directly:
+
+| domain | decision | folded | **trained** | majority |
+|---|---|---:|---:|---:|
+| complexity | is reasoning needed | 95.79% | **96.54%** | 85.64% |
+| cost | short vs long generation | 92.44% | **95.69%** | 53.10% |
+| sensitivity | block at NEVER_EGRESS | 94.42% | **95.05%** | 82.89% |
+| complexity | route: small vs large | 88.22% | **93.35%** | 80.59% |
+
+Training the decision directly beats folding on all four, by +0.75 to +5.13. The
+gain is largest exactly where the fold was worst, which is what you would expect
+if folding loses information the binary task needs.
+
+## 94. The §91 loop lead is NOT the schedule
+
+Round AK's second arm changed only the learning-rate schedule — cosine instead of
+linear — against the round-V corpus:
+
+| arm | refined gold | vs incumbent 0.9016 |
+|---|---:|---:|
+| cx-ak2-cosine | 0.9069 | +0.53 |
+
+Inside the 1.06-point floor, single seed. **The schedule does not explain the
++0.80 gap** between `perjuror.py`'s control and `train.py`.
+
+That leaves two candidates: corpus coverage and masked-mean pooling. The corpus
+arm is running, and it is now a genuine like-for-like — the corrected file glob
+totals **exactly 161,617 rows**, matching what `perjuror.py` trained on. Two of
+those files (`complexity-pair-MEDIUM-COMPLEX`, `complexity-pair-SIMPLE-MEDIUM`,
+~48k rows of synthetic minimal pairs for the two hardest boundaries) plus the
+`disagree` corpora have never appeared in any `train.py` complexity recipe.
+
+If corpus coverage is the answer, the finding is unglamorous: **every complexity
+run in this project trained on a subset, by accident of which files were listed
+in a shell variable.**

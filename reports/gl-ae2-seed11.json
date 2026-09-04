@@ -86,5 +86,6 @@
  },
  "cpu_p50_ms": 7.94,
  "cpu_p99_ms": 18.03,
- "train_rows": 427
+ "train_rows": 427,
+ "seed_note": "PUBLISHED SEED IS THE FIRST ONE RUN (11), not the best. Both seeds:\n  seed 11  refined gold 0.9569   real gold 0.9532\n  seed 22  refined gold 0.9542   real gold 0.9506\n\nWHAT THIS MODEL IS. Not a four-tier cost classifier. It answers the binary capacity question the deployed router asks: will this request produce a SHORT or a LONG generation? MINIMAL/LOW fold to SHORT, MODERATE/HIGH to LONG. Tier-exact accuracy on the full cost taxonomy is 0.8976 and is capped near 0.914 by inter-juror agreement; this decision is not.\n\nTHIS IS THE BEST-EVIDENCED RESULT IN THE PROJECT, for a reason that is easy to miss: its majority-class baseline is 53.10%. There is no majority shortcut available, so 95.69% is +42.6 points over chance -- unlike the project's other binary gates, whose baselines sit at 83-86%. Per class on refined gold: LONG recall 98.98% / precision 93.30%, SHORT recall 91.95% / precision 98.77%.\n\nIT ALSO REPLICATES ON A SECOND, INDEPENDENT EVAL. On genlen-volume-gold (727 rows, built separately to over-sample high-volume requests) it scores 92.30% against a 59.28% baseline. No other decision measured in this project has a second eval.\n\nWEAKEST POINT, STATED. On the 168 rows where the three-model jury SPLIT, it scores 84.52% against a 55.95% baseline -- still well clear of chance, but 11 points below its clean-subset figure. Jury agreement on those rows is 57.7%."
 }

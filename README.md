@@ -50,18 +50,26 @@ the decisions that actually exist (§75, §79):
 
 | signal | deployed decision | jury agr | accuracy | majority baseline |
 |---|---|---:|---:|---:|
-| complexity | is reasoning needed | 94.6% | **95.79%** | 86.53% |
-| sensitivity | block at NEVER_EGRESS | 96.4% | **95.62%** | 82.89% |
-| cost | short vs long generation | 88.1% | **92.44%** | 50.42% |
-| complexity | route: small vs large | 82.0% | 88.22% | 75.42% |
+| complexity | is reasoning needed | 94.6% | **96.54%** | 85.64% |
+| cost | short vs long generation | 88.1% | **95.69%** | 53.10% |
+| sensitivity | block at NEVER_EGRESS | 96.4% | **95.05%** | 82.89% |
+| complexity | route: small vs large | 82.0% | **93.35%** | 80.59% |
+
+All four are trained directly on the decision (earlier versions of this table
+showed the weaker numbers obtained by folding a tier model's output). Published:
+[`reasoning-gate`](https://huggingface.co/cnuland/llm-d-sc-reasoning-gate),
+[`genlen-gate`](https://huggingface.co/cnuland/llm-d-sc-genlen-gate),
+[`sensitivity-v3-bge`](https://huggingface.co/cnuland/llm-d-sc-sensitivity-v3-bge).
 
 Majority baselines are in every table for a reason: one candidate fold scores
 93.78% against a 93.45% baseline, and the binary egress model scores 99.65% on an
 eval containing two positive rows. Both would otherwise read as the best results
 here.
 
-The honest summary: **three of the router's four real decisions sit at 92-96%;
-the small-vs-large route at 88.22% is the gap.**
+The honest summary: **all four of the router's real decisions sit at 93-97%,
+while tier-exact accuracy on the same models sits at 0.82-0.90.** The taxonomy is
+finer than the decision, and tier-exact has been charging the classifier for
+distinctions the deployment discards.
 
 ## Findings worth reading first
 
