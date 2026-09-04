@@ -3144,3 +3144,58 @@ v2-rubric relabel at +0.13 (§65/AB) — both inside the 1.06-point floor. A thi
 attempt with a better noise detector is a reasonable idea with a poor prior, and
 the compute is better spent on the per-annotator heads, which attack the
 structure §83 identified rather than the noise.
+
+## 86. Every per-run latency figure in this report was contaminated by concurrent load
+
+`bge-small` reported p50 **24.76 ms** and `bge-base` reported **21.9 ms** — a 33M
+model slower than a 109M model at the same depth, which is not possible. The two
+numbers came from different training runs, at different times, with different
+numbers of other trainers competing on the same machine.
+
+**That invalidates every per-run latency number quoted so far**, including the
+6.1 ms vs 21.9 ms comparison §68's deployment recommendation leans on.
+
+`harness/latency_bench.py` measures all models in ONE process, single-threaded,
+in interleaved rounds so any drift in machine load hits every model equally
+instead of whichever ran last:
+
+| model | params | p50 | p90 | p99 | vs MiniLM |
+|---|---:|---:|---:|---:|---:|
+| MiniLM-L6 (`se-w-esc0.0-seed22`) | 22.7M | **8.38 ms** | 16.75 | 19.86 | 1.00x |
+| bge-small (`se-ah-bgesmall-seed11`) | 33.4M | 13.94 ms | 28.40 | 33.07 | 1.66x |
+| bge-base (`se-x1-bge-raw`) | 109.5M | 31.20 ms | 63.77 | 75.50 | 3.73x |
+
+The ordering now matches parameter count, and the ratios are stable. §68's
+qualitative conclusion survives — bge-base really is ~3.7x MiniLM, not the 3.6x
+claimed, so the recommendation does not change — but it survived by luck rather
+than by measurement.
+
+**Rule: latency comparisons across separately-timed runs are not evidence.** Any
+number that has to be compared must be measured in the same process, in the same
+pass.
+
+## 87. bge-small matches bge-base's accuracy at 45% of its cost
+
+`se-ah-bgesmall-seed11`, natural corpus, escalate 0.0 (§66's recipe):
+
+| model | recipe | entsec-gold | real-gold | p50 | latency vs MiniLM |
+|---|---|---:|---:|---:|---:|
+| MiniLM-L6 | esc 0.0 | 0.7999 (median) | 0.8750 | 8.38 ms | 1.00x |
+| **bge-small** | esc 0.0 | **0.8119** | 0.8803 | 13.94 ms | **1.66x** |
+| bge-base | esc 1.0 | 0.8119 | 0.8838 | 31.20 ms | 3.73x |
+
+**bge-small reaches bge-base's entsec score exactly, at 45% of its latency**, and
+beats MiniLM by 1.20 points for a 66% latency increase. That is the cell §80's
+split implied and §57's frozen probe predicted: the probe had bge-small
+recovering 52% of bge-base's balanced-accuracy gain over MiniLM, and the trained
+model recovers all of it.
+
+It also vindicates probing all three small encoders rather than assuming: e5-base
+beat bge-base on the frozen pair probe (§61), but e5-small was WORSE than
+bge-small (§87 probe table). Family rank at one size does not predict rank at
+another.
+
+**bge-small is now the recommended sensitivity encoder** unless §68's
+matched-containment comparison reverses on it — that comparison is what decided
+against bge-base and has not yet been run here. Pending, and the recommendation
+is provisional until it is.

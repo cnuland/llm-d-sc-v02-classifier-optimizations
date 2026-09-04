@@ -545,7 +545,16 @@ if __name__ == "__main__":
                 l: (mm["confusion"][l][l] / max(1, sum(mm["confusion"][l].values())))
                 for l in labels}
             print(fmt(a.signal, f"{a.arch}:{name}{suffix}", mm))
-    p50, p99 = cpu_latency(lat, [r["text"] for r in heldout(a.signal)])
+    # Derived signals (egress, reasoning, genlen, route) have no genesis heldout
+    # set. §81's guard covered the evalsets line but not this one, so every
+    # binary-decision model trained fine, printed its scores, and then died here
+    # WITHOUT writing reports/<tag>.json -- which is what upload.py builds its
+    # model card from. Fall back to whatever eval rows exist.
+    try:
+        lat_rows = [r["text"] for r in heldout(a.signal)]
+    except FileNotFoundError:
+        lat_rows = [r["text"] for _, rs in evalsets for r in rs][:200]
+    p50, p99 = cpu_latency(lat, lat_rows)
     report["cpu_p50_ms"], report["cpu_p99_ms"] = round(p50, 2), round(p99, 2)
     print(f"  CPU single-request latency: p50={p50:.1f}ms p99={p99:.1f}ms")
     (ROOT/"reports").mkdir(exist_ok=True)
