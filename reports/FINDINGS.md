@@ -2403,9 +2403,18 @@ than a point in either direction. Escalation was buying a safety property that,
 measured, it barely delivers — while charging for it in both accuracy and
 unnecessary blocking.
 
-**Recipe change: drop `--escalate` from the sensitivity recipe.** The escalate
-0.5 arm will say whether the relationship is monotone; the 1.0-vs-0.0 comparison
-is already decisive at 13x the 0.14-point floor.
+**Recipe change: drop `--escalate` from the sensitivity recipe.** The completed
+sweep is monotone, which is what a real dose-response looks like rather than a
+lucky seed:
+
+| escalate | seed 11 | seed 22 | median |
+|---:|---:|---:|---:|
+| 0.0 | 0.7963 | 0.8034 | **0.7999** |
+| 0.5 | 0.7907 | 0.7893 | 0.7900 |
+| 1.0 | 0.7793 | 0.7822 | 0.7808 |
+
+Every step of the flag costs about a point, in order, across both seeds — 13x the
+0.14-point floor end to end.
 
 Worth naming the general trap: escalation was introduced as a *safety* measure
 and was never audited against the safety metric it was justified by. It survived
@@ -2632,3 +2641,63 @@ the HIGH threshold so long articles stay MODERATE.**
 Generalisation worth keeping: a rubric rewrite is not one intervention. Report
 per-boundary residuals, because a headline delta can be two changes of opposite
 sign, and only the per-boundary view tells you which half to keep.
+
+## 72. Cost rubric v3 is WORSE than v2 — and rubric rewrites move the subset, never the population
+
+§71 diagnosed the v2 cost rubric as two effects cancelling and specified v3
+narrowly: keep the size-spec table and the MINIMAL clarification, revert the
+artifact-type ladder toward v1's wording, tighten HIGH. Same seeded rows as §71,
+so all three versions are directly comparable.
+
+| rubric | random 500 (population) | contested 400 |
+|---|---:|---:|
+| v1 | 75.0% | 37.2% |
+| **v2** | **75.8%** | **59.5%** |
+| v3 | 73.4% | 57.2% |
+
+**v3 lost on both samples. The prescribed fix made things worse.** Per-boundary,
+MODERATE/LOW disagreement on the population went 49 (v1) -> 62 (v2) -> **73
+(v3)** — the boundary v3 existed to repair got monotonically worse as v1's
+MODERATE cue words were restored. §70 already measured why and I did not join it
+up: the "single-artifact" cue (*detailed, thorough, comprehensive*) fires on
+22.7% of MODERATE rows but also 26.1% of HIGH and 4.3% of LOW. It is not a
+MODERATE cue at all. Restoring it re-imported the confusion.
+
+`rubrics/cost.md` reverted to v2, the best measured. v1 and v3 preserved.
+
+**The pattern across two signals and three rewrites is now hard to dismiss:**
+
+| signal | rewrite | hard-subset delta | population delta |
+|---|---|---:|---:|
+| complexity | v1 -> v2 | **+7.0** | +0.2 |
+| cost | v1 -> v2 | **+22.2** | +0.8 |
+| cost | v1 -> v3 | **+20.0** | -1.6 |
+
+Every rewrite produces a large, real gain on the rows that were previously
+coin-flips, and moves the corpus by less than a point in either direction. The
+mechanism is arithmetic rather than mysterious — contested rows are ~12-28% of a
+corpus, so even resolving a third of them cannot move the whole by much — but the
+consequence is worth stating as a rule: **rubric rewriting is not a corpus-level
+lever.** It is worth doing to make a boundary decidable and to shrink the
+contested pool, and it is not worth doing in the hope of a headline number.
+
+## 73. Corpus-wide agreement PREDICTED the training outcome — the cheap proxy works
+
+§65 recorded the prospective prediction before Round AB ran: corpus agreement
+moved 87.5% -> 87.7% under the v2 complexity rubric, so the retrain should land
+"at or below complexity's 1.06-point floor". First seed:
+
+| | incumbent (median of 3 seeds) | v2-rubric relabel, seed 11 |
+|---|---:|---:|
+| refined gold | 0.9016 | 0.9016 |
+| real gold | 0.8923 | 0.8971 |
+
+Dead level on refined gold, +0.48 on real gold — both inside the floor. Two seeds
+still running, but the prediction is holding.
+
+Read together with §54's +7.0 on the hard subset, this validates a cheap
+protocol: **relabel two samples and check agreement on a RANDOM one before
+spending a relabelling campaign.** The subset number predicted a gain that did not
+materialise; the population number predicted no gain, and there was none. A
+59,582-prompt relabel and a 3-seed retrain — roughly a day of wall clock — were
+settled in advance by 500 labelled rows.
