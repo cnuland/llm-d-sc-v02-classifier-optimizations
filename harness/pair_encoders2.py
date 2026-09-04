@@ -17,9 +17,14 @@ from sklearn.metrics import balanced_accuracy_score
 sig, pair = sys.argv[1], sys.argv[2]
 A, B = pair.split("/")
 CAP = int(sys.argv[3]) if len(sys.argv) > 3 else 3000
-ENCODERS = ["sentence-transformers/all-MiniLM-L6-v2",
-            "BAAI/bge-base-en-v1.5",
-            "intfloat/e5-base-v2"]
+# §80: bge-base is the better classifier (+4.5) but MiniLM the better component
+# (6.1 ms vs 21.9 ms). The interesting cell is a SMALL strong encoder -- does
+# bge-class quality survive at MiniLM-class cost?
+ENCODERS = ["sentence-transformers/all-MiniLM-L6-v2",   #  22M, 384d  -- shipped
+            "BAAI/bge-small-en-v1.5",                   #  33M, 384d
+            "intfloat/e5-small-v2",                     #  33M, 384d
+            "thenlper/gte-small",                       #  33M, 384d
+            "BAAI/bge-base-en-v1.5"]                    # 109M, 768d -- reference
 
 tr = collections.defaultdict(list)
 for p in glob.glob(str(ROOT/"data/train"/f"{sig}-*.jsonl")):

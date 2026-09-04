@@ -15,20 +15,21 @@ retract an earlier entry in the same file.
 
 ## Headline
 
-| signal | shipped v0.1 | published v2 | eval |
+| signal | shipped v0.1 | current best | eval |
 |---|---:|---:|---|
 | complexity | 0.6411 | **0.8963** | refined gold, real traffic |
 | cost | 0.3910 | **0.8976** | refined gold, real traffic |
-| sensitivity | 0.2903 | **0.7793** | enterprise + secrets |
+| sensitivity | 0.2903 | **0.8034** | enterprise + secrets (synthetic) |
 
-Models: [`cnuland/llm-d-sc-complexity-v2`](https://huggingface.co/cnuland/llm-d-sc-complexity-v2),
-[`-cost-v2`](https://huggingface.co/cnuland/llm-d-sc-cost-v2),
-[`-sensitivity-v2`](https://huggingface.co/cnuland/llm-d-sc-sensitivity-v2),
-[`-complexity-v2-mini`](https://huggingface.co/cnuland/llm-d-sc-complexity-v2-mini).
+Models on the Hub: [`complexity-v2`](https://huggingface.co/cnuland/llm-d-sc-complexity-v2),
+[`cost-v2`](https://huggingface.co/cnuland/llm-d-sc-cost-v2),
+[`sensitivity-v2.1`](https://huggingface.co/cnuland/llm-d-sc-sensitivity-v2.1),
+[`complexity-v2-mini`](https://huggingface.co/cnuland/llm-d-sc-complexity-v2-mini).
 
-**None of the three reaches the high 90s, and the arithmetic says they cannot on
-these evals** (§69). Splitting each eval by whether its three-juror jury was
-unanimous:
+### Tier-exact accuracy is the wrong metric, and that is the main result
+
+**None of these reach the high 90s and none can** (§69). Split each eval by whether
+its three-juror jury was unanimous:
 
 | signal | unanimous rows | contested rows | ceiling if every contested row were labelled perfectly |
 |---|---:|---:|---:|
@@ -36,10 +37,31 @@ unanimous:
 | cost | 88.06% | 58.33% | 91.43% |
 | sensitivity | 77.93% | 51.24% | 83.56% |
 
-That cuts both ways. High-90s tier-exact accuracy is out of reach against labels
-this noisy — but **10–22 points of the remaining error is on rows three
-independent jurors agreed on**, which is genuine model error and is where the
-headroom is.
+Worse, **model accuracy tracks jury agreement within 1.3-2.6 points at every fold
+of the same eval** (§74). Eighteen mechanisms, five encoders, six corpora and
+three rubric rewrites later, the models have been pinned to how decidable the
+question is, not to their own capability.
+
+**But llm-d-sc does not consume four complexity tiers.** The deployed Praxis table
+routes SIMPLE/MEDIUM to the small model and COMPLEX/REASONING to the large one. A
+classifier saying MEDIUM where the jury said SIMPLE picks the same backend and has
+made no routing error — tier-exact accuracy charges it for one anyway. Scored on
+the decisions that actually exist (§75, §79):
+
+| signal | deployed decision | jury agr | accuracy | majority baseline |
+|---|---|---:|---:|---:|
+| complexity | is reasoning needed | 94.6% | **95.79%** | 86.53% |
+| sensitivity | block at NEVER_EGRESS | 96.4% | **95.62%** | 82.89% |
+| cost | short vs long generation | 88.1% | **92.44%** | 50.42% |
+| complexity | route: small vs large | 82.0% | 88.22% | 75.42% |
+
+Majority baselines are in every table for a reason: one candidate fold scores
+93.78% against a 93.45% baseline, and the binary egress model scores 99.65% on an
+eval containing two positive rows. Both would otherwise read as the best results
+here.
+
+The honest summary: **three of the router's four real decisions sit at 92-96%;
+the small-vs-large route at 88.22% is the gap.**
 
 ## Findings worth reading first
 
