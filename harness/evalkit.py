@@ -19,6 +19,16 @@ SIGNALS = ("complexity", "cost", "sensitivity")
 
 
 def load_taxonomy(signal: str) -> dict:
+    """Taxonomy for `signal`, preferring a LOCAL override over genesis.
+
+    Derived taxonomies (e.g. the binary egress gate folded out of sensitivity)
+    need to live somewhere, and llm-d-sc-genesis is upstream source that this
+    project does not write to. A local classifiers/<signal>.json wins; anything
+    absent falls through to genesis unchanged, so shipped signals are untouched.
+    """
+    local = ROOT / "classifiers" / f"{signal}.json"
+    if local.exists():
+        return json.loads(local.read_text())
     return json.loads((GENESIS / "classifiers" / f"{signal}.json").read_text())
 
 

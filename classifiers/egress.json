@@ -1,0 +1,4 @@
+{
+  "labels": ["ALLOW", "BLOCK"],
+  "note": "Binary egress gate folded out of the sensitivity ladder at the NEVER_EGRESS threshold. Derived taxonomy, local to the accuracy project; llm-d-sc-genesis is not modified. See FINDINGS §74."
+}

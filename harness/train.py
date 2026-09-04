@@ -512,7 +512,11 @@ if __name__ == "__main__":
               "lora_rank": a.lora, "weight_decay": a.wd,
               "scheduler": a.sched, "warmup_ratio": a.warmup,
               "train_prior": dict(_c.Counter(r["tier"] for r in tr))}
-    evalsets = [("heldout-v1", heldout(a.signal))]
+    # derived signals (e.g. the folded egress gate) have no genesis heldout set
+    try:
+        evalsets = [("heldout-v1", heldout(a.signal))]
+    except FileNotFoundError:
+        evalsets = []
     for nm, f in [("real-gold", f"{a.signal}-real-gold"),
                   ("real-contested", f"{a.signal}-real-contested"),
                   ("enterprise-gold", f"{a.signal}-enterprise-gold"),

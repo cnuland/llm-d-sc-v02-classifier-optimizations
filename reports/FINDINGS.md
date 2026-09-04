@@ -2701,3 +2701,74 @@ spending a relabelling campaign.** The subset number predicted a gain that did n
 materialise; the population number predicted no gain, and there was none. A
 59,582-prompt relabel and a 3-seed retrain — roughly a day of wall clock — were
 settled in advance by 500 labelled rows.
+
+## 74. Model accuracy tracks JURY AGREEMENT within 2-3 points at every fold
+
+Before proposing any taxonomy change, measure what each candidate fold buys.
+`harness/merge_analysis.py` reports, for each, the **jury agreement** it creates
+(the ceiling) beside the **accuracy the existing model scores under it with no
+retraining** (a lower bound, since a model trained on the fold should beat it).
+
+| taxonomy | jury agreement | model accuracy | gap |
+|---|---:|---:|---:|
+| complexity, 4 tiers | 70.4% | 81.82% | — |
+| complexity merge MEDIUM+COMPLEX | 83.0% | 89.23% | — |
+| cost, 4 tiers | 71.8% | 79.66% | — |
+| cost merge LOW+MODERATE | 83.4% | 86.89% | — |
+| sensitivity, 5 tiers | 74.5% | 72.92% | -1.6 |
+| sensitivity merge INTERNAL+CONFIDENTIAL | 80.6% | 79.35% | -1.3 |
+| sensitivity binary @ CONFIDENTIAL | 84.8% | 82.30% | -2.5 |
+| sensitivity binary @ REGULATED | 87.5% | 84.93% | -2.6 |
+| **sensitivity binary @ NEVER_EGRESS** | **96.4%** | **94.42%** | **-2.0** |
+
+On sensitivity, where both are measured on identical rows, **model accuracy sits
+within 1.3-2.6 points of jury agreement at every one of five folds.** The model
+tracks the decidability of the question almost exactly.
+
+(Complexity and cost sit ABOVE their agreement figures because those are
+three-juror unanimity over four tiers while the model is scored against the
+adjudicated majority — a laxer target. The *ordering* is what transfers.)
+
+**This reframes the whole project.** Eighteen mechanisms, three encoders, six
+corpora, two rubric rewrites, and the model has been pinned to how decidable the
+question is the entire time. The remaining lever is not the model. It is which
+question gets asked.
+
+## 75. The router's ACTUAL decisions score 92-96% — tier-exact was the wrong metric
+
+llm-d-sc does not consume four complexity tiers. The deployed Praxis table maps
+SIMPLE/MEDIUM to the small model and COMPLEX/REASONING to the large one. A
+classifier that says MEDIUM where the jury said SIMPLE routes to the same backend
+and has made **no routing error**; tier-exact accuracy counts it as one.
+
+Scored on the decisions that exist in the deployment, folding existing models'
+outputs with no retraining (`harness/route_analysis.py`):
+
+| signal | decision | jury agr | **accuracy** | majority baseline |
+|---|---|---:|---:|---:|
+| complexity | *tier-exact (as reported)* | 70.4% | 81.82% | — |
+| complexity | route: small vs large | 82.0% | 88.22% | 75.42% |
+| complexity | **is reasoning needed** | 94.6% | **95.79%** | 86.53% |
+| cost | *tier-exact (as reported)* | 71.8% | 79.66% | — |
+| cost | **short vs long generation** | 88.1% | **92.44%** | 50.42% |
+| cost | reserve a big budget | 93.8% | 93.78% | **93.45%** |
+| sensitivity | *tier-exact (as reported)* | 74.5% | 72.92% | — |
+| sensitivity | **block at NEVER_EGRESS** | 96.4% | **94.42%** | 85.04% |
+| sensitivity | block at REGULATED | 87.5% | 84.93% | 67.97% |
+
+**The majority-baseline column is not decoration.** Cost's "reserve a big budget"
+scores 93.78% — a high-90s-adjacent number for a decision that is 93.45%
+achievable by always answering no. It is worthless, and without that column it
+would be the most impressive row in the table. The three bolded decisions clear
+their baselines by 9.3, 42.0 and 9.4 points.
+
+So: **three of the router's real decisions already score 92-96% with no
+retraining**, and every one of them is a fold of a model trained for a different
+task. Rounds AD and AE train them directly. The one decision that does NOT reach
+the 90s is complexity's small-vs-large route at 88.22% — the honest gap, and the
+one worth reporting as unfinished.
+
+**What this does and does not claim.** It does not claim the tier taxonomies are
+fine; §69's ceilings stand and tier-exact accuracy on them will not reach the high
+90s. It claims the taxonomy is finer than the decision, so tier-exact accuracy
+has been charging the classifier for distinctions the router discards.
