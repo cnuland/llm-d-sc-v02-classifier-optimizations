@@ -2887,3 +2887,39 @@ in one place:
 That is the largest open risk in this project, and no amount of further
 optimisation against entsec reduces it. Reducing it needs real enterprise
 prompts, which is an access problem rather than a modelling one.
+
+## 78. Uniform class balancing LOSES 3.1 points — §57's prediction was wrong
+
+§57 argued §50's "bigger is worse on sensitivity" was an artefact of class skew,
+and predicted a big encoder on a balanced corpus would reverse it. Round X tested
+that with the encoder held fixed:
+
+| arm | corpus | entsec-gold | real-gold |
+|---|---|---:|---:|
+| se-x1-bge-raw | natural | **0.8119** | 0.8838 |
+| se-x2-bge-bal | uniform balance | 0.7808 | **0.8944** |
+
+**Uniform balancing costs 3.11 points on entsec** — 22x the noise floor — while
+gaining 1.06 on real traffic. §57's prediction is wrong in sign on the eval it
+was made about.
+
+§56 already contained the explanation. Uniform balancing cut INTERNAL from 16,450
+to 7,694 rows, and INTERNAL is **51.2% of the entsec eval**; the resample moved
+the training prior away from the evaluation prior, and §56 measured that mismatch
+as worth about a point through logit adjustment alone. Resampling applies the
+same distortion harder.
+
+**Uniform balance is not the neutral choice it looks like.** It is a specific
+prior — the one that maximises entropy — chosen by default rather than measured.
+Round AG varies the prior directly (natural / sqrt-interpolated / exact eval
+match) with encoder and schedule fixed.
+
+The two candidates are in genuine tension and both are run rather than argued:
+the exact eval prior matches best but starves CONFIDENTIAL to 1,861 rows, and
+CONFIDENTIAL is the class §57 showed the model already cannot learn. Whichever
+wins says which pressure dominates.
+
+**Scope caveat.** "Match the eval prior" tunes to entsec, which §77 measured as
+95.8% distinguishable from real traffic. real-gold is reported on every arm so
+the cost of that tuning is visible. Notably x2 already shows the trade running
+the other way — uniform balancing HELPED real-gold by 1.06 while hurting entsec.

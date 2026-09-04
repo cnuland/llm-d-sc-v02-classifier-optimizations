@@ -1,0 +1,7 @@
+{
+ "labels": [
+  "LARGE",
+  "SMALL"
+ ],
+ "note": "Binary deployed decision folded out of complexity: {'SIMPLE': 'SMALL', 'MEDIUM': 'SMALL', 'COMPLEX': 'LARGE', 'REASONING': 'LARGE'}. Derived taxonomy local to the accuracy project; genesis untouched. See FINDINGS 75."
+}
