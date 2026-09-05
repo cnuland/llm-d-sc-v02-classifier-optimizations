@@ -4637,3 +4637,49 @@ taxonomy-drift check can now be written against.
 and from `UNAVAILABLE`. The adapter counts the three separately, which is what
 makes coverage an honest measurement rather than a success rate over the requests
 that happened to succeed.
+
+## 126. Qualification through the runtime: the deployed classifier has +4.50 lift
+
+The first end-to-end runtime qualification, against the live llm-d-sc service on
+the homelab cluster, with artifact identity pinned and coverage gated:
+
+```
+EVALUATION PLANES
+  PASS  classifier_quality   1 control(s) passed
+  PASS  decision_quality     evidence present, no controls configured
+  FAIL  runtime_quality      failing control(s): runtime_slo
+   --   traffic_validity     no separability measured against production traffic
+   --   outcome_value        no outcome evidence supplied
+
+RESULT: REJECTED
+PROMOTION: REJECT
+   qualification rejected: runtime_slo
+   lift +0.0450 below minimum +0.1500
+```
+
+| | accuracy | majority baseline | **lift** |
+|---|---:|---:|---:|
+| **deployed** (`c5f55ef4…`, taxonomy `scr-default-anchors-v1`) | 64.50% | 60.00% | **+4.50** |
+| this project's checkpoint, same rows | 81.82% | 56.40% | **+25.42** |
+
+Per-class recall on the deployed classifier: **REASONING 0.1818, COMPLEX 0.3333**
+— it essentially cannot detect the two tiers that route to the large model, which
+is the entire routing decision. Guessing MEDIUM on every request scores 60.00%.
+
+Runtime: **coverage 100%**, no errors, no RESOURCE_EXHAUSTED, p50 78.6ms /
+p95 148.9ms / p99 193.7ms against a 20ms SLO. Latency is measured through a
+port-forward and is an upper bound; the coverage and error figures are not.
+
+**Two independent rejection reasons.** The deployed artifact fails the latency SLO
+AND falls short of the minimum lift by more than 10 points. Either alone blocks
+promotion; both firing means the rejection is not a threshold artifact.
+
+**This is the headline case for why the framework exists.** 125 findings of
+optimisation produced models with +25.42 lift. None of them is deployed. Offline
+model evaluation told one story; qualification through the real runtime told
+another, and no model-plane evaluation could have revealed the gap because it
+never asks the runtime what it is running.
+
+`artifact_identity` is what makes that statement attributable rather than
+speculative: the report records `model:c5f55ef419d268ba843c544dc00988d1e9878044`
+and `taxonomy scr-default-anchors-v1` as reported by the service itself.

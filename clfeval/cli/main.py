@@ -31,7 +31,9 @@ def cmd_run(a) -> int:
                      seed_scores=[float(x) for x in a.seed_score] or None,
                      noise_floor=a.noise_floor, floor_measured_on=a.floor_from,
                      traffic={"separability": sep}, slo=suite.runtime_slo,
-                     measure_runtime=a.runtime, controls=suite.active_controls())
+                     measure_runtime=a.runtime, controls=suite.active_controls(),
+                     expected_identity=suite.expected_identity,
+                     required_planes=suite.required_planes)
 
     missing = suite.check_metric_contract(report.metrics)
     if missing:

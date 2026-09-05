@@ -37,6 +37,8 @@ class EvalSuite:
         "matched_operating_point", "calibration", "traffic_alignment",
         "runtime_slo", "corpus_immutability", "judge_integrity"])
     runtime_slo: dict = dataclasses.field(default_factory=dict)
+    expected_identity: dict = dataclasses.field(default_factory=dict)
+    required_planes: list[str] = dataclasses.field(default_factory=list)
     promotion: PromotionPolicy = dataclasses.field(default_factory=PromotionPolicy)
     description: str = ""
 
@@ -48,6 +50,8 @@ class EvalSuite:
             "required_metrics": sorted(self.required_metrics),
             "controls": sorted(self.controls),
             "runtime_slo": self.runtime_slo,
+            "expected_identity": self.expected_identity,
+            "required_planes": self.required_planes,
             "promotion": dataclasses.asdict(self.promotion),
         }, sort_keys=True)
         return "sha256:" + hashlib.sha256(payload.encode()).hexdigest()[:16]
@@ -84,6 +88,8 @@ class EvalSuite:
                    controls=spec.get("controls",
                        cls.__dataclass_fields__["controls"].default_factory()),
                    runtime_slo=spec.get("runtime", {}), promotion=pol,
+                   expected_identity=spec.get("expectedIdentity", {}),
+                   required_planes=spec.get("requiredPlanes", []),
                    description=spec.get("description", ""))
 
     def to_yaml(self) -> str:
@@ -97,6 +103,8 @@ class EvalSuite:
                 "metrics": {"required": self.required_metrics},
                 "controls": self.controls,
                 "runtime": self.runtime_slo,
+                "expectedIdentity": self.expected_identity,
+                "requiredPlanes": self.required_planes,
                 "promotion": dataclasses.asdict(self.promotion),
             },
         }

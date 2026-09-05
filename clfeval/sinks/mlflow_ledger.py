@@ -71,11 +71,15 @@ class MlflowLedger:
             "eval_code_revision": report.eval_code_revision or eval_code_revision(),
             "suite": report.suite, "signal": report.signal,
             "dataset_manifest": json.dumps(report.dataset_manifest)[:480],
-            "planes_evaluated": ",".join(report.planes_evaluated),
-            "planes_unevaluated": ",".join(report.planes_unevaluated),
+            # per-plane status as params, so a run can be filtered in the UI by
+            # "which planes actually passed" rather than by a single verdict
+            **{f"plane.{p['plane']}": p["status"] for p in (report.planes or [])},
             **(extra_params or {}),
         }
+        planes = {p["plane"]: p["status"] for p in (report.planes or [])}
         tags = {"verdict": report.verdict, "report_digest": report.digest,
+                "planes_not_evaluated": ",".join(
+                    k for k, v in planes.items() if v == "NOT_EVALUATED") or "none",
                 "primary_metric": "lift_over_chance",
                 "reproducible": str(not report.unpinned),
                 "unpinned_inputs": ",".join(report.unpinned) or "none"}

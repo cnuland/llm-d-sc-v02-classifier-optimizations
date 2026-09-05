@@ -22,6 +22,7 @@ from .metrics import classification as M
 from .metrics.calibration import expected_calibration_error
 from .controls import DEFAULT_CONTROLS, summarise
 from .reports import QualificationReport
+from .reports.planes import resolve as resolve_planes, verdict as plane_verdict
 from .sinks import eval_code_revision
 
 PLANES = ["classifier_quality", "decision_quality", "runtime_quality",
@@ -43,7 +44,8 @@ def load_rows(task, datasets, root: pathlib.Path, roles=("qualification", "conte
 
 def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
             seed_scores=None, noise_floor=None, floor_measured_on=None, config_id=None, champion=None, traffic=None, slo=None,
-            judge=None, measure_runtime=False, outcome=None, controls=None):
+            judge=None, measure_runtime=False, outcome=None, controls=None,
+            expected_identity=None, required_planes=None):
     texts = [r[task.text_field] for r in rows]
     runtime = None
     if measure_runtime:
@@ -68,23 +70,17 @@ def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
     if runtime:
         m.update({f"runtime/{k}": v for k, v in runtime.items()})
 
-    evaluated = ["classifier_quality"]
-    unevaluated = []
-    evaluated.append("decision_quality") if task.gates or task.folds else unevaluated.append("decision_quality")
-    evaluated.append("runtime_quality") if runtime else unevaluated.append("runtime_quality")
-    evaluated.append("traffic_validity") if (traffic or {}).get("separability") is not None \
-        else unevaluated.append("traffic_validity")
-    if outcome: evaluated.append("outcome_value")
-    else: unevaluated.append("outcome_value")
-
     manifest = [d.manifest(root) for d in datasets]
     ctx = {"metrics": m, "task": task, "seed_scores": seed_scores or [m["accuracy"]],
            "noise_floor": noise_floor, "floor_measured_on": floor_measured_on,
            "config_id": config_id or getattr(adapter, "revision", "unknown"),
            "champion_comparison": champion, "traffic": traffic or {},
            "runtime": runtime, "slo": slo or {}, "judge": judge,
-           "dataset_manifest": manifest}
+           "dataset_manifest": manifest, "adapter": adapter,
+           "expected_identity": expected_identity, "outcome": outcome}
     results = [c.run(ctx) for c in (controls or DEFAULT_CONTROLS)]
+    planes = resolve_planes(m, results, traffic, outcome)
+    v = plane_verdict(planes, results, required_planes)
 
     return QualificationReport.build(
         suite=suite, task=task,
@@ -92,4 +88,4 @@ def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
         runtime_revision=getattr(adapter, "runtime_revision", None),
         eval_code_revision=eval_code_revision(),
         dataset_manifest=manifest, metrics=m, control_results=results,
-        planes_evaluated=evaluated, planes_unevaluated=unevaluated)
+        planes=planes, verdict=v)

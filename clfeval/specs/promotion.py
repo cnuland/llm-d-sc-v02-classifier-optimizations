@@ -26,18 +26,26 @@ class PromotionPolicy:
     def decide(self, report, champion_metrics: dict | None = None) -> dict:
         reasons, decision = [], "PROMOTE"
 
-        if report.verdict == "NOT_QUALIFIED":
+        if report.verdict == "REJECTED":
             decision = "REJECT"
-            reasons.append(f"qualification failed: "
-                           f"{', '.join(report.controls['blocking_failures'])}")
-        elif report.verdict == "QUALIFIED_WITH_WARNING" and not self.allow_warnings:
+            reasons.append(f"qualification rejected: "
+                           f"{', '.join(report.controls['blocking_failures']) or 'a plane failed'}")
+        elif report.verdict == "INCOMPLETE":
+            # Distinct from REJECT on purpose: the evidence does not exist yet, so
+            # the honest decision is to withhold rather than to refuse.
+            decision = "INCOMPLETE"
+            reasons.append("a required evaluation plane was not exercised — "
+                           "this is unfinished, not failed")
+        elif report.verdict == "QUALIFIED_WITH_WARNINGS" and not self.allow_warnings:
             decision = "REJECT"
             reasons.append(f"warnings not permitted by policy: "
                            f"{', '.join(report.controls['warnings'])}")
 
-        missing = [p for p in self.require_planes if p in report.planes_unevaluated]
+        unevaluated = [p["plane"] for p in (report.planes or [])
+                       if p.get("status") == "NOT_EVALUATED"]
+        missing = [p for p in self.require_planes if p in unevaluated]
         if missing:
-            decision = "REJECT"
+            decision = "INCOMPLETE" if decision == "PROMOTE" else decision
             reasons.append(f"required evaluation plane(s) not evaluated: {missing}")
 
         if self.require_reproducible and report.unpinned:

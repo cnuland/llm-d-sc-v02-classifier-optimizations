@@ -27,8 +27,7 @@ class QualificationReport:
     runtime_revision: str | None = None
     eval_code_revision: str | None = None
     qualified_at: float = dataclasses.field(default_factory=time.time)
-    planes_evaluated: list[str] = dataclasses.field(default_factory=list)
-    planes_unevaluated: list[str] = dataclasses.field(default_factory=list)
+    planes: list[dict] = dataclasses.field(default_factory=list)
 
     @property
     def unpinned(self) -> list[str]:
@@ -70,8 +69,10 @@ class QualificationReport:
         A(f"  environment    {self.environment.get('platform','?')}")
         A("")
         A("EVALUATION PLANES")
-        for p in self.planes_evaluated:   A(f"  [x] {p}")
-        for p in self.planes_unevaluated: A(f"  [ ] {p}   NOT EVALUATED")
+        for p in self.planes:
+            mark = {"PASS":"PASS","WARN":"WARN","FAIL":"FAIL",
+                    "NOT_EVALUATED":" -- "}[p["status"]]
+            A(f"  {mark:<5} {p['plane']:<20} {p['detail'][:70]}")
         A("")
         A("EVIDENCE")
         for d in self.dataset_manifest:
@@ -90,6 +91,9 @@ class QualificationReport:
             A(f"  {mark}  {c['control']:<26} {c['detail'][:90]}")
         A("")
         A(f"RESULT: {self.verdict}")
+        if self.verdict == "INCOMPLETE":
+            A("  a required plane was not evaluated — this is not a failure, "
+              "it is unfinished")
         if self.unpinned:
             A(f"  NOT REPRODUCIBLE — unpinned inputs: {', '.join(self.unpinned)}")
         A(f"  report digest {self.digest}")
@@ -97,16 +101,15 @@ class QualificationReport:
 
     @classmethod
     def build(cls, *, suite, task, classifier_revision, dataset_manifest,
-              metrics, control_results, planes_evaluated, planes_unevaluated,
+              metrics, control_results, planes, verdict,
               runtime_revision=None, eval_code_revision=None):
         from ..controls.base import summarise
         c = summarise(control_results)
         return cls(suite=suite, signal=task.signal, taxonomy_digest=task.digest,
                    classifier_revision=classifier_revision,
                    dataset_manifest=dataset_manifest, metrics=metrics, controls=c,
-                   verdict=c["verdict"], runtime_revision=runtime_revision,
+                   verdict=verdict, runtime_revision=runtime_revision,
                    eval_code_revision=eval_code_revision,
-                   planes_evaluated=planes_evaluated,
-                   planes_unevaluated=planes_unevaluated,
+                   planes=[p.to_dict() for p in planes],
                    environment={"platform": platform.platform(),
                                 "python": platform.python_version()})

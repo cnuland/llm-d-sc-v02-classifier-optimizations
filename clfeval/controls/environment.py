@@ -58,11 +58,25 @@ class RuntimeSLOControl(Control):
                            "no runtime measurements — model-plane evaluation only")
         slo = ctx.get("slo", {})
         cov = rt.get("classification_coverage")
-        if cov is not None and cov < 0.99:
+        # THE PRODUCTION INVARIANT, checked before anything else:
+        #   a classifier is not qualified at a given traffic level unless the
+        #   required share of requests actually receives a classification.
+        # A gateway returning 200s while llm-d-sc is bypassed is not a successful
+        # semantic-routing deployment, and latency percentiles computed over the
+        # requests that did succeed will look excellent while it happens.
+        required = slo.get("min_classification_coverage", 0.99)
+        if cov is None:
             return self._r(Status.FAIL,
-                f"classification coverage {cov:.2%}: the serving path is failing to "
-                f"classify requests. Latency percentiles are meaningless below full "
-                f"coverage", coverage=cov)
+                "classification coverage was not measured; a runtime plane without "
+                "coverage cannot distinguish a fast classifier from a bypassed one")
+        if cov < required:
+            return self._r(Status.FAIL,
+                f"classification coverage {cov:.4%} < required {required:.2%} at "
+                f"{int(rt.get('attempted', 0))} requests: the serving path is not "
+                f"classifying. Latency percentiles below full coverage describe only "
+                f"the requests that survived",
+                coverage=cov, required_coverage=required,
+                attempted=rt.get("attempted"))
         fails, warns = [], []
         for k, key in (("max_p95_ms", "p95_ms"), ("max_p99_ms", "p99_ms")):
             lim, got = slo.get(k), rt.get(key)

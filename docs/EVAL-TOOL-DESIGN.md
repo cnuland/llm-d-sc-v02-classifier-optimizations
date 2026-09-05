@@ -167,6 +167,57 @@ These are roughly 500 lines total. **They caught more errors than every modellin
 idea in this project combined** — 7 rejected interventions, 3 reordered result
 tables, 1 retracted finding. Productising them is mostly packaging, not research.
 
+## 6b. Terminal states, planes, and artifact identity
+
+**Four verdicts, not three.** `INCOMPLETE` is deliberately distinct from
+`REJECTED`: a run missing a required plane has not failed, it has not been
+finished. Collapsing them either blocks work that was never evaluated or -- worse
+-- lets an unevaluated plane read as an acceptable one. It is `NOT_APPLICABLE`
+lifted from the control level to the verdict.
+
+```
+QUALIFIED  |  QUALIFIED_WITH_WARNINGS  |  REJECTED  |  INCOMPLETE
+```
+
+**Each of the five planes resolves to its own state**, so a reader does not
+interpret thirty metrics:
+
+```
+EVALUATION PLANES
+  PASS  classifier_quality   1 control(s) passed
+  PASS  decision_quality     evidence present, no controls configured
+  FAIL  runtime_quality      failing control(s): runtime_slo
+   --   traffic_validity     no separability measured against production traffic
+   --   outcome_value        no outcome evidence supplied
+```
+
+A plane with no applicable control AND no required evidence is NOT_EVALUATED,
+never PASS.
+
+**Artifact identity is mandatory for runtime qualification.** The finding that
+motivated it: a runtime scored 63.67% while the project's own checkpoint scored
+81.82% on identical rows, and the first question that raises is not "why is it
+worse" but *which model is that*. `ArtifactIdentityControl` reads
+`model_revision`, `tokenizer_revision` and `taxonomy_revision` from the service's
+own `ClassifyResponse` and compares them to the suite's `expectedIdentity`. It
+fails on mismatch, on taxonomy drift, and on **unknown** -- an unidentifiable
+artifact cannot be qualified, because the qualification would attribute to
+nothing.
+
+**Coverage is the production invariant**, checked before latency:
+
+> A classifier is not qualified at a given traffic level unless the required
+> share of requests actually receives a classification.
+
+```yaml
+runtime:
+  min_classification_coverage: 0.999
+```
+
+An unmeasured coverage FAILS. A gateway returning 200s while llm-d-sc is bypassed
+is not a successful semantic-routing deployment, and latency percentiles computed
+over the requests that survived will look excellent throughout.
+
 ## 7. The one thing the tool cannot do
 
 It cannot tell you whether the routing decision is worth making. §122/§123 tried
