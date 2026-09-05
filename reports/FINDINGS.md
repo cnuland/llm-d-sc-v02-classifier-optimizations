@@ -3850,3 +3850,37 @@ The general lesson is the one §103 already recorded and I applied to accuracy b
 not to the gate metric: **any number produced by selecting an operating point is
 fitted unless the selection happened on different rows.** It took building the
 control twice, on two different metrics, to apply it consistently.
+
+## 108. Dropping the off-distribution third HURTS — separability predicts the value of ADDING data, not of keeping it
+
+§64 measured `sensitivity-real.jsonl` (8,361 WildChat rows) at **98.2% separable**
+from the entsec eval, and §76/§77 established separability as the predictor of
+whether synthetic data helps. Round AP removed it:
+
+| corpus | entsec-gold | real-gold |
+|---|---:|---:|
+| full (`se-ai-bge-esc0-seed11`) | **0.8204** | **0.8908** |
+| WildChat rows dropped | 0.8076 | 0.7641 |
+| delta | **-1.28** | **-12.67** |
+
+**Wrong in sign on the eval the prediction was about.** The rows a linear probe
+separates from entsec 98.2% of the time are still contributing to entsec
+performance.
+
+**The refinement: separability predicts the value of ADDING data, not the cost of
+KEEPING it.** §63's minimal pairs and §76's grey-zone scenes failed because they
+DISPLACED better rows at matched size — the comparison was always "these rows or
+those rows". WildChat rows displace nothing; they supply register diversity and
+negative examples the enterprise corpus does not contain, and distance in
+embedding space does not make that contribution worthless.
+
+The -12.67 on real traffic is the unsurprising half and is exactly why the round
+reported both evals. An entsec-only report would have shown -1.28 and concealed a
+model that had become useless on the traffic it actually serves.
+
+**Sixth hypothesis of mine falsified today by the experiment built to test it**,
+after the agreement-band rule (§76), per-annotator heads (§91), uniform balancing
+(§78), the native 2-tier rubric (§99), and denoised labels on the fold (§102).
+Every one had a mechanism convincing enough to write into the round script before
+running it. The pre-registration is what makes the failures legible rather than
+quietly forgotten.
