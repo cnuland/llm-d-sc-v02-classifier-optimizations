@@ -4342,3 +4342,43 @@ vocabulary SIMPLE/REASONING — the same fold under two names (§100) — so eve
 prediction "missed". Noticed because 0.00% is impossible, not because the code was
 reviewed. Third time this session an exact-looking number (+0.00%, 0.0%, now
 0.00%) has been a type or naming error rather than a result.
+
+## 121. Abstention drops contested rows at 1.7-1.9x — except on triage, where it is blind
+
+Every gate degrades sharply on jury-split rows (roughly 32% of real traffic), and
+§120 showed abstaining on the least-confident 10% takes three gates to 99%. The
+question neither finding answered: are those the SAME rows?
+
+Contested share among the rows each gate is least confident about:
+
+| gate | base rate | drop@95% | drop@90% | drop@80% |
+|---|---:|---:|---:|---:|
+| genlen | 31.2% | 59.3% (**1.9x**) | 59.3% (1.9x) | 50.9% (1.6x) |
+| reasoning | 31.9% | 60.7% (**1.9x**) | 50.0% (1.6x) | 41.4% (1.3x) |
+| route | 31.9% | 57.1% (1.8x) | 55.4% (1.7x) | 56.8% (1.8x) |
+| **triage** | 31.9% | **32.1% (1.0x)** | 39.3% (1.2x) | 38.7% (1.2x) |
+
+**For three gates the contested-row problem and the abstention story are the same
+thing.** Their confidence tracks jury disagreement at 1.7-1.9x enrichment, so
+routing the uncertain slice to the large model genuinely addresses the rows the
+jury could not agree on.
+
+**Triage is at 1.0x — its confidence is blind to disagreement.** Its least
+confident 5% contains contested rows at exactly the base rate.
+
+That explains a result §118 recorded and could not account for: triage has the
+WORST abstention curve of any gate (74% false-fire at 99% recall) despite the
+second-highest accuracy. It is not uncertain about the hard rows — **it is
+confidently wrong on them**, so abstention cannot help it.
+
+**Same structure as the binary egress gate** (§119, §120): confidently wrong
+rather than uncertain, plateauing under abstention, and fixed there by a REVIEW
+tier rather than a threshold. Two models, two different signals, one failure
+shape. The general statement: **a model whose errors are not concentrated in its
+low-confidence tail cannot be made safe by any operating-point choice, and needs
+somewhere for uncertain rows to GO.**
+
+**Practical consequence for the published triage gate:** its contested-row
+weakness is not mitigable by abstention, so the honest options are to deploy it at
+full coverage and accept the 80.11% on split rows, or to build a three-way version
+with a middle tier as §119 did for egress. The latter is untested.
