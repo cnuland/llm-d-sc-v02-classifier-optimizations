@@ -1,0 +1,47 @@
+# Custom domain template. Copy, fill in, and run:
+#     clfeval run --domain ./my_domain.yaml --model ./path/to/model
+#
+# Only `name` and `labels` are strictly required. Everything else buys you a
+# stronger report, and the fields most people skip are the ones that caught
+# errors on the project this tool came from.
+
+name: my_domain
+description: >
+  One sentence on what routing or gating decision this signal drives. If you
+  cannot state the decision, the taxonomy is probably finer than anything that
+  consumes it -- which was worth +3 accuracy points to notice here.
+
+# Order matters when the tiers form a ladder (escalating cost, risk, effort).
+# Ordered taxonomies unlock gate metrics and contiguous fold search.
+labels: [LOW, MEDIUM, HIGH]
+ordered: true
+
+# Deployment thresholds: "block/escalate at this tier or above".
+# Each gate gets containment / over-block reported at matched operating points.
+gates: [HIGH]
+
+# The measured seed-to-seed spread for this signal. Without it, the tool cannot
+# tell you whether a difference is a result. Run two seeds of one config to get it.
+noise_floor: 0.01
+
+datasets:
+  - id: gold
+    path: data/my_domain-gold.jsonl        # {"text": ..., "tier": ..., "votes": [...]}
+    role: eval
+    provenance: real-traffic               # real-traffic | synthetic | mixed
+    jury_models: 3
+    # How distinguishable is this eval from the traffic you actually serve?
+    # 0.5 = indistinguishable. Leave null if unmeasured -- the report will say so
+    # rather than let a synthetic eval pass as production evidence.
+    separability_from_production: null
+  - id: contested
+    path: data/my_domain-contested.jsonl
+    role: contested                        # rows the jury split on -- NOT discarded
+
+# Candidate collapsed taxonomies. `clfeval taxonomy search` will enumerate every
+# contiguous fold for you and rank them; list the ones you want scored.
+folds:
+  escalate:
+    LOW: NO
+    MEDIUM: NO
+    HIGH: YES

@@ -4510,3 +4510,59 @@ case for complexity routing remains unmeasured.
 acted on. That is the only reason this retraction is cheap: nothing was published,
 no recommendation was changed, and no model card cites it. Writing down what would
 falsify a result before running the check is what makes the check worth running.
+
+## 124. The noise floor was the MINIMUM observed spread, not a floor — many "Nx the floor" claims were inflated
+
+The qualification framework's `seed_stability` control failed on
+`se-ao3-priorsqrt`, the best sensitivity model in this project and one published
+hours earlier: seed spread 0.0057 against a declared floor of 0.0014, i.e. 4x. That
+prompted an audit of where 0.0014 came from.
+
+Observed within-configuration seed spreads on entsec-gold:
+
+| config | encoder | seeds | spread |
+|---|---|---:|---:|
+| se-w-esc0.0 | MiniLM-L6 | 2 | **0.0071** |
+| se-ai-bge-esc0 | bge-base | 2 | **0.0057** |
+| se-u-big | MiniLM-L6 | 2 | 0.0028 |
+| se-q | MiniLM-L6 | 3 | 0.0014 |
+| se-w-esc0.5 | MiniLM-L6 | 2 | 0.0014 |
+| se-as-bgesmall-prior | bge-small | 2 | 0.0014 |
+
+**A 5x range, and 0.0014 — the number used as "the noise floor for sensitivity"
+throughout this report — is the MINIMUM.** It is a best case, not a floor.
+
+**Consequence: every "Nx the noise floor" claim on this signal is inflated.**
+
+| claim as recorded | against 0.0014 | against 0.0057 |
+|---|---:|---:|
+| prior matching +1.27 | "9x the floor" | **2.2x** |
+| escalation removal +1.91 | "13x the floor" | **2.7x** |
+| bge-small vs MiniLM +1.20 | "8x the floor" | 2.1x |
+
+**The effects survive; the confidence expressed about them does not.** Each is
+still above a realistic noise estimate, and none is the near-certainty the
+original phrasing implied.
+
+**The underlying error: a noise floor is a property of a CONFIGURATION, not of a
+signal.** It was measured once on a MiniLM config and then carried unchanged
+across every encoder, corpus, loss and resampling change for the rest of the
+project. Encoder capacity and corpus size both plausibly affect seed variance, and
+the table above is consistent with that — the two largest spreads are on the two
+configurations that differ most from the one where the floor was measured.
+
+**Also note the estimator is weak.** With two seeds, the spread is a very noisy
+estimate of sigma (expected spread for n=2 is about 1.13 sigma), so single
+two-seed spreads should not be treated as measurements of stability either. Four
+seeds of the prior-matched config are running to give a usable estimate.
+
+**Corrective actions:**
+1. `noise_floor` moves from the task spec to the RUN — estimated per
+   configuration, or inherited with an explicit warning that it was measured
+   elsewhere.
+2. Claims of the form "Nx the noise floor" are replaced by reporting the observed
+   spread alongside the effect, so a reader can judge the ratio themselves.
+3. The `seed_stability` control keeps its current behaviour. **It was right.**
+   Flagging a 0.0057 spread against a 0.0014 declared floor is exactly the
+   intended function, and it caught a real error in the surrounding analysis
+   rather than a fault in the model.

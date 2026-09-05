@@ -1,0 +1,52 @@
+{
+ "name": "complexity",
+ "description": "Which backend serves this request. The deployed router collapses these four tiers to two, so tier-exact accuracy charges the classifier for distinctions the deployment discards.",
+ "labels": [
+  "SIMPLE",
+  "MEDIUM",
+  "COMPLEX",
+  "REASONING"
+ ],
+ "ordered": false,
+ "gates": [],
+ "noise_floor": 0.0106,
+ "datasets": [
+  {
+   "id": "gold",
+   "path": "data/eval/complexity-real-gold.jsonl",
+   "role": "eval",
+   "provenance": "real-traffic",
+   "jury_models": 3,
+   "separability_from_production": null,
+   "notes": "WildChat-derived real assistant traffic"
+  },
+  {
+   "id": "contested",
+   "path": "data/eval/complexity-real-contested.jsonl",
+   "role": "contested",
+   "provenance": "real-traffic",
+   "jury_models": 3,
+   "notes": "rows the jury split on \u2014 kept, not discarded"
+  }
+ ],
+ "folds": {
+  "route": {
+   "SIMPLE": "SMALL",
+   "MEDIUM": "SMALL",
+   "COMPLEX": "LARGE",
+   "REASONING": "LARGE"
+  },
+  "triage": {
+   "SIMPLE": "TRIVIAL",
+   "MEDIUM": "WORK",
+   "COMPLEX": "WORK",
+   "REASONING": "WORK"
+  },
+  "reasoning": {
+   "SIMPLE": "NO",
+   "MEDIUM": "NO",
+   "COMPLEX": "NO",
+   "REASONING": "YES"
+  }
+ }
+}

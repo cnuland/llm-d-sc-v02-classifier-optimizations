@@ -1,0 +1,42 @@
+{
+ "name": "cost",
+ "description": "Generation-length budget and capacity reservation. Driven by how much text must be produced, not by reasoning difficulty.",
+ "labels": [
+  "MINIMAL",
+  "LOW",
+  "MODERATE",
+  "HIGH"
+ ],
+ "ordered": true,
+ "gates": [
+  "HIGH"
+ ],
+ "noise_floor": 0.0135,
+ "datasets": [
+  {
+   "id": "gold",
+   "path": "data/eval/cost-real-gold.jsonl",
+   "role": "eval",
+   "provenance": "real-traffic",
+   "jury_models": 3,
+   "separability_from_production": null,
+   "notes": "WildChat-derived real assistant traffic"
+  },
+  {
+   "id": "contested",
+   "path": "data/eval/cost-real-contested.jsonl",
+   "role": "contested",
+   "provenance": "real-traffic",
+   "jury_models": 3,
+   "notes": "rows the jury split on \u2014 kept, not discarded"
+  }
+ ],
+ "folds": {
+  "genlen": {
+   "MINIMAL": "SHORT",
+   "LOW": "SHORT",
+   "MODERATE": "LONG",
+   "HIGH": "LONG"
+  }
+ }
+}

@@ -1,0 +1,53 @@
+{
+ "name": "sensitivity",
+ "description": "Whether the request may egress to an external provider. Ordered by escalating exposure; assign the highest tier that applies.",
+ "labels": [
+  "PUBLIC",
+  "INTERNAL",
+  "CONFIDENTIAL",
+  "REGULATED",
+  "NEVER_EGRESS"
+ ],
+ "ordered": true,
+ "gates": [
+  "CONFIDENTIAL",
+  "REGULATED",
+  "NEVER_EGRESS"
+ ],
+ "noise_floor": 0.0014,
+ "datasets": [
+  {
+   "id": "gold",
+   "path": "data/eval/sensitivity-entsec-gold.jsonl",
+   "role": "eval",
+   "provenance": "synthetic",
+   "jury_models": 3,
+   "separability_from_production": 0.958,
+   "notes": "entsec is synthetic enterprise text; real consumer traffic is ~93% PUBLIC and cannot exercise the egress tiers at all"
+  },
+  {
+   "id": "contested",
+   "path": "data/eval/sensitivity-entsec-contested.jsonl",
+   "role": "contested",
+   "provenance": "synthetic",
+   "jury_models": 3,
+   "notes": "rows the jury split on \u2014 kept, not discarded"
+  }
+ ],
+ "folds": {
+  "egress": {
+   "PUBLIC": "ALLOW",
+   "INTERNAL": "ALLOW",
+   "CONFIDENTIAL": "ALLOW",
+   "REGULATED": "ALLOW",
+   "NEVER_EGRESS": "BLOCK"
+  },
+  "egress_triage": {
+   "PUBLIC": "ALLOW",
+   "INTERNAL": "REVIEW",
+   "CONFIDENTIAL": "REVIEW",
+   "REGULATED": "REVIEW",
+   "NEVER_EGRESS": "BLOCK"
+  }
+ }
+}
