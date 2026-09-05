@@ -1,2 +1,3 @@
 from .qualification import QualificationReport
-__all__ = ["QualificationReport"]
+from .comparison import ComparisonReport, compare
+__all__ = ["QualificationReport","ComparisonReport","compare"]

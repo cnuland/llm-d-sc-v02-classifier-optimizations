@@ -35,27 +35,52 @@ class SeedStabilityControl(Control):
     """One seed is not a measurement.
 
     Caught: a '+0.42 gain' that vanished on the second seed; a published figure
-    corrected from best-of-seeds to median.
+    corrected from best-of-seeds to median; and an audit showing that the
+    "noise floor" quoted across a whole signal was the MINIMUM spread ever
+    observed, inflating every "Nx the floor" claim by about 4x.
+
+    That last one is why `floor_measured_on` exists. A noise floor is a property
+    of a CONFIGURATION -- encoder, corpus, loss -- not of a signal. Inheriting one
+    measured on a different configuration is allowed, because measuring it fresh
+    costs seeds, but it can never pass silently.
     """
     name = "seed_stability"
     def run(self, ctx):
         scores = ctx.get("seed_scores") or []
-        floor = ctx["task"].noise_floor
+        floor = ctx.get("noise_floor") or ctx["task"].noise_floor
+        floor_src = ctx.get("floor_measured_on")
+        inherited = floor is not None and floor_src not in (None, ctx.get("config_id"))
         if len(scores) < 2:
             return self._r(Status.FAIL,
                 f"{len(scores)} seed(s): a difference cannot be separated from "
                 f"initialisation noise", n_seeds=len(scores))
         spread = max(scores) - min(scores)
-        if floor and spread > 3 * floor:
+        med = sorted(scores)[len(scores)//2]
+        # spread is a weak estimator of sigma at small n (E[spread] ~ 1.13*sigma
+        # for n=2), so report it rather than asserting stability from it
+        sigma = spread / {2: 1.128, 3: 1.693, 4: 2.059}.get(len(scores), 2.3)
+        ev = dict(spread=spread, median=med, sigma_estimate=sigma,
+                  n_seeds=len(scores), noise_floor=floor,
+                  floor_inherited=inherited, floor_measured_on=floor_src)
+        note = (f" — NOTE floor was measured on '{floor_src}', not this "
+                f"configuration; a floor is a property of a config, not a signal"
+                if inherited else "")
+        if floor is None:
+            return self._r(Status.WARN,
+                f"{len(scores)} seeds, spread {spread:.4f} (sigma~{sigma:.4f}); "
+                f"no noise floor declared, so effect sizes cannot be judged", **ev)
+        if spread > 3 * floor:
             return self._r(Status.FAIL,
-                f"seed spread {spread:.4f} is >3x the noise floor ({floor:.4f}); "
-                f"this configuration is unstable", spread=spread)
-        if floor and spread > floor:
-            return self._r(Status.WARN, f"seed spread {spread:.4f} exceeds the "
-                           f"noise floor ({floor:.4f})", spread=spread)
+                f"seed spread {spread:.4f} is >3x the declared floor ({floor:.4f}): "
+                f"either this configuration is unstable or the floor does not apply "
+                f"to it{note}", **ev)
+        if spread > floor:
+            return self._r(Status.WARN,
+                f"seed spread {spread:.4f} exceeds the floor ({floor:.4f}); report "
+                f"effect sizes against the spread, not the floor{note}", **ev)
         return self._r(Status.PASS,
-            f"{len(scores)} seeds, spread {spread:.4f}, median "
-            f"{sorted(scores)[len(scores)//2]:.4f}", spread=spread)
+            f"{len(scores)} seeds, spread {spread:.4f}, median {med:.4f}"
+            f"{note}", **ev)
 
 
 class HoldoutControl(Control):

@@ -42,7 +42,7 @@ def load_rows(task, datasets, root: pathlib.Path, roles=("qualification", "conte
 
 
 def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
-            seed_scores=None, champion=None, traffic=None, slo=None,
+            seed_scores=None, noise_floor=None, floor_measured_on=None, config_id=None, champion=None, traffic=None, slo=None,
             judge=None, measure_runtime=False, outcome=None, controls=None):
     texts = [r[task.text_field] for r in rows]
     runtime = None
@@ -79,6 +79,8 @@ def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
 
     manifest = [d.manifest(root) for d in datasets]
     ctx = {"metrics": m, "task": task, "seed_scores": seed_scores or [m["accuracy"]],
+           "noise_floor": noise_floor, "floor_measured_on": floor_measured_on,
+           "config_id": config_id or getattr(adapter, "revision", "unknown"),
            "champion_comparison": champion, "traffic": traffic or {},
            "runtime": runtime, "slo": slo or {}, "judge": judge,
            "dataset_manifest": manifest}

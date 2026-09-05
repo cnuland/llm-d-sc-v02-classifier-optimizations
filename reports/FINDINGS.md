@@ -4566,3 +4566,74 @@ seeds of the prior-matched config are running to give a usable estimate.
    Flagging a 0.0057 spread against a 0.0014 declared floor is exactly the
    intended function, and it caught a real error in the surrounding analysis
    rather than a fault in the model.
+
+## 125. The runtime plane found two failures no offline evaluation could
+
+The qualification framework's runtime plane was written but unproven: no live
+llm-d-sc service was reachable. Once one was, it produced two findings in the
+first hour — both invisible to every model-plane evaluation in this report.
+
+### 1. A deployment that cannot survive a restart
+
+`llm-d-sc` on the homelab cluster had been in `Init:CrashLoopBackOff` for 32 hours
+with 329 restarts, while its checkpoint scored ~96% on the model plane. The init
+container:
+
+```sh
+cp -R /models/. /shared/
+```
+
+The model files are **mode 444 in the image**, so the copy reproduces them
+read-only into the emptyDir. On a fresh volume this succeeds. After any container
+restart — the emptyDir persists across restarts within a pod — `cp` cannot
+truncate a read-only destination even as its owner, and the pod can never
+self-heal. Only deleting the pod, which discards the volume, recovers it.
+
+**A first-run-only success is indistinguishable from a healthy deployment until
+something bounces it.** Fixed by making the stage idempotent:
+
+```sh
+rm -rf /shared/* /shared/.[!.]* 2>/dev/null || true; cp -R /models/. /shared/
+```
+
+Service returned to `READY (resident Candle classifier loaded and warmed)`.
+
+**This is the argument for `classification_coverage` being the FIRST runtime
+metric and a hard gate.** Latency percentiles over zero successful requests look
+excellent. A classifier that is not answering is not fast.
+
+### 2. A score-normalisation bug that would have corrupted every confidence metric
+
+The gRPC adapter normalised the service's ranked signals by dividing by their sum.
+llm-d-sc returns **cosine similarities, which are negative-capable**:
+
+```
+SIMPLE 3.395   MEDIUM -0.251   COMPLEX -0.773   REASONING -1.371
+```
+
+Sum-normalisation yields values above 1, and where the scores sum to <= 0 it
+silently collapsed the row to uniform — destroying the prediction entirely on the
+second test prompt.
+
+**It fails in the most dangerous way available: argmax is preserved under any
+monotone transform, so ACCURACY WOULD HAVE LOOKED CORRECT** while calibration,
+risk-coverage, abstention thresholds and every confidence-based control ran on
+nonsense. Fixed with softmax, which is the correct map from similarities to a
+distribution and, being monotone, changes no argmax.
+
+**No local checkpoint could have surfaced this** — a softmax head cannot emit a
+negative score. It required the runtime.
+
+### What the wire contract gives the ledger
+
+`ClassifyResponse` carries `model_revision`, `tokenizer_revision`,
+`taxonomy_revision` and `classifier_id`, so the qualification report records what
+the RUNTIME reports it is running rather than what the caller believes it
+deployed. The live service reports `taxonomy_revision: scr-default-anchors-v1` —
+a fact about the deployment that is unobtainable offline, and one that a
+taxonomy-drift check can now be written against.
+
+`ABSTAIN` is also a first-class wire status, distinct from a low-confidence `OK`
+and from `UNAVAILABLE`. The adapter counts the three separately, which is what
+makes coverage an honest measurement rather than a success rate over the requests
+that happened to succeed.
