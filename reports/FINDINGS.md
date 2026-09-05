@@ -4069,3 +4069,59 @@ The control is about forty lines. It has been worth more than every architecture
 loss function and data-generation idea in this report combined. The transferable
 statement: **on a gated ordered taxonomy, an argmax comparison between two models
 compares two arbitrary points, not two models.**
+
+## 114. bge-small + prior matching: 0.50 behind on accuracy, 3x worse where it matters
+
+The deployment-friendly version of the best model. §87 showed bge-small captures
+the full encoder gain at 45% of bge-base's cost, and §111's prior matching acts on
+the corpus rather than the representation, so the two should compose.
+
+They do, on accuracy:
+
+| model | entsec (2 seeds) | real-gold | p50 |
+|---|---:|---:|---:|
+| bge-base + prior | **0.8303** | 0.8662 | 22.2 ms |
+| bge-small + prior | 0.8253 | **0.8715** | **10.2 ms** |
+| bge-small alone | 0.8119 | 0.8803 | 10.2 ms |
+| MiniLM + esc0 | 0.7999 | 0.8750 | 5.3 ms |
+
+bge-small + prior is **+1.34 over bge-small alone** — the prior gain transfers to
+the smaller encoder — and only 0.50 behind bge-base + prior at less than half the
+latency, while scoring BETTER on real traffic.
+
+On the metric the gate is deployed on it is not close:
+
+| gate | 85% | 90% | 95% |
+|---|---|---|---|
+| CONFIDENTIAL | 9.52 vs **6.58** | 17.01 vs **12.02** | 28.12 vs **25.62** |
+| REGULATED | 10.94 vs **8.15** | 22.53 vs **16.74** | **29.40** vs 32.40 |
+| NEVER_EGRESS | 2.56 vs **0.85** | 4.10 vs **1.71** | **14.16** vs **4.95** |
+
+**Loses 8 of 9 cells, and at the security-critical gate at 95% containment it
+over-blocks 14.16% against 4.95% — nearly three times as much legitimate traffic
+stopped.** A 0.50-point accuracy gap corresponds to a 3x difference in the number
+that actually governs deployment.
+
+**Eighth intervention through this control, seventh rejection as a replacement.**
+Recommendation stands: bge-base + prior for an egress gate; bge-small + prior is a
+reasonable low-latency TIER classifier and should not be used as a gate.
+
+## 115. Even interleaved latency measurement drifts ~15% between runs
+
+§86 established that per-run latency figures were contaminated by concurrent load
+and fixed the comparison by measuring all models in one interleaved process. Two
+such runs, hours apart:
+
+| model | run 1 | run 2 | ratio run 1 | ratio run 2 |
+|---|---:|---:|---:|---:|
+| MiniLM-L6 | 8.38 ms | 5.34 ms | 1.00x | 1.00x |
+| bge-small | 13.94 ms | 10.24 ms | 1.66x | 1.92x |
+| bge-base | 31.20 ms | 22.20 ms | 3.73x | 4.16x |
+
+Absolute numbers move by 35% and **the RATIOS still move by 12-15%**, so §86's
+claim that interleaving "fixes the comparison" is too strong. It removes the gross
+contamination — the ordering is stable and matches parameter count in both runs —
+but these are not precision measurements and should not be quoted to three
+significant figures.
+
+Use them as: MiniLM ~1x, bge-small ~2x, bge-base ~4x. Anything finer is noise.
