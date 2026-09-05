@@ -3810,3 +3810,43 @@ ordered taxonomy it predicts the deployed metric badly.**
 It also qualifies §104. bge-small's apparent egress gain is an operating-point
 artifact, not a signal-level encoder effect. The encoder result on sensitivity's
 5-tier task (+4.53, §80) stands; its translation to the gate does not.
+
+## 107. Containment thresholds do not transfer, and every matched-containment number in this report is ~2x optimistic at the top
+
+Every gate figure here picks a threshold and reports the containment it achieves on
+the same rows. A deployer cannot do that: they tune on data they have and run on
+traffic they have not seen. `harness/containment_cv.py` measures the difference —
+choose the cheapest threshold hitting a target on fold A, then measure what it
+ACTUALLY delivers on fold B, over 120 held-out evaluations.
+
+`eg-ad1-cw-seed11` (the published egress gate):
+
+| target | achieved | shortfall | held-out over-block | P(miss target) |
+|---:|---:|---:|---:|---:|
+| 85% | 84.90% | -0.10% | 2.17% | 50% |
+| 90% | 89.53% | -0.47% | 3.70% | 50% |
+| 95% | 94.04% | **-0.96%** | **17.13%** | 50% |
+
+**Deployment guidance: to get 95% containment on live traffic, tune for ~96%.**
+The shortfall grows with the target because the tail is sparse — at 95%
+containment the threshold is set by roughly six BLOCK rows, and those six do not
+transfer. The 50% miss rate is by construction: a threshold tuned to hit the
+target exactly lands above or below it with equal probability.
+
+**And this corrects every matched-containment table in this report.** §106 quoted
+MiniLM's over-block at 95% containment as 8.87%; held out it is **17.13%, nearly
+double**. Those tables are FITTED — the threshold is chosen on the rows it is
+scored on — which is the exact error §103 caught in the accuracy numbers and did
+not think to check here.
+
+**What survives and what does not:**
+- **Rankings survive.** Both models in every comparison were fitted identically, so
+  the relative conclusions (§56, §60, §68, §90, §106) stand as written.
+- **Absolute over-block figures do not.** They were quoted as deployment guidance
+  and a deployer will see roughly double at high containment. Anywhere this report
+  says "over-block X% at 95% containment", read it as a lower bound.
+
+The general lesson is the one §103 already recorded and I applied to accuracy but
+not to the gate metric: **any number produced by selecting an operating point is
+fitted unless the selection happened on different rows.** It took building the
+control twice, on two different metrics, to apply it consistently.
