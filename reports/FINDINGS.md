@@ -3493,9 +3493,23 @@ depends on accumulated eval batches, not on a deterministic code path. And Round
 Z's fourth arm survived because it was still TRAINING when the round was killed —
 it had not reached evaluation yet.
 
-Fixed with `output_hidden_states=(supcon > 0 and model.training)`. The
-hierarchy-aware contrastive loss (§Z) is now testable and has never actually been
-measured.
+Fixed with `output_hidden_states=(supcon > 0 and model.training)` — **and that
+fix was half of one.** The next arm died 33% into training at the first epoch-end
+evaluation with `TypeError: 'NoneType' object is not subscriptable`: hidden states
+were correctly no longer requested, but the loss block still indexed
+`outputs.hidden_states[-1]`. `Trainer.prediction_step` calls `compute_loss` during
+evaluation, so **a training-only loss term needs the guard in both places**, not
+just at the point where its inputs are produced. Complete fix:
+
+```python
+outputs = model(**inputs, output_hidden_states=(supcon > 0 and model.training))
+...
+if supcon > 0 and model.training:
+    loss = loss + supcon * _hier_supcon(...)
+```
+
+Verified by a 1-epoch smoke run that reaches evaluation and completes. The
+hierarchy-aware contrastive loss has still never produced a measurement.
 
 **§81's operational lesson stands and its diagnosis was wrong.** "Unexplained" was
 the honest label at the time, and keeping the arms' failure visible is what made

@@ -1,0 +1,119 @@
+{
+ "tag": "cx2-an2-selfcons-seed22",
+ "signal": "cx2",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 17996,
+ "epochs": 3,
+ "source": "cx2-aj-selfcons:19996",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SIMPLE": 16715,
+  "REASONING": 1281
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9114832535885168,
+  "macro_f1": 0.8819776714513557,
+  "wilson95": [
+   0.8803720039202447,
+   0.9350999647049454
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 86,
+    "SIMPLE": 11
+   },
+   "SIMPLE": {
+    "REASONING": 26,
+    "SIMPLE": 295
+   }
+  },
+  "recall": {
+   "REASONING": 0.8865979381443299,
+   "SIMPLE": 0.9190031152647975
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.7443181818181818,
+  "macro_f1": 0.7166469893742622,
+  "wilson95": [
+   0.6751272467638896,
+   0.8030713457753225
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 38,
+    "SIMPLE": 11
+   },
+   "SIMPLE": {
+    "REASONING": 34,
+    "SIMPLE": 93
+   }
+  },
+  "recall": {
+   "REASONING": 0.7755102040816326,
+   "SIMPLE": 0.7322834645669292
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9042553191489362,
+  "macro_f1": 0.8583804143126177,
+  "wilson95": [
+   0.8702948249532604,
+   0.9300387877947905
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 63,
+    "SIMPLE": 10
+   },
+   "SIMPLE": {
+    "REASONING": 26,
+    "SIMPLE": 277
+   }
+  },
+  "recall": {
+   "REASONING": 0.863013698630137,
+   "SIMPLE": 0.9141914191419142
+  }
+ },
+ "val-internal": {
+  "n": 2000,
+  "accuracy": 0.953,
+  "macro_f1": 0.8543407991421603,
+  "wilson95": [
+   0.9428243534935966,
+   0.9614387379603387
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 130,
+    "SIMPLE": 43
+   },
+   "SIMPLE": {
+    "REASONING": 51,
+    "SIMPLE": 1776
+   }
+  },
+  "recall": {
+   "REASONING": 0.7514450867052023,
+   "SIMPLE": 0.9720853858784894
+  }
+ },
+ "cpu_p50_ms": 13.6,
+ "cpu_p99_ms": 47.15
+}

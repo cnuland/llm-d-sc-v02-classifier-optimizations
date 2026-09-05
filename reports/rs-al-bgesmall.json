@@ -1,0 +1,119 @@
+{
+ "tag": "rs-al-bgesmall",
+ "signal": "reasoning",
+ "arch": "head",
+ "base": "BAAI/bge-small-en-v1.5",
+ "train_rows": 92158,
+ "epochs": 3,
+ "source": "reasoning-v2:5566+reasoning-real:52212+reasoning-active:7326+reasoning-distill:30000+reasoning-real-contested:7294",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "NO": 87446,
+  "YES": 4712
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9569377990430622,
+  "macro_f1": 0.9253126861226921,
+  "wilson95": [
+   0.9329628377993119,
+   0.9725903366623817
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 336,
+    "YES": 18
+   },
+   "YES": {
+    "NO": 0,
+    "YES": 64
+   }
+  },
+  "recall": {
+   "NO": 0.9491525423728814,
+   "YES": 1.0
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.8977272727272727,
+  "macro_f1": 0.7901986754966888,
+  "wilson95": [
+   0.8441381833791285,
+   0.9343246416847054
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 142,
+    "YES": 18
+   },
+   "YES": {
+    "NO": 0,
+    "YES": 16
+   }
+  },
+  "recall": {
+   "NO": 0.8875,
+   "YES": 1.0
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9627659574468085,
+  "macro_f1": 0.931511839708561,
+  "wilson95": [
+   0.9384781079082963,
+   0.9776932645796038
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 308,
+    "YES": 14
+   },
+   "YES": {
+    "NO": 0,
+    "YES": 54
+   }
+  },
+  "recall": {
+   "NO": 0.9565217391304348,
+   "YES": 1.0
+  }
+ },
+ "val-internal": {
+  "n": 10240,
+  "accuracy": 0.98212890625,
+  "macro_f1": 0.9176511704953256,
+  "wilson95": [
+   0.9793761637783828,
+   0.9845200370375299
+  ],
+  "confusion": {
+   "NO": {
+    "NO": 9559,
+    "YES": 151
+   },
+   "YES": {
+    "NO": 32,
+    "YES": 498
+   }
+  },
+  "recall": {
+   "NO": 0.9844490216271885,
+   "YES": 0.939622641509434
+  }
+ },
+ "cpu_p50_ms": 12.03,
+ "cpu_p99_ms": 30.24
+}

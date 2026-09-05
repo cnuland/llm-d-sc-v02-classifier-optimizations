@@ -250,7 +250,14 @@ def train_head(base, tr, va, labels, out, epochs=4, bs=32, lr=2e-5, seed=2026090
                 if W is not None:
                     ll = ll * W.unsqueeze(0)      # weight per TRUE-class mass
                 loss = ll.sum(-1).mean()
-            if supcon > 0:
+            # BOTH halves of this guard matter. §97 stopped REQUESTING hidden
+            # states outside training, which fixed the accumulation OOM, but left
+            # this block indexing outputs.hidden_states[-1] -- now None on eval
+            # batches -- so the arm died at the first epoch-end evaluation with
+            # TypeError instead of an OOM. Trainer calls compute_loss during
+            # evaluation too; a training-only loss term needs the same condition
+            # in both places.
+            if supcon > 0 and model.training:
                 loss = loss + supcon * _hier_supcon(
                     outputs.hidden_states[-1], inputs["attention_mask"],
                     (labels_in if labels_in is not None else q.argmax(-1)),
