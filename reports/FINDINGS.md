@@ -4721,3 +4721,57 @@ appeared in a published model card, now corrected.
 
 The published median also moved, 0.8303 -> 0.8310, so the point estimate was
 slightly off as well as the interval.
+
+## 128. The context_completeness field ships ahead of its behaviour
+
+Reviewing open PRs on llm-d-semantic-classifier surfaced a live inconsistency,
+confirmed against the running service.
+
+`proto/classify.proto` on `v0.2-staging` carries `ContextCompleteness`
+(UNSPECIFIED / FULL / DELTA). The behaviour that acts on it — abstain when the
+caller declares a delta-only follow-up — is in **PR #23, still open**. Tested on
+the deployed service with a genuine fragment, `"and what about the second one?"`:
+
+| context_completeness | status | ranked | top label |
+|---|---|---:|---|
+| UNSPECIFIED | OK | 4 | SIMPLE |
+| FULL | OK | 4 | SIMPLE |
+| **DELTA** | **OK** | **4** | **SIMPLE** |
+
+**The field is accepted on the wire and ignored.** A caller reading the proto
+would reasonably assume declaring DELTA is protective; it is not. That is worse
+than the field being absent, because it invites a false assumption silently.
+
+PR #23's own spec states the requirement it currently violates: *"after a restart
+or cache loss the classifier must not turn a context-free delta into a confident
+semantic label."* It does, today.
+
+### The telemetry gap this creates, and why coverage catches it
+
+PR #23's abstention returns before cache lookup — deliberately, since a disposable
+cache must not become authoritative session state. But on `main` the
+hit/miss/coalesced counters are recorded AFTER that point, so **an abstention is
+invisible in the service's own metrics**.
+
+Simulating 30% abstention through `clfeval`:
+
+| metric | value |
+|---|---:|
+| classification_coverage | **0.70** |
+| error_rate | **0.00** |
+| `RuntimeSLOControl` | **FAIL** |
+
+`error_rate 0.00` alongside `coverage 0.70` is the whole point: **an abstention is
+not an error, it is a refusal to answer, and a system that only counts failures
+reads a refusal as a success.** If #23 merges and a gateway begins sending DELTA,
+30% of traffic could stop being classified while the service reports zero errors
+and a healthy cache hit rate.
+
+This is the "gateway returning 200s while llm-d-sc is bypassed" invariant arriving
+by a route that was not anticipated when it was written — which is mild evidence
+the invariant is stated at the right level of generality.
+
+**Review actions:** ask #23 for an abstention counter recorded on the early-return
+path, and ask whether anything sets `context_completeness` today. If a gateway
+already sets DELTA expecting protection, it is currently getting confident labels
+on fragments instead.
