@@ -35,7 +35,13 @@ import llmkit as L
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 N_PER = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-SMALL, LARGE, JUDGE = "claude-haiku-4-5", "claude-sonnet-5", "claude-opus-5"
+# Routing ROLES, not a model comparison. Override via env to run this against
+# any small/large pair; the finding is about whether routing pays, and naming
+# specific models would make it read as a vendor benchmark and date it.
+import os
+SMALL = os.environ.get("QD_SMALL", "claude-haiku-4-5")
+LARGE = os.environ.get("QD_LARGE", "claude-sonnet-5")
+JUDGE = os.environ.get("QD_JUDGE", "claude-opus-5")
 MAXTOK = 1200
 
 rows = (load_jsonl(ROOT/"data/eval/triage-real-gold.jsonl")
@@ -109,7 +115,8 @@ for (tier, flip), v in zip(meta, verdicts):
         large_won = (v == "A") == flip
         results[tier]["large" if large_won else "small"] += 1
 
-print(f"\n  small={SMALL}   large={LARGE}   judge={JUDGE}  (judge is neither generator)")
+print(f"\n  roles: SMALL vs LARGE, judged by a third model that is neither contestant.")
+print(f"  (model identities intentionally not reported — this measures routing economics,\n   not a vendor comparison; set QD_SMALL/QD_LARGE/QD_JUDGE to use your own)")
 print(f"\n  {'routed as':<12}{'n':>5}{'large wins':>12}{'tie':>9}{'small wins':>12}{'large net':>11}")
 for tier in ("TRIVIAL", "WORK"):
     c = results[tier]; n = sum(c.values())

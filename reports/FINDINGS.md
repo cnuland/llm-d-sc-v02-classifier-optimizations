@@ -4391,9 +4391,15 @@ saved by routing easy prompts down exceeds the quality lost by doing so, and onl
 the first term had ever been touched.
 
 200 real WildChat prompts, **split by what the deployed triage classifier
-PREDICTS** (not by gold, so misroutes are inside the measurement), answered by
-`claude-haiku-4-5` and `claude-sonnet-5`, judged blind and position-randomised by
-`claude-opus-5` — a judge that is neither contestant. Ties encouraged.
+PREDICTS** (not by gold, so misroutes are inside the measurement), answered by a
+SMALL and a LARGE model from the same family, judged blind and position-randomised
+by a THIRD model that is neither contestant. Ties encouraged.
+
+*(Specific models are deliberately not named. The result is about whether
+complexity-based routing pays, not about which vendor model is better; naming them
+would turn a methodology finding into an unintended model comparison and tie it to
+particular versions. The tiers are the routing roles — the small/fast option and
+the large/expensive one — which is what generalises.)*
 
 | routed as | n | large wins | tie | small wins | **large net** |
 |---|---:|---:|---:|---:|---:|
@@ -4453,14 +4459,14 @@ exactly the tier where it won by more:
 answer won 87 (70.2%)**. Against a 50% length-indifferent baseline, the judge is
 substantially measuring words.
 
-**Control 3 — a different judge.** Same answers, `claude-fable-5-1` instead of
-`claude-opus-5`, with a sharpened instruction that a longer answer is not better
+**Control 3 — a different judge.** Same answers, a DIFFERENT third-party judge,
+with a sharpened instruction that a longer answer is not better
 if the extra content was not requested:
 
 | judge | TRIVIAL net | WORK net |
 |---|---:|---:|
-| opus-5 (§122) | **+37.4** | +15.4 |
-| fable-5-1 | **+33.0** | **+33.0** |
+| judge A (§122) | **+37.4** | +15.4 |
+| judge B | **+33.0** | **+33.0** |
 
 **Identical on both tiers. The ordering vanishes.** §122's headline is retracted:
 the large model does not help more on TRIVIAL prompts, and the appearance that it
