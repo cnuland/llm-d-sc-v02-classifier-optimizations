@@ -4300,3 +4300,45 @@ evaluated on a single number has not been evaluated.**
 **Recommendation: `llm-d-sc-egress-triage` supersedes `llm-d-sc-egress-gate` for
 any deployment where releasing a secret is worse than queueing a false positive.**
 The binary gate remains appropriate only where no human review path exists.
+
+## 120. Abstention buys 99% on three gates — and the two exceptions are the security ones
+
+§119 showed a REVIEW tier eliminated the worst failure by giving an uncertain row
+somewhere safe to go. That is one instance of SELECTIVE PREDICTION, which this
+project had never applied: let the classifier decline on its least-confident rows,
+send those to a fallback, and measure accuracy on the rest.
+
+Held out (2-fold, 40 repeats — the abstention threshold is an operating point and
+§103/§107 both showed choosing one on the rows you then score is worth about a
+point of optimism):
+
+| gate | full | @95% cov | @90% cov | @80% cov | **coverage for 99%** |
+|---|---:|---:|---:|---:|---:|
+| reasoning | 96.54% | 98.89% | **99.41%** | 99.34% | **90%** |
+| genlen | 95.69% | 97.63% | 98.50% | **99.48%** | 85% |
+| triage | 96.01% | 98.07% | 98.81% | 99.29% | 85% |
+| egress-triage | 94.34% | 95.95% | 97.38% | 98.11% | 50% |
+| route | 93.35% | 94.77% | 95.82% | 97.42% | **unreachable** |
+| egress | 95.33% | 97.69% | 98.11% | 98.22% | **unreachable** |
+
+**Declining on 10% of traffic takes the reasoning gate to 99.41%.** Three gates
+reach 99% by abstaining on 10-15%, which is free — no retraining, one confidence
+threshold, and a fallback path most deployments already have.
+
+**The two that cannot are the finding.** `egress` plateaus at 98.31% even after
+dropping 30% of traffic: its errors are NOT concentrated in low-confidence rows.
+It is confidently wrong on some secrets. For a security gate that is a sharper
+statement than any accuracy figure — **abstention cannot buy safety here, because
+the model does not know which ones it is getting wrong.**
+
+That is the same conclusion §119 reached from a different direction. The binary
+egress gate's weakness is structural, and the fix was a REVIEW tier rather than a
+better threshold. Two independent analyses agreeing on the mechanism is the reason
+to trust it.
+
+**Bug caught by an impossible number.** The first run reported route at 0.00%.
+`route` was trained with SMALL/LARGE labels while its eval file uses the cx2
+vocabulary SIMPLE/REASONING — the same fold under two names (§100) — so every
+prediction "missed". Noticed because 0.00% is impossible, not because the code was
+reviewed. Third time this session an exact-looking number (+0.00%, 0.0%, now
+0.00%) has been a type or naming error rather than a result.
