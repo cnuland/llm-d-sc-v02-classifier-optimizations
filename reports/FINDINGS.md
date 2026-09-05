@@ -4944,3 +4944,106 @@ This generalises past triage: it applies to any classifier whose training
 taxonomy is finer than its routing decision, which is the normal case (complexity
 has 4 labels and drives a 2-way route). `clfeval` should compute risk-coverage
 after applying a task's declared deployment fold, and currently does not.
+
+## 131. argmax-then-fold is what the router does, and it is fine — the §130 defect is confined to confidence
+
+llm-d-sc serves the 4-way complexity taxonomy; Praxis routes on a label->cluster
+table (SIMPLE/MEDIUM->small, COMPLEX/REASONING->large). The deployed pipeline
+therefore takes the argmax FIRST and folds the winning label SECOND, which is not
+the same operation as summing inside each route class and then taking the argmax:
+
+```
+SIMPLE .35   MEDIUM .05  |  COMPLEX .30   REASONING .30
+argmax-then-fold -> SIMPLE            -> small
+fold-then-argmax -> .40 vs .60        -> large
+```
+
+§130 showed folding is a sum and that the sum changes confidence materially, so
+the question is whether the same arithmetic reaches the routing decision itself.
+Matched rows (n=552, gold 376 + contested 176), McNemar:
+
+| model | argmax->fold | fold->argmax | delta | disagree | McNemar |
+|---|---|---|---|---|---|
+| cx-ab-v2rubric-seed11 | 89.13% | 88.95% | -0.18 | 0.2% | 1 vs 0, p=1.00 |
+| cx-ab-v2rubric-seed22 | 89.13% | 88.59% | -0.54 | 0.9% | 4 vs 1, p=0.38 |
+| cx-ab-v2rubric-seed33 | 89.13% | 88.95% | -0.18 | 0.2% | 1 vs 0, p=1.00 |
+| cx-t-big-seed33 | 87.32% | 86.96% | -0.36 | 0.4% | 2 vs 0, p=0.50 |
+| cx-ak1-allrows-seed11 | 88.95% | 88.77% | -0.18 | 0.2% | 1 vs 0, p=1.00 |
+
+**The two operations disagree on 0.2-0.9% of rows** and the deployed ordering wins
+those disagreements 9 to 1 — never significantly, but never behind either. The
+pathological split needs mass spread across one route class while a single label
+in the other wins alone, and a trained head is confident enough that this is rare.
+
+The deployed router is not broken. §130's defect is specific to **confidence**,
+which reads the whole distribution, and does not extend to **argmax**, which only
+needs the winner. Worth stating explicitly, because the tempting generalisation
+from §130 — "the fold is wrong everywhere" — would have sent a change into
+production that buys nothing.
+
+## 132. Train on the finest taxonomy you can label, deploy the fold: the binary head's confidence ordering is BROKEN
+
+Comparing the 4-way complexity head folded to the route decision against a head
+trained natively on that binary decision (`cx2`), identical rows and labels:
+
+| arm | all | unanimous only | escalate for >=95% | >=97% | >=98% | >=99% |
+|---|---|---|---|---|---|---|
+| 4-way -> fold, seed 11 | 88.95% | 93.35% | **19%** | **29%** | **34%** | **38%** |
+| 4-way -> fold, seed 22 | 88.59% | 93.35% | **18%** | **28%** | **36%** | **41%** |
+| cx2 native binary, seed 11 | 88.41% | 93.35% | 28% | **unreachable** | unreachable | unreachable |
+| cx2 native binary, seed 22 | 86.78% | 92.02% | **unreachable** | unreachable | unreachable | unreachable |
+
+Thresholds held out. On accuracy these four arms span 2.2 points and are
+practically indistinguishable. On the metric a router actually needs they are not
+comparable at all: one reaches 99% by escalating 38% of traffic, the other cannot
+reach 97% at any coverage down to 30%.
+
+### The binary head's risk-coverage curve is non-monotone
+
+| coverage | 100% | 90% | 80% | 70% | 60% | 50% | 40% | 30% |
+|---|---|---|---|---|---|---|---|---|
+| 4-way folded | 88.95% | 92.34% | 95.24% | 97.15% | 99.70% | 99.64% | 100.00% | 100.00% |
+| cx2 native binary | 88.41% | 91.33% | 93.20% | 95.34% | **95.77%** | **94.93%** | **93.67%** | **91.57%** |
+
+The binary head peaks at 60% coverage and then **falls**. Keeping only its most
+confident 30% of rows scores 91.57% — worse than keeping 70%. Its most confident
+rows are not its most correct rows: the confidence ordering is inverted in the
+top half, which no accuracy number can show.
+
+The confidence percentiles say why:
+
+| percentile | 90% | 80% | 70% | 60% | 50% | 40% | 30% |
+|---|---|---|---|---|---|---|---|
+| 4-way folded | 0.796 | 0.927 | 0.964 | 0.978 | 0.985 | 0.988 | 0.989 |
+| cx2 native binary | 0.736 | 0.880 | 0.935 | 0.953 | 0.959 | 0.961 | 0.962 |
+
+The binary head saturates: 0.953 -> 0.962 across its top 60%, a 0.009 band in
+which to rank 330 rows. Quantiles cut through a spike, so the ordering there is
+close to arbitrary. The folded 4-way score is a SUM of two well-separated modes
+and stays graded to 0.989.
+
+A 2-class softmax on a hard boundary has one logit difference to express both
+"which side" and "how sure"; the 4-way head answers a harder question and its
+extra structure survives the fold as resolution.
+
+### Rule, and it composes with §130
+
+**Train on the finest taxonomy you can reliably label. Deploy the fold. Read
+confidence in the deployed space.** §130 is the third clause — the fine taxonomy
+is what produces a usable confidence signal, and reading that signal in the
+trained space is what throws it away.
+
+### What this says about the standing goal
+
+High-90s accuracy on real traffic is reachable, and this is the price:
+
+- **97% at ~29% escalation, 99% at ~38%**, on pooled real traffic including the
+  31.9% of rows three frontier labellers could not agree on
+- 93.35% is the pooled ceiling with no escalation, and it is the same for every
+  arm here — the headline gains are entirely in the abstention curve
+- the native binary head, at indistinguishable accuracy, **cannot reach 97% at
+  any escalation rate**
+
+A gate quoted at 95.93% on jury-unanimous rows (§121, triage) is not wrong, but it
+is not an operating point either. The deployable claim is a target paired with an
+escalation rate, and only the fine-then-fold architecture can make one.
