@@ -4208,3 +4208,53 @@ its agreement means anything. `genlen` stays published, `oneliner` is not built 
 **genlen is the strongest result in the project and fourth on raw accuracy;
 reasoning is the highest accuracy and the weakest lift.** Both facts have been
 true all day and only became visible when the column was added.
+
+## 118. Held-out deployment guidance — and a THIRD ranking of the same five gates
+
+Every gate is published with an argmax number. A deployer needs a different thing:
+"if I want X% recall on the class that matters, what will it cost me?" — measured
+on rows the threshold never saw (§107 showed fitted curves are optimistic at the
+high end and the gap grows with the target).
+
+`harness/deploy_guide.py`, 80 held-out evaluations per target:
+
+| gate | false-fire @90% recall | @95% | @99% |
+|---|---:|---:|---:|
+| **reasoning** | **1.00%** | **1.46%** | **2.90%** |
+| genlen | 1.81% | 3.91% | 9.59% |
+| route | 6.38% | 10.24% | 15.80% |
+| egress | 3.81% | 16.03% | **56.30%** |
+| triage | 1.73% | 18.08% | **74.31%** |
+
+**This is the third distinct ranking of the same five models.**
+
+| | 1st | 2nd | 3rd | 4th | 5th |
+|---|---|---|---|---|---|
+| by accuracy | reasoning | triage | genlen | egress | route |
+| by lift over chance | genlen | triage | route | egress | **reasoning** |
+| **by deployability** | **reasoning** | genlen | route | egress | **triage** |
+
+Reasoning is first, last, and first. Triage is second, second and **last** — it was
+published two hours ago on the strength of the accuracy column.
+
+**What predicts deployability is jury agreement, not class balance.** Reasoning has
+the SPARSEST positive class (14.4%) and the best curve; triage at 19.7% has the
+worst. Their agreements are 94.6% and 86.9%. Well-separated classes give a
+threshold that can be pushed; ambiguous ones give a cliff — at 99% recall triage
+fires falsely on 74% of traffic.
+
+**genlen is the only gate whose thresholds transfer cleanly**: shortfall -0.21 /
++0.12 / -0.20, essentially zero at every target, because its 53.1% positive class
+gives a dense tail. Every other gate undershoots by 0.5-1.9 points, since its tail
+is set by a handful of rows that do not generalise.
+
+**Per-gate guidance, none of it visible from the published accuracy numbers:**
+- reasoning — push it hard; 99% recall costs 2.90%
+- genlen — set the threshold and trust it; no margin needed
+- route — usable throughout at moderate cost
+- egress — 95% containment costs 16% over-block; 99% is not viable
+- triage — 90% recall only
+
+**Three orthogonal rankings from one set of models is the finding.** A single
+accuracy figure per model is not a summary of it; it is one of at least three
+answers, and which one matters depends on the deployment.

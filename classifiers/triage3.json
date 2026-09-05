@@ -1,0 +1,8 @@
+{
+ "labels": [
+  "ALLOW",
+  "BLOCK",
+  "REVIEW"
+ ],
+ "note": "Binary deployed decision folded out of sensitivity: {'PUBLIC': 'ALLOW', 'INTERNAL': 'REVIEW', 'CONFIDENTIAL': 'REVIEW', 'REGULATED': 'REVIEW', 'NEVER_EGRESS': 'BLOCK'}. Derived taxonomy local to the accuracy project; genesis untouched. See FINDINGS 75."
+}

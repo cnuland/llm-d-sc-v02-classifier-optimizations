@@ -27,6 +27,11 @@ TABLES = {
                               "COMPLEX":"WORK","REASONING":"WORK"}),
  "oneliner":  ("cost",       {"MINIMAL":"ONELINE","LOW":"COMPOSED",
                               "MODERATE":"COMPOSED","HIGH":"COMPOSED"}),
+ # §116's search ranked this third on sensitivity at 89.5% agreement, and it is
+ # the only high-agreement fold that is not binary: an allow / review / block
+ # gate, which is what a DLP-style deployment actually wants.
+ "triage3":   ("sensitivity",{"PUBLIC":"ALLOW","INTERNAL":"REVIEW","CONFIDENTIAL":"REVIEW",
+                              "REGULATED":"REVIEW","NEVER_EGRESS":"BLOCK"}),
  "egress":    ("sensitivity",{"PUBLIC":"ALLOW","INTERNAL":"ALLOW","CONFIDENTIAL":"ALLOW",
                               "REGULATED":"ALLOW","NEVER_EGRESS":"BLOCK"}),
 }
