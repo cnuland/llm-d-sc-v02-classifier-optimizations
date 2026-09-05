@@ -3670,3 +3670,40 @@ three labelling passes over 20,000 prompts.
 
 That is the fifth label-quality intervention on complexity to fail, now on both
 taxonomies. The label axis is closed on this signal.
+
+## 103. A cross-validated threshold takes the reasoning gate to 97.89% — free
+
+Every gate is reported at argmax, which is threshold 0.5: one arbitrary point on a
+curve. Raw curves show accuracy rising above it for three of four gates, with
+reasoning reaching 98.14% at threshold 0.8 — **and quoting that would be fitting
+the test set**, since 0.8 was chosen because it maximised accuracy on the rows
+being scored.
+
+`harness/threshold_cv.py` chooses the threshold on half the eval and reports on
+the other half, swapped, over 40 random splits (80 held-out evaluations):
+
+| gate | argmax | CV-tuned | delta | thresholds chosen |
+|---|---:|---:|---:|---|
+| **reasoning** | 96.54% | **97.89%** | **+1.35** | **0.75 x56**, 0.9 x10, 0.8 x8 |
+| route | 93.35% | 93.50% | +0.15 | 0.95 x26, 0.9 x22, 0.55 x16 |
+| egress | 95.33% | 95.36% | +0.03 | 0.8 x22, 0.95 x22, 0.3 x11 |
+| genlen | 95.69% | 95.69% | -0.00 | 0.6 x44, 0.75 x13 |
+
+**One gate improves, and the threshold-selection column is what tells you which.**
+Reasoning picks 0.75 in 56 of 80 folds — a clear mode. Route and egress scatter
+across 0.55/0.9/0.95 and 0.3/0.8/0.95, which is what a flat curve looks like when
+forced to choose; their +0.15 and +0.03 are noise.
+
+Genlen is the useful counter-example: its threshold DOES cluster (0.6, 44 of 80)
+and the gain is exactly zero. **Clustering means the curve has a shape; it does
+not mean the shape is worth anything.** Both signals have to agree.
+
+**Deployment consequence: run the reasoning gate at threshold 0.75, not argmax.**
+That is +1.35 points for one configuration value and no retraining. At 0.75 the
+model keeps 98.15% recall on YES while cutting false fires from 3.73% to 2.80%,
+so it improves on both axes rather than trading them — which is why the gain
+survives cross-validation while the others do not.
+
+The CV estimate (97.89%) is deliberately lower than the fitted optimum (98.14%).
+The difference is the size of the selection bias that would have been smuggled
+into the headline.
