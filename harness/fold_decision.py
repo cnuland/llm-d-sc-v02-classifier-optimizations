@@ -25,6 +25,12 @@ TABLES = {
  # every one rather than by picking the obvious binary.
  "triage":    ("complexity", {"SIMPLE":"TRIVIAL","MEDIUM":"WORK",
                               "COMPLEX":"WORK","REASONING":"WORK"}),
+ # §121: triage is confidently wrong on jury-split rows (abstention enriches for
+ # them at only 1.0x), so no threshold can rescue it. §119 hit the same failure
+ # shape on the binary egress gate and fixed it with a middle tier. Same fix here:
+ # give the uncertain rows somewhere to GO instead of forcing a binary call.
+ "triage3cx": ("complexity", {"SIMPLE":"TRIVIAL","MEDIUM":"STANDARD",
+                              "COMPLEX":"HARD","REASONING":"HARD"}),
  "oneliner":  ("cost",       {"MINIMAL":"ONELINE","LOW":"COMPOSED",
                               "MODERATE":"COMPOSED","HIGH":"COMPOSED"}),
  # §116's search ranked this third on sensitivity at 89.5% agreement, and it is

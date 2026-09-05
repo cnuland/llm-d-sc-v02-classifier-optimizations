@@ -1,0 +1,8 @@
+{
+ "labels": [
+  "HARD",
+  "STANDARD",
+  "TRIVIAL"
+ ],
+ "note": "Binary deployed decision folded out of complexity: {'SIMPLE': 'TRIVIAL', 'MEDIUM': 'STANDARD', 'COMPLEX': 'HARD', 'REASONING': 'HARD'}. Derived taxonomy local to the accuracy project; genesis untouched. See FINDINGS 75."
+}

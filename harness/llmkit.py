@@ -151,3 +151,41 @@ def label_schema(labels: list[str], with_reason=True) -> dict:
 
 def rubric(signal: str) -> str:
     return (ROOT / "rubrics" / f"{signal}.md").read_text()
+
+
+def ask_text(prompt: str, model="claude-sonnet-5", max_tokens=1200,
+             system=None, cache=True, seed_tag=""):
+    """Plain-text completion, memoised on disk like ask_json.
+
+    Added for the quality-delta measurement: that experiment needs ANSWERS to
+    real prompts, not structured labels, and every other call in this harness is
+    schema-constrained. Caching matters here for a different reason than usual --
+    a rerun must reproduce the same answers or the paired comparison changes
+    underneath the judge.
+    """
+    LLM_CACHE.mkdir(parents=True, exist_ok=True)
+    key = hashlib.blake2b(json.dumps(
+        ["TEXT", model, prompt, system, max_tokens, seed_tag],
+        sort_keys=True).encode(), digest_size=16).hexdigest()
+    f = LLM_CACHE / f"{key}.txt"
+    if cache and f.exists():
+        return f.read_text()
+    kw = dict(model=model, max_tokens=max_tokens,
+              messages=[{"role": "user", "content": prompt}])
+    if system:
+        kw["system"] = system
+    last = None
+    for _ in range(4):
+        try:
+            r = client().messages.create(**kw)
+            out = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
+            if out.strip():
+                if cache: f.write_text(out)
+                return out
+            last = RuntimeError("empty completion")
+        except Exception as e:
+            last = e
+            if "refus" in str(e).lower():
+                raise Refusal(str(e))
+            time.sleep(2)
+    raise RuntimeError(f"ask_text failed: {type(last).__name__}: {last}")

@@ -4382,3 +4382,55 @@ somewhere for uncertain rows to GO.**
 weakness is not mitigable by abstention, so the honest options are to deploy it at
 full coverage and accept the 80.11% on split rows, or to build a three-way version
 with a middle tier as §119 did for egress. The latter is untested.
+
+## 122. The quality delta runs BACKWARDS from the routing premise
+
+121 findings measure whether the classifier picks the right tier. None measured
+whether picking the right tier is worth anything. A router pays off when the cost
+saved by routing easy prompts down exceeds the quality lost by doing so, and only
+the first term had ever been touched.
+
+200 real WildChat prompts, **split by what the deployed triage classifier
+PREDICTS** (not by gold, so misroutes are inside the measurement), answered by
+`claude-haiku-4-5` and `claude-sonnet-5`, judged blind and position-randomised by
+`claude-opus-5` — a judge that is neither contestant. Ties encouraged.
+
+| routed as | n | large wins | tie | small wins | **large net** |
+|---|---:|---:|---:|---:|---:|
+| TRIVIAL | 99 | 45.5% | **46.5%** | 8.1% | **+37.4%** |
+| WORK | 91 | 44.0% | 27.5% | 28.6% | **+15.4%** |
+
+**The large model wins by MORE on the prompts the router sends to the small model
+(+37.4) than on the prompts it sends to the large one (+15.4).** The routing
+premise requires the opposite: TRIVIAL should tie, WORK should show a gap.
+
+**One half of the premise does hold.** The tie rate is 46.5% on TRIVIAL against
+27.5% on WORK — trivial prompts genuinely are more often equivalent, exactly as
+predicted. But *conditional on a difference existing*, the large model takes 85%
+of the decided TRIVIAL pairs (45.5 of 53.6) and only 61% of the decided WORK pairs
+(44.0 of 72.6).
+
+**Small wins 28.6% of WORK pairs against 8.1% of TRIVIAL pairs.** On hard prompts
+the small model is not merely worse — it is higher variance, and sometimes better.
+
+### What this would mean if it survives its controls
+
+Routing TRIVIAL prompts to a small model costs real quality, and routing WORK
+prompts to a large model buys less than routing everything there would. Under
+those numbers the classifier is accurate at sorting prompts along an axis that
+does **not** correspond to where the large model helps — and no improvement to
+classification accuracy fixes that, because the problem is the premise rather than
+the model.
+
+### The control that has to run first
+
+Verbosity bias is the best-documented failure of LLM-as-judge and would produce
+exactly this pattern: on a trivial prompt a thorough answer looks better than a
+terse one even when the user would not care, and the larger model writes more. The
+judge was instructed to ignore length and to use TIE freely, which is a mitigation
+and not a control. Answer-length ratios by tier are being measured now.
+
+**Recorded before that check completes, and not acted on until it does.** This is
+the single most consequential number in the report — it is the one that decides
+whether any of the other 121 findings matter — and it is exactly where a
+convenient confound would be easiest to overlook.

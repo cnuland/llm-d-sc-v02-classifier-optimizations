@@ -1,0 +1,12 @@
+{
+ "TRIVIAL": {
+  "large": 45,
+  "tie": 46,
+  "small": 8
+ },
+ "WORK": {
+  "large": 40,
+  "tie": 25,
+  "small": 26
+ }
+}
