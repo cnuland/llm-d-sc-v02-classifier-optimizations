@@ -55,8 +55,14 @@ the decisions that actually exist (§75, §79):
 | [genlen](https://huggingface.co/cnuland/llm-d-sc-genlen-gate) | short vs long generation | 95.69% | **53.10%** | **+42.6** |
 | [triage](https://huggingface.co/cnuland/llm-d-sc-triage-gate) | trivial vs needs work | 96.01% | 80.32% | +15.7 |
 | [route](https://huggingface.co/cnuland/llm-d-sc-route-gate) | small vs large model | 93.35% | 80.59% | +12.8 |
+| [**egress-triage**](https://huggingface.co/cnuland/llm-d-sc-egress-triage) | allow / review / block | 94.34% | 73.27% | **+21.1** |
 | [egress](https://huggingface.co/cnuland/llm-d-sc-egress-gate) | block at NEVER_EGRESS | 95.33% | 82.89% | +12.4 |
 | [reasoning](https://huggingface.co/cnuland/llm-d-sc-reasoning-gate) | is reasoning needed | **97.89%** | 85.64% | +12.3 |
+
+`egress-triage` scores LOWER than the binary `egress` gate and supersedes it:
+the binary gate ALLOWs 14.88% of live-secret content outright because it has
+nowhere to put an uncertain row, while the three-way gate routed **zero of 121**
+BLOCK rows to ALLOW across both seeds. See §119.
 
 Sorted by LIFT OVER CHANCE, not accuracy. `genlen` is the strongest result here
 and fourth on raw accuracy, because its classes are nearly balanced and almost
