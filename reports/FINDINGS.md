@@ -3707,3 +3707,32 @@ survives cross-validation while the others do not.
 The CV estimate (97.89%) is deliberately lower than the fitted optimum (98.14%).
 The difference is the size of the selection bias that would have been smuggled
 into the headline.
+
+## 104. The encoder gain transfers by SIGNAL, not by task — and the §55 diagnosis keeps predicting it
+
+bge-small applied to all four gates, against the MiniLM medians they were
+published on:
+
+| gate | signal | MiniLM | bge-small | delta |
+|---|---|---:|---:|---:|
+| route (cx2) | complexity | 0.9269 | 0.9202 | **-0.67** |
+| reasoning | complexity | 0.9681 | 0.9628 | **-0.53** |
+| **genlen** | **cost** | 0.9556 | **0.9623** | **+0.67** |
+| egress | sensitivity | — | *running* | — |
+| *(sensitivity 5-tier, for reference)* | sensitivity | 0.7999 | 0.8119 | *+1.20* |
+
+**Both complexity decisions lose; the cost decision gains.** That is the third and
+fourth confirmation of §55's diagnosis, made hours earlier from a completely
+different measurement — the unanimous/contested split, which found complexity
+rubric-limited and sensitivity model-limited. A better representation helps a
+signal whose ceiling is the model and does nothing for one whose ceiling is the
+labels, and that holds whether the taxonomy has two tiers or four.
+
+§61's frozen pair probes ordered the encoder gain the same way before any of these
+models existed: sensitivity INTERNAL/CONFIDENTIAL +8.3 balanced accuracy, cost
+LOW/MODERATE +3.4, complexity MEDIUM/COMPLEX +3.1. The ranking has now been
+reproduced by fine-tuned models on the collapsed taxonomies.
+
+**Practical: MiniLM stays the encoder for both complexity gates at 8.38 ms.** The
+genlen result is a single seed against a 2-seed median with an observed spread of
+0.27, so +0.67 is suggestive and gets a second seed before anything is republished.

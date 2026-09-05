@@ -1,0 +1,119 @@
+{
+ "tag": "cx2-am2-bgesmall",
+ "signal": "cx2",
+ "arch": "head",
+ "base": "BAAI/bge-small-en-v1.5",
+ "train_rows": 92158,
+ "epochs": 3,
+ "source": "cx2-v2:5566+cx2-real:52212+cx2-active:7326+cx2-distill:30000+cx2-real-contested:7294",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SIMPLE": 82809,
+  "REASONING": 9349
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9186602870813397,
+  "macro_f1": 0.8911991670749633,
+  "wilson95": [
+   0.8884843526618167,
+   0.9412109642533477
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 87,
+    "SIMPLE": 10
+   },
+   "SIMPLE": {
+    "REASONING": 24,
+    "SIMPLE": 297
+   }
+  },
+  "recall": {
+   "REASONING": 0.8969072164948454,
+   "SIMPLE": 0.9252336448598131
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.7670454545454546,
+  "macro_f1": 0.7456916299559472,
+  "wilson95": [
+   0.699296990368156,
+   0.8233851921747041
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 42,
+    "SIMPLE": 7
+   },
+   "SIMPLE": {
+    "REASONING": 34,
+    "SIMPLE": 93
+   }
+  },
+  "recall": {
+   "REASONING": 0.8571428571428571,
+   "SIMPLE": 0.7322834645669292
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9202127659574468,
+  "macro_f1": 0.881983678593848,
+  "wilson95": [
+   0.8883835027028489,
+   0.9435422263378882
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 66,
+    "SIMPLE": 7
+   },
+   "SIMPLE": {
+    "REASONING": 23,
+    "SIMPLE": 280
+   }
+  },
+  "recall": {
+   "REASONING": 0.9041095890410958,
+   "SIMPLE": 0.9240924092409241
+  }
+ },
+ "val-internal": {
+  "n": 10240,
+  "accuracy": 0.95771484375,
+  "macro_f1": 0.8930251088399889,
+  "wilson95": [
+   0.9536423584424194,
+   0.9614440286801618
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 922,
+    "SIMPLE": 119
+   },
+   "SIMPLE": {
+    "REASONING": 314,
+    "SIMPLE": 8885
+   }
+  },
+  "recall": {
+   "REASONING": 0.8856868395773295,
+   "SIMPLE": 0.9658658549842374
+  }
+ },
+ "cpu_p50_ms": 12.31,
+ "cpu_p99_ms": 33.22
+}

@@ -1,0 +1,119 @@
+{
+ "tag": "gl-al-bgesmall",
+ "signal": "genlen",
+ "arch": "head",
+ "base": "BAAI/bge-small-en-v1.5",
+ "train_rows": 85942,
+ "epochs": 3,
+ "source": "genlen-v2:5970+genlen-real:43717+genlen-real-contested:15805+genlen-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SHORT": 49697,
+  "LONG": 36245
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.955503512880562,
+  "macro_f1": 0.9551849662768668,
+  "wilson95": [
+   0.9315524530978552,
+   0.9713315766708579
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 222,
+    "SHORT": 4
+   },
+   "SHORT": {
+    "LONG": 15,
+    "SHORT": 186
+   }
+  },
+  "recall": {
+   "LONG": 0.9823008849557522,
+   "SHORT": 0.9253731343283582
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.8333333333333334,
+  "macro_f1": 0.8318077803203661,
+  "wilson95": [
+   0.7696635738848362,
+   0.8820994450814678
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 62,
+    "SHORT": 12
+   },
+   "SHORT": {
+    "LONG": 16,
+    "SHORT": 78
+   }
+  },
+  "recall": {
+   "LONG": 0.8378378378378378,
+   "SHORT": 0.8297872340425532
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.9622641509433962,
+  "macro_f1": 0.961963208155135,
+  "wilson95": [
+   0.9376623035807152,
+   0.9773908815513512
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 195,
+    "SHORT": 2
+   },
+   "SHORT": {
+    "LONG": 12,
+    "SHORT": 162
+   }
+  },
+  "recall": {
+   "LONG": 0.9898477157360406,
+   "SHORT": 0.9310344827586207
+  }
+ },
+ "val-internal": {
+  "n": 9550,
+  "accuracy": 0.8979057591623036,
+  "macro_f1": 0.8956471014437937,
+  "wilson95": [
+   0.8916723343709835,
+   0.9038191881177292
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 3585,
+    "SHORT": 500
+   },
+   "SHORT": {
+    "LONG": 475,
+    "SHORT": 4990
+   }
+  },
+  "recall": {
+   "LONG": 0.8776009791921665,
+   "SHORT": 0.9130832570905764
+  }
+ },
+ "cpu_p50_ms": 12.38,
+ "cpu_p99_ms": 39.01
+}
