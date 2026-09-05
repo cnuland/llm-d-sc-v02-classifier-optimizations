@@ -3772,3 +3772,41 @@ The pattern across the day is worth stating: **on this problem, mechanism change
 have produced almost nothing and representation and taxonomy changes have produced
 everything.** The two effects that moved anything materially were the encoder
 (+4.53 on sensitivity) and collapsing the taxonomy (+3.06 on complexity).
+
+## 106. bge-small on the egress gate: a better operating point, a worse curve
+
+`eg-al-bgesmall` looked like the cleanest win of the session. At argmax it beats
+the published MiniLM gate on every axis at once:
+
+| model | accuracy | BLOCK recall | precision | over-block |
+|---|---:|---:|---:|---:|
+| eg-al-bgesmall | **96.32%** | **89.26%** | **89.26%** | **2.22%** |
+| eg-ad1-cw-seed11 (published) | 95.33% | 85.12% | 87.29% | 2.56% |
+| eg-ad1-cw-seed22 | 94.34% | 81.82% | 84.62% | 3.07% |
+
+Higher containment AND lower over-block is not a ROC slide — that is what genuine
+domination looks like, and on those numbers alone the gate should be republished.
+
+Over-block at matched containment says otherwise:
+
+| containment | bge-small | MiniLM |
+|---|---:|---:|
+| 85% | **1.19%** | 1.88% |
+| 90% | 5.12% | **3.58%** |
+| 95% | 16.38% | **8.87%** |
+| 99% | 63.31% | **48.98%** |
+
+**The curves cross at roughly 89-90% containment.** bge-small sits at a favourable
+point at argmax and degrades sharply above it — at 95% containment it over-blocks
+almost twice as much. A security gate runs at high containment, so **MiniLM stays
+published** despite losing all four argmax numbers.
+
+**Fifth intervention overturned by this control**, after logit adjustment (§56),
+span-max (§60), the three-model ensemble (§68) and bge-base on sensitivity (§90).
+The failure mode is consistent enough to state as a rule: **an argmax comparison
+between two models is a comparison of two arbitrary points, and on a gated
+ordered taxonomy it predicts the deployed metric badly.**
+
+It also qualifies §104. bge-small's apparent egress gain is an operating-point
+artifact, not a signal-level encoder effect. The encoder result on sensitivity's
+5-tier task (+4.53, §80) stands; its translation to the gate does not.

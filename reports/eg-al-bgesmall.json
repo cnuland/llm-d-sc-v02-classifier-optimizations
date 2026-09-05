@@ -1,0 +1,142 @@
+{
+ "tag": "eg-al-bgesmall",
+ "signal": "egress",
+ "arch": "head",
+ "base": "BAAI/bge-small-en-v1.5",
+ "train_rows": 42237,
+ "epochs": 3,
+ "source": "egress-v2:6783+egress-real:8361+egress-enterprise:31168+egress-real-contested:618",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "ALLOW": 37676,
+  "BLOCK": 4561
+ },
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.9894366197183099,
+  "macro_f1": 0.49734513274336284,
+  "wilson95": [
+   0.9694077896197291,
+   0.9964011830930408
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 281,
+    "BLOCK": 1
+   },
+   "BLOCK": {
+    "ALLOW": 2,
+    "BLOCK": 0
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9964539007092199,
+   "BLOCK": 0.0
+  }
+ },
+ "real-contested": {
+  "n": 119,
+  "accuracy": 0.9831932773109243,
+  "macro_f1": 0.49576271186440674,
+  "wilson95": [
+   0.9407860259928332,
+   0.9953789213865561
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 117,
+    "BLOCK": 2
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 0
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9831932773109243,
+   "BLOCK": 0.0
+  }
+ },
+ "enterprise-gold": {
+  "n": 744,
+  "accuracy": 0.9959677419354839,
+  "macro_f1": 0.7847014565448056,
+  "wilson95": [
+   0.9882122280969812,
+   0.9986277658268659
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 739,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 3,
+    "BLOCK": 2
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.4
+  }
+ },
+ "entsec-gold": {
+  "n": 707,
+  "accuracy": 0.9632248939179632,
+  "macro_f1": 0.9351888415648888,
+  "wilson95": [
+   0.9466608390576539,
+   0.9747821378305868
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 573,
+    "BLOCK": 13
+   },
+   "BLOCK": {
+    "ALLOW": 13,
+    "BLOCK": 108
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9778156996587031,
+   "BLOCK": 0.8925619834710744
+  }
+ },
+ "val-internal": {
+  "n": 4693,
+  "accuracy": 0.9914766673769444,
+  "macro_f1": 0.9795653555924219,
+  "wilson95": [
+   0.9884150772711271,
+   0.9937342888050038
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 4118,
+    "BLOCK": 30
+   },
+   "BLOCK": {
+    "ALLOW": 10,
+    "BLOCK": 535
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9927675988428158,
+   "BLOCK": 0.981651376146789
+  }
+ },
+ "cpu_p50_ms": 14.03,
+ "cpu_p99_ms": 33.1
+}
