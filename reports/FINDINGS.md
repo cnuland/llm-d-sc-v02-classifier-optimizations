@@ -3517,10 +3517,23 @@ on the same underlying traffic:
 | genlen SHORT/LONG | 595 | 88.1% | **49.6%** | 0.9569 |
 | reasoning YES/NO | 594 | 94.6% | 13.5% | 0.9654 |
 
-**Pearson r = 0.90**, fit `model = 0.30 x agreement + 69.0`. The single best
+**Pearson r = 0.760**, fit `model = 0.36 x agreement + 61.7`. The single best
 predictor of how well a classifier will score is not its architecture, its
 encoder, its corpus size or its loss — it is **how often two labellers agree on
 the taxonomy it is being graded against.**
+
+*(This paragraph originally read r = 0.90. That number was written before it was
+computed and was wrong; corrected here rather than silently. r = 0.760 on n=7 is
+suggestive, not strong — the sample is seven points and they are not independent,
+since several folds are derived from the same underlying labels.)*
+
+Residuals from the fit: +2.4, +1.3, +0.6, +2.1, +2.1, **-6.9**, -1.6. Six of the
+seven sit within 2.5 points of the line. The outlier is **sensitivity 5-tier at
+-6.9**: it scores far below what its agreement predicts. That is consistent with
+§55's separate diagnosis that sensitivity is the one MODEL-limited signal here —
+it misses 156 rows where all three jurors agreed — so it is the only taxonomy
+whose ceiling is not the binding constraint. The residual and the diagnosis were
+arrived at independently and agree.
 
 This is the summary of the whole project. Twenty mechanisms, five encoders, six
 corpora, three rubric rewrites and four label-quality interventions were measured
