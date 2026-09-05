@@ -50,10 +50,18 @@ the decisions that actually exist (§75, §79):
 
 | signal | deployed decision | jury agr | accuracy | majority baseline |
 |---|---|---:|---:|---:|
-| complexity | is reasoning needed | 94.6% | **96.54%** | 85.64% |
-| cost | short vs long generation | 88.1% | **95.69%** | 53.10% |
-| sensitivity | block at NEVER_EGRESS | 96.4% | **95.05%** | 82.89% |
-| complexity | route: small vs large | 82.0% | **93.35%** | 80.59% |
+| gate | decision | accuracy | majority | **lift over chance** |
+|---|---|---:|---:|---:|
+| [genlen](https://huggingface.co/cnuland/llm-d-sc-genlen-gate) | short vs long generation | 95.69% | **53.10%** | **+42.6** |
+| [triage](https://huggingface.co/cnuland/llm-d-sc-triage-gate) | trivial vs needs work | 96.01% | 80.32% | +15.7 |
+| [route](https://huggingface.co/cnuland/llm-d-sc-route-gate) | small vs large model | 93.35% | 80.59% | +12.8 |
+| [egress](https://huggingface.co/cnuland/llm-d-sc-egress-gate) | block at NEVER_EGRESS | 95.33% | 82.89% | +12.4 |
+| [reasoning](https://huggingface.co/cnuland/llm-d-sc-reasoning-gate) | is reasoning needed | **97.89%** | 85.64% | +12.3 |
+
+Sorted by LIFT OVER CHANCE, not accuracy. `genlen` is the strongest result here
+and fourth on raw accuracy, because its classes are nearly balanced and almost
+none of its accuracy is free; `reasoning` has the highest accuracy and the
+weakest lift. Reading the accuracy column alone reverses the ranking.
 
 All four are trained directly on the decision (earlier versions of this table
 showed the weaker numbers obtained by folding a tier model's output). Published:
