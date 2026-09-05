@@ -4171,3 +4171,40 @@ order is enumerate the folds, measure agreement and minority share, then build.
 **Weakness carried into the model card:** on jury-split rows triage scores 80.11%
 against an 82.95% baseline — below it — with TRIVIAL recall at 43.33%. Contested
 rows are roughly 30% of real traffic.
+
+## 117. `oneliner` scores 1.08 points higher than `genlen` and carries 26.7 points less information
+
+The second fold §116's search surfaced, trained:
+
+| fold | accuracy | majority | minority | **lift over chance** |
+|---|---:|---:|---:|---:|
+| oneliner (MINIMAL \| LOW+MODERATE+HIGH) | **96.77%** | 80.86% | 19.1% | **+15.90** |
+| genlen (MINIMAL+LOW \| MODERATE+HIGH) | 95.69% | 53.10% | 46.9% | **+42.59** |
+
+**Higher accuracy, far less information.** On a leaderboard `oneliner` wins; it
+wins because 80.9% of its rows are one class, so most of its accuracy is free.
+`genlen` is nearly balanced, so almost none of its accuracy is free.
+
+This was predicted in `round_at.sh` before the arm ran, because **the fold search
+ranks on agreement and agreement alone would have recommended the worse fold** —
+the same trap §98 flagged when egress reached 96.4% agreement partly by being 85%
+ALLOW.
+
+**Correction to how §116's search should be used:** rank by agreement to generate
+candidates, then REJECT any whose minority share collapses. Agreement and balance
+are not two scores to trade off; balance is a gate the candidate must pass before
+its agreement means anything. `genlen` stays published, `oneliner` is not built on.
+
+**Ranked by lift rather than accuracy, the published gates reorder:**
+
+| gate | accuracy | baseline | lift |
+|---|---:|---:|---:|
+| genlen | 95.69% | **53.10%** | **+42.6** |
+| triage | 96.01% | 80.32% | +15.7 |
+| egress | 95.33% | 82.89% | +12.4 |
+| route | 93.35% | 80.59% | +12.8 |
+| reasoning | 97.89% | 85.64% | +12.3 |
+
+**genlen is the strongest result in the project and fourth on raw accuracy;
+reasoning is the highest accuracy and the weakest lift.** Both facts have been
+true all day and only became visible when the column was added.
