@@ -1,0 +1,119 @@
+{
+ "tag": "onl-at2-seed11",
+ "signal": "oneliner",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 85942,
+ "epochs": 3,
+ "source": "oneliner-v2:5970+oneliner-real:43717+oneliner-real-contested:15805+oneliner-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "COMPOSED": 70620,
+  "ONELINE": 15322
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.9578454332552693,
+  "macro_f1": 0.9350405679513185,
+  "wilson95": [
+   0.9343544880618684,
+   0.9731716189807198
+  ],
+  "confusion": {
+   "COMPOSED": {
+    "COMPOSED": 331,
+    "ONELINE": 10
+   },
+   "ONELINE": {
+    "COMPOSED": 8,
+    "ONELINE": 78
+   }
+  },
+  "recall": {
+   "COMPOSED": 0.9706744868035191,
+   "ONELINE": 0.9069767441860465
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.8214285714285714,
+  "macro_f1": 0.703319990581587,
+  "wilson95": [
+   0.7565296552370575,
+   0.8719561130518783
+  ],
+  "confusion": {
+   "COMPOSED": {
+    "COMPOSED": 122,
+    "ONELINE": 21
+   },
+   "ONELINE": {
+    "COMPOSED": 9,
+    "ONELINE": 16
+   }
+  },
+  "recall": {
+   "COMPOSED": 0.8531468531468531,
+   "ONELINE": 0.64
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.967654986522911,
+  "macro_f1": 0.9493584493584494,
+  "wilson95": [
+   0.9443219562667288,
+   0.9814024030359741
+  ],
+  "confusion": {
+   "COMPOSED": {
+    "COMPOSED": 291,
+    "ONELINE": 9
+   },
+   "ONELINE": {
+    "COMPOSED": 3,
+    "ONELINE": 68
+   }
+  },
+  "recall": {
+   "COMPOSED": 0.97,
+   "ONELINE": 0.9577464788732394
+  }
+ },
+ "val-internal": {
+  "n": 9550,
+  "accuracy": 0.9126701570680629,
+  "macro_f1": 0.8637609590604478,
+  "wilson95": [
+   0.9068406325021998,
+   0.918167812268331
+  ],
+  "confusion": {
+   "COMPOSED": {
+    "COMPOSED": 7219,
+    "ONELINE": 636
+   },
+   "ONELINE": {
+    "COMPOSED": 198,
+    "ONELINE": 1497
+   }
+  },
+  "recall": {
+   "COMPOSED": 0.9190324633991088,
+   "ONELINE": 0.8831858407079646
+  }
+ },
+ "cpu_p50_ms": 3.92,
+ "cpu_p99_ms": 8.35
+}

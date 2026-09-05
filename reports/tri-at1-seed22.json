@@ -1,0 +1,119 @@
+{
+ "tag": "tri-at1-seed22",
+ "signal": "triage",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 92158,
+ "epochs": 3,
+ "source": "triage-v2:5566+triage-real:52212+triage-active:7326+triage-distill:30000+triage-real-contested:7294",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "TRIVIAL": 23216,
+  "WORK": 68942
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9593301435406698,
+  "macro_f1": 0.9375104427736007,
+  "wilson95": [
+   0.9358390062650587,
+   0.9744552842932929
+  ],
+  "confusion": {
+   "TRIVIAL": {
+    "TRIVIAL": 77,
+    "WORK": 6
+   },
+   "WORK": {
+    "TRIVIAL": 11,
+    "WORK": 324
+   }
+  },
+  "recall": {
+   "TRIVIAL": 0.927710843373494,
+   "WORK": 0.9671641791044776
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.8011363636363636,
+  "macro_f1": 0.6529772970536871,
+  "wilson95": [
+   0.7360135004632234,
+   0.853394067085108
+  ],
+  "confusion": {
+   "TRIVIAL": {
+    "TRIVIAL": 13,
+    "WORK": 17
+   },
+   "WORK": {
+    "TRIVIAL": 18,
+    "WORK": 128
+   }
+  },
+  "recall": {
+   "TRIVIAL": 0.43333333333333335,
+   "WORK": 0.8767123287671232
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9601063829787234,
+  "macro_f1": 0.9390500891554547,
+  "wilson95": [
+   0.9352285298470118,
+   0.9756774899254408
+  ],
+  "confusion": {
+   "TRIVIAL": {
+    "TRIVIAL": 70,
+    "WORK": 4
+   },
+   "WORK": {
+    "TRIVIAL": 11,
+    "WORK": 291
+   }
+  },
+  "recall": {
+   "TRIVIAL": 0.9459459459459459,
+   "WORK": 0.9635761589403974
+  }
+ },
+ "val-internal": {
+  "n": 10240,
+  "accuracy": 0.91181640625,
+  "macro_f1": 0.8865698110106524,
+  "wilson95": [
+   0.9061685344293426,
+   0.917155402949775
+  ],
+  "confusion": {
+   "TRIVIAL": {
+    "TRIVIAL": 2253,
+    "WORK": 378
+   },
+   "WORK": {
+    "TRIVIAL": 525,
+    "WORK": 7084
+   }
+  },
+  "recall": {
+   "TRIVIAL": 0.8563283922462942,
+   "WORK": 0.9310027598896045
+  }
+ },
+ "cpu_p50_ms": 3.63,
+ "cpu_p99_ms": 8.09
+}

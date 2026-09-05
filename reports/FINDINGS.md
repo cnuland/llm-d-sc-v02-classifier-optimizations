@@ -4125,3 +4125,49 @@ but these are not precision measurements and should not be quoted to three
 significant figures.
 
 Use them as: MiniLM ~1x, bge-small ~2x, bge-base ~4x. Anything finer is noise.
+
+## 116. Enumerating the folds beats picking one: +3.32 for seconds of arithmetic
+
+§98 showed model accuracy tracks jury agreement across seven taxonomies, and §100
+showed collapsing complexity to two tiers was worth +3.06. Both taxonomies were
+chosen by hand — the route split because the deployed Praxis table routes that
+way, the reasoning split because it was the obvious binary. **Neither was chosen
+by measurement.**
+
+`harness/fold_search.py` enumerates every CONTIGUOUS fold of an ordered taxonomy
+and ranks by three-juror agreement, reporting minority share alongside so a
+degenerate split cannot win on agreement alone. It runs in seconds on vote data
+already on disk. Complexity's top folds:
+
+| fold | agreement | minority |
+|---|---:|---:|
+| SIMPLE+MEDIUM+COMPLEX \| REASONING *(reasoning gate, built)* | 94.6% | 13.5% |
+| **SIMPLE \| MEDIUM+COMPLEX+REASONING** *(never tried)* | **86.9%** | 19.0% |
+| SIMPLE+MEDIUM \| COMPLEX+REASONING *(route gate, built)* | 82.0% | 24.6% |
+
+Trained (`tri-at1`, two seeds, both 0.9601):
+
+| gate | accuracy | majority | minority recall |
+|---|---:|---:|---:|
+| **triage** (search-selected) | **96.01%** | 80.32% | TRIVIAL 94.59% |
+| route (hand-picked) | 0.9269 median | 80.59% | LARGE 91.78% |
+
+**+3.32 points at a near-identical baseline** — a like-for-like comparison whose
+entire difference is how the fold was chosen. §98's fit predicted +1.7 from the
+agreement gap; the actual is roughly double, which places that fit as a ranking
+heuristic rather than a calibrated estimator.
+
+**Both seeds scoring 0.9601 is a coincidence, and was checked rather than
+assumed.** The models have different parameter sums, logits differing by up to
+1.48, and 10 disagreeing predictions out of 376 that happen to cancel. Two
+independently seeded models converging on the same number is stronger evidence
+than one.
+
+**The workflow this inverts:** I built FOUR gates before running the search. Both
+hand-picked folds were defensible — one is literally what the router does — and
+that is exactly what made them feel like they did not need checking. The correct
+order is enumerate the folds, measure agreement and minority share, then build.
+
+**Weakness carried into the model card:** on jury-split rows triage scores 80.11%
+against an 82.95% baseline — below it — with TRIVIAL recall at 43.33%. Contested
+rows are roughly 30% of real traffic.

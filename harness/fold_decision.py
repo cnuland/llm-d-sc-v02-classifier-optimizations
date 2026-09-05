@@ -21,6 +21,12 @@ TABLES = {
  "genlen":    ("cost",       {"MINIMAL":"SHORT","LOW":"SHORT","MODERATE":"LONG","HIGH":"LONG"}),
  "cx2":       ("complexity", {"SIMPLE":"SIMPLE","MEDIUM":"SIMPLE",
                               "COMPLEX":"REASONING","REASONING":"REASONING"}),
+ # §116's fold search: the best untested contiguous splits, found by enumerating
+ # every one rather than by picking the obvious binary.
+ "triage":    ("complexity", {"SIMPLE":"TRIVIAL","MEDIUM":"WORK",
+                              "COMPLEX":"WORK","REASONING":"WORK"}),
+ "oneliner":  ("cost",       {"MINIMAL":"ONELINE","LOW":"COMPOSED",
+                              "MODERATE":"COMPOSED","HIGH":"COMPOSED"}),
  "egress":    ("sensitivity",{"PUBLIC":"ALLOW","INTERNAL":"ALLOW","CONFIDENTIAL":"ALLOW",
                               "REGULATED":"ALLOW","NEVER_EGRESS":"BLOCK"}),
 }

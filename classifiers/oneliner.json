@@ -1,0 +1,7 @@
+{
+ "labels": [
+  "COMPOSED",
+  "ONELINE"
+ ],
+ "note": "Binary deployed decision folded out of cost: {'MINIMAL': 'ONELINE', 'LOW': 'COMPOSED', 'MODERATE': 'COMPOSED', 'HIGH': 'COMPOSED'}. Derived taxonomy local to the accuracy project; genesis untouched. See FINDINGS 75."
+}
