@@ -1,0 +1,119 @@
+{
+ "tag": "gl-ar-prior-sqrt",
+ "signal": "genlen",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 76191,
+ "epochs": 3,
+ "source": "genlen-prior-sqrt:84657",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SHORT": 39954,
+  "LONG": 36237
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.9508196721311475,
+  "macro_f1": 0.9504675943060106,
+  "wilson95": [
+   0.9259886816687914,
+   0.9676111935521714
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 221,
+    "SHORT": 5
+   },
+   "SHORT": {
+    "LONG": 16,
+    "SHORT": 185
+   }
+  },
+  "recall": {
+   "LONG": 0.9778761061946902,
+   "SHORT": 0.9203980099502488
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.8511904761904762,
+  "macro_f1": 0.8505497633704587,
+  "wilson95": [
+   0.789550043034709,
+   0.8971288519476469
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 66,
+    "SHORT": 8
+   },
+   "SHORT": {
+    "LONG": 17,
+    "SHORT": 77
+   }
+  },
+  "recall": {
+   "LONG": 0.8918918918918919,
+   "SHORT": 0.8191489361702128
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.9487870619946092,
+  "macro_f1": 0.9484032001873852,
+  "wilson95": [
+   0.9214030717813589,
+   0.9669721779241166
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 192,
+    "SHORT": 5
+   },
+   "SHORT": {
+    "LONG": 14,
+    "SHORT": 160
+   }
+  },
+  "recall": {
+   "LONG": 0.9746192893401016,
+   "SHORT": 0.9195402298850575
+  }
+ },
+ "val-internal": {
+  "n": 8466,
+  "accuracy": 0.897826600519726,
+  "macro_f1": 0.8975635661456993,
+  "wilson95": [
+   0.8911932836509981,
+   0.90409903917119
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 3586,
+    "SHORT": 507
+   },
+   "SHORT": {
+    "LONG": 358,
+    "SHORT": 4015
+   }
+  },
+  "recall": {
+   "LONG": 0.8761299780112387,
+   "SHORT": 0.9181340041161674
+  }
+ },
+ "cpu_p50_ms": 6.7,
+ "cpu_p99_ms": 13.8
+}

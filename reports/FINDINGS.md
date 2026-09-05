@@ -3975,3 +3975,47 @@ Which model to deploy depends on which distribution is being served.
 "bet on both remaining arms being inside the floor". §78's argument for this arm
 was made hours earlier and I under-rated my own reasoning. Recorded because the
 five correct null predictions today do not make the sixth one free.
+
+## 112. Prior matching pays only when the mismatch is large — and it is NOT eval-fitting
+
+§111's prior-matching win raised an obvious worry: all four gates are mismatched
+in the same direction, but their training corpora come from the same traffic their
+evals were drawn from, so `train%` is approximately traffic% and it is the EVALS
+that are enriched by construction (§99 measured the route split at ~94/6 in live
+traffic against 80/20 in its gold). Matching an enriched eval would raise the
+reported number while making the model worse.
+
+**genlen is the only gate with two independent evals, so it is the only place that
+failure is detectable.** `genlen-real-gold-v2` is 53.1% LONG; `genlen-volume-gold`
+is 40.7%, essentially the training corpus's own 42.2%. Resample toward the
+enriched one and score both:
+
+| model | matched eval (53% LONG) | independent eval (41% LONG) |
+|---|---:|---:|
+| baseline, median of 2 seeds | **0.9556** | **0.9209** |
+| prior-matched | 0.9488 | 0.9188 |
+| delta | **-0.68** | **-0.21** |
+
+**It lost on both.** Eval-fitting would have produced a GAIN on the matched eval
+and a loss on the independent one. There is no gain anywhere, so the technique is
+not fitting eval construction — **which clears §111.** The sensitivity result is
+a real effect, not an artifact.
+
+The pattern across three applications is mismatch magnitude:
+
+| signal | minority prior mismatch | rows discarded | entsec/eval delta |
+|---|---:|---:|---:|
+| sensitivity 5-tier | **2.50x** | 20% | **+1.27** |
+| egress gate | 1.57x | 20% | +0.42 |
+| genlen gate | 1.26x | 11% | **-0.68** |
+
+**Resampling always costs data.** Below roughly 1.5x mismatch the row loss exceeds
+what alignment buys, and the sign flips. This is a usable rule: measure the
+mismatch first, and only resample when it is large.
+
+**Not applying prior matching to route or reasoning** despite their 1.91x and 2.81x
+mismatches. Those ratios are inflated by eval enrichment rather than by a genuine
+training skew — the training corpora already match live traffic — so resampling
+toward them would move the model AWAY from the deployment distribution to chase a
+number. sensitivity is different: entsec was built by unconditioned generation
+keeping whatever mix resulted, so its prior is not an artifact of sampling design.
