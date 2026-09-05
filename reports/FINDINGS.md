@@ -3929,3 +3929,49 @@ ever changes.
 holds: large gain where the signal is model-limited (sensitivity, +4.53), small
 gain on cost (+0.54 to +0.67), negative on complexity (-0.53, -0.67). §55's
 diagnosis has now correctly predicted the sign of six encoder experiments.
+
+## 111. Prior matching wins every matched-containment cell — the first intervention this control confirms
+
+§78 found uniform class balancing COSTS 3.11 points because it moves the training
+prior away from the evaluation prior. The implication — interpolate TOWARD that
+prior instead — was built as `sensitivity-prior-sqrt.jsonl` and then sat unrun for
+hours while its waiter got cleaned up in a cascade.
+
+Geometric interpolation between the corpus and eval priors (CONFIDENTIAL 14.4% ->
+9.4%, INTERNAL 35.1% -> 43.7%), bge-base + escalate 0.0:
+
+| | entsec-gold | real-gold |
+|---|---:|---:|
+| prior-matched (sqrt) | **0.8274** | 0.8627 |
+| previous best (`se-ai-bge-esc0-seed11`) | 0.8204 | **0.8908** |
+| delta | **+0.70** | **-2.81** |
+
++0.70 is 5x sensitivity's 0.14-point noise floor. But the accuracy number is not
+the result — over-block at matched containment is:
+
+| gate | 85% | 90% | 95% |
+|---|---|---|---|
+| CONFIDENTIAL | **6.58** vs 7.94 | **12.02** vs 12.70 | **25.62** vs 29.71 |
+| REGULATED | **8.15** vs 10.94 | **16.74** vs 20.39 | **32.40** vs 40.34 |
+| NEVER_EGRESS | **0.85** vs 1.71 | **1.71** vs 2.39 | **4.95** vs 8.19 |
+
+**Nine cells out of nine.** At the security-critical gate and 95% containment it
+blocks 4.95% of legitimate traffic against 8.19% — **40% less collateral for the
+same containment.**
+
+**This control overturned five interventions today** (§56 logit adjustment, §60
+span-max, §68 ensembling, §90 bge-base, §106 bge-small on egress) and this is the
+first it confirms. A strictly better curve at every gate and every operating point
+is a different kind of result from a better point on the same curve, and the
+distinction is only visible because the control existed.
+
+**The trade, stated:** -2.81 on real traffic. Matching the entsec prior tunes
+toward synthetic enterprise text and away from WildChat. §77's caveat applies with
+full force — entsec is 95.8% distinguishable from real traffic, so this model is
+optimised for enterprise-LIKE synthetic data and pays for it on consumer traffic.
+Which model to deploy depends on which distribution is being served.
+
+**Prediction I got wrong:** in the preceding session note I wrote that I would
+"bet on both remaining arms being inside the floor". §78's argument for this arm
+was made hours earlier and I under-rated my own reasoning. Recorded because the
+five correct null predictions today do not make the sixth one free.
