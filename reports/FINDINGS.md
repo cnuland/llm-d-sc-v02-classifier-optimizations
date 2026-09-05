@@ -3884,3 +3884,48 @@ after the agreement-band rule (§76), per-annotator heads (§91), uniform balanc
 Every one had a mechanism convincing enough to write into the round script before
 running it. The pre-registration is what makes the failures legible rather than
 quietly forgotten.
+
+## 109. SupCon is flat across a 3x dose — the dose-response test confirms the null
+
+| arm | entsec-gold |
+|---|---:|
+| baseline (bge-base + esc0) | 0.8204 |
+| + SupCon lambda=0.1 | 0.8218 |
+| + SupCon lambda=0.3 | 0.8218 |
+
+**Tripling the contrastive weight changes the result by 0.0000.** A real effect
+shows dose-response; §66's escalation sweep was monotone across 0.0/0.5/1.0 with
+about a point per step, which is what made it believable on two seeds. SupCon is
+flat, which is what a null looks like when the term is simply not doing anything
+the cross-entropy was not already doing.
+
+**Recording the dose-response check as a standing technique.** It is cheaper than
+extra seeds — one extra arm rather than a full replication — and it distinguishes
+"small real effect" from "noise" in a way a single comparison cannot. Two arms at
+different strengths landing on the identical number is far stronger evidence of a
+null than one arm landing near zero.
+
+## 110. genlen on bge-small: +0.54, real but not worth 1.76x latency
+
+Two seeds each, refined gold:
+
+| encoder | seed 11 | seed 22 | median | p50 |
+|---|---:|---:|---:|---:|
+| MiniLM-L6 (published) | 0.9569 | 0.9542 | 0.9556 | 7.94 ms |
+| bge-small | 0.9623 | 0.9596 | **0.9610** | ~13.9 ms |
+| delta | +0.54 | +0.54 | **+0.54** | **1.76x** |
+
+The gain is consistent — identical delta on both seeds, and each encoder's own
+seed spread is 0.27 — so this is a real effect at roughly 2x the noise. It is also
+the only positive encoder transfer outside sensitivity (§104).
+
+**Not republishing.** genlen is a balanced binary task, so accuracy is the right
+metric here and no gate/containment reversal applies — but +0.54 points for 76%
+more CPU latency is a poor trade on a serving path where llm-d-sc runs the
+classifier on CPU for every request. Recorded as available if the latency budget
+ever changes.
+
+**This is the third distinct answer the encoder axis has given**, and the pattern
+holds: large gain where the signal is model-limited (sensitivity, +4.53), small
+gain on cost (+0.54 to +0.67), negative on complexity (-0.53, -0.67). §55's
+diagnosis has now correctly predicted the sign of six encoder experiments.

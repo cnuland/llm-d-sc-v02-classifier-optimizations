@@ -1,0 +1,119 @@
+{
+ "tag": "gl-al-bgesmall-s22",
+ "signal": "genlen",
+ "arch": "head",
+ "base": "BAAI/bge-small-en-v1.5",
+ "train_rows": 85942,
+ "epochs": 3,
+ "source": "genlen-v2:5970+genlen-real:43717+genlen-real-contested:15805+genlen-distill:30000",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": false,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SHORT": 49721,
+  "LONG": 36221
+ },
+ "real-gold": {
+  "n": 427,
+  "accuracy": 0.9461358313817331,
+  "macro_f1": 0.9457058351991596,
+  "wilson95": [
+   0.920472972946522,
+   0.9638427477266907
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 221,
+    "SHORT": 5
+   },
+   "SHORT": {
+    "LONG": 18,
+    "SHORT": 183
+   }
+  },
+  "recall": {
+   "LONG": 0.9778761061946902,
+   "SHORT": 0.9104477611940298
+  }
+ },
+ "real-contested": {
+  "n": 168,
+  "accuracy": 0.8511904761904762,
+  "macro_f1": 0.8499946426658096,
+  "wilson95": [
+   0.789550043034709,
+   0.8971288519476469
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 64,
+    "SHORT": 10
+   },
+   "SHORT": {
+    "LONG": 15,
+    "SHORT": 79
+   }
+  },
+  "recall": {
+   "LONG": 0.8648648648648649,
+   "SHORT": 0.8404255319148937
+  }
+ },
+ "refined-gold": {
+  "n": 371,
+  "accuracy": 0.9595687331536388,
+  "macro_f1": 0.9592262886031431,
+  "wilson95": [
+   0.934369925545352,
+   0.9753476725013962
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 195,
+    "SHORT": 2
+   },
+   "SHORT": {
+    "LONG": 13,
+    "SHORT": 161
+   }
+  },
+  "recall": {
+   "LONG": 0.9898477157360406,
+   "SHORT": 0.9252873563218391
+  }
+ },
+ "val-internal": {
+  "n": 9550,
+  "accuracy": 0.9021989528795812,
+  "macro_f1": 0.8998846120122124,
+  "wilson95": [
+   0.896078549792157,
+   0.9079959075444605
+  ],
+  "confusion": {
+   "LONG": {
+    "LONG": 3582,
+    "SHORT": 527
+   },
+   "SHORT": {
+    "LONG": 407,
+    "SHORT": 5034
+   }
+  },
+  "recall": {
+   "LONG": 0.8717449501095157,
+   "SHORT": 0.9251975739753722
+  }
+ },
+ "cpu_p50_ms": 13.34,
+ "cpu_p99_ms": 31.79
+}
