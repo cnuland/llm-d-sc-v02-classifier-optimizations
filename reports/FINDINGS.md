@@ -4775,3 +4775,66 @@ the invariant is stated at the right level of generality.
 path, and ask whether anything sets `context_completeness` today. If a gateway
 already sets DELTA expecting protection, it is currently getting confident labels
 on fragments instead.
+
+## 129. The deployment topology is one classifier per instance, and two of three signals have no instance
+
+Probing the deployed service for which signals it serves:
+
+```
+signals=["complexity"]          OK, 4 ranked labels
+signals=["cost"]                INVALID_ARGUMENT: unsupported signal 'cost';
+                                this instance serves 'complexity'
+signals=["sensitivity"]         INVALID_ARGUMENT: ... serves 'complexity'
+signals=["complexity","cost"]   INVALID_ARGUMENT: ... serves 'complexity'
+signals=[]                      OK, 4 ranked labels
+```
+
+Configured by `LLM_D_SC_CLASSIFIER=complexity`. **One instance serves exactly one
+signal**, and a mixed request is rejected outright rather than partially served.
+
+### Three architectural facts this establishes
+
+1. **Three signals require three deployments** — three model loads, three sets of
+   pods, three lifecycles to qualify.
+2. **A gateway wanting all three makes three round trips.** At 0.13 ms per
+   classification (§in-cluster measurement) that is cheap in absolute terms, but
+   it is fan-out the gateway must orchestrate and a failure surface that
+   multiplies: one bad signal name fails the whole call rather than degrading.
+3. **An empty `signals` list returns OK with ranked labels.** A caller that
+   forgets to set it gets a confident answer from an unspecified classifier
+   instead of an error — the same permissive-default shape as §128's
+   `context_completeness`.
+
+### What this means for the models this project produced
+
+| signal | models published | deployment path on this cluster |
+|---|---:|---|
+| complexity | 4 | serving, at +4.50 lift against our +25.42 checkpoint |
+| cost | 2 | **none** |
+| sensitivity | 5 | **none** |
+
+A `sensitivity-classifier` does run on the cluster, but it belongs to a different
+project (`app.kubernetes.io/part-of: semantic-redacted`, a guardrails/redaction
+stack with Qdrant) — different codebase, different wire protocol, not an llm-d-sc
+instance.
+
+**Seven of eleven published models have no process that could serve them today.**
+Not because they are inadequate: the egress-triage gate that releases 0% of
+secrets, the genlen gate at +42.6 lift, and the prior-matched sensitivity model
+are all unreachable for want of a deployment.
+
+### The constraint has moved
+
+Model quality is no longer the bottleneck on this signal family. The gap between
+what has been built and what is serving is now larger than any remaining accuracy
+work, and it is not a modelling problem:
+
+1. deploy the better complexity checkpoint — +21 points of lift on the one signal
+   that has an instance
+2. stand up cost and sensitivity instances — currently none of that work is
+   reachable
+3. everything else measurable
+
+This is the kind of finding only the runtime plane produces. Every model-plane
+number in this report was correct and none of them could reveal that most of the
+work has nowhere to run.
