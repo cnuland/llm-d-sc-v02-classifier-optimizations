@@ -1,0 +1,147 @@
+{
+ "tag": "t3-au-seed11",
+ "signal": "triage3",
+ "arch": "head",
+ "base": "BAAI/bge-base-en-v1.5",
+ "source": "triage3-v2+triage3-real+triage3-enterprise+triage3-real-contested",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "epochs": 3,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "ordinal": false,
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.9084507042253521,
+  "macro_f1": 0.7809215722009597,
+  "wilson95": [
+   0.8692400448480299,
+   0.936758810077735
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 223,
+    "BLOCK": 0,
+    "REVIEW": 19
+   },
+   "BLOCK": {
+    "ALLOW": 1,
+    "BLOCK": 1,
+    "REVIEW": 0
+   },
+   "REVIEW": {
+    "ALLOW": 6,
+    "BLOCK": 0,
+    "REVIEW": 34
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9214876033057852,
+   "BLOCK": 0.5,
+   "REVIEW": 0.85
+  }
+ },
+ "real-contested": {
+  "n": 119,
+  "accuracy": 0.5882352941176471,
+  "macro_f1": 0.3837778443711917,
+  "wilson95": [
+   0.4983993017742346,
+   0.6725525581820018
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 47,
+    "BLOCK": 1,
+    "REVIEW": 19
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 0,
+    "REVIEW": 0
+   },
+   "REVIEW": {
+    "ALLOW": 28,
+    "BLOCK": 1,
+    "REVIEW": 23
+   }
+  },
+  "recall": {
+   "ALLOW": 0.7014925373134329,
+   "BLOCK": 0.0,
+   "REVIEW": 0.4423076923076923
+  }
+ },
+ "enterprise-gold": {
+  "n": 744,
+  "accuracy": 0.9717741935483871,
+  "macro_f1": 0.8401906429335666,
+  "wilson95": [
+   0.9572356870952278,
+   0.9814657705396511
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 60,
+    "BLOCK": 0,
+    "REVIEW": 14
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 3,
+    "REVIEW": 2
+   },
+   "REVIEW": {
+    "ALLOW": 4,
+    "BLOCK": 1,
+    "REVIEW": 660
+   }
+  },
+  "recall": {
+   "ALLOW": 0.8108108108108109,
+   "BLOCK": 0.6,
+   "REVIEW": 0.9924812030075187
+  }
+ },
+ "entsec-gold": {
+  "n": 707,
+  "accuracy": 0.9434229137199435,
+  "macro_f1": 0.910384472914849,
+  "wilson95": [
+   0.9238741728435206,
+   0.9581788752617114
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 54,
+    "BLOCK": 1,
+    "REVIEW": 13
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 114,
+    "REVIEW": 7
+   },
+   "REVIEW": {
+    "ALLOW": 3,
+    "BLOCK": 16,
+    "REVIEW": 499
+   }
+  },
+  "recall": {
+   "ALLOW": 0.7941176470588235,
+   "BLOCK": 0.9421487603305785,
+   "REVIEW": 0.9633204633204633
+  }
+ },
+ "cpu_p50_ms": 16.02,
+ "cpu_p99_ms": 29.46,
+ "train_rows": 744,
+ "seed": 11,
+ "seed_note": "PUBLISHED SEED IS THE FIRST ONE RUN (11). Both seeds:\n  seed 11  entsec 0.9434   BLOCK recall 0.9421   released outright 0/121\n  seed 22  entsec 0.9293   BLOCK recall 0.9174   released outright 0/121\n\nREAD THE LAST COLUMN FIRST, NOT THE ACCURACY. This model scores LOWER than the binary llm-d-sc-egress-gate it is meant to replace (94.34% against 95.33%) and is the better security model by a wide margin:\n\n                          binary egress     this model\n  accuracy                    95.33%          94.34%\n  majority baseline           82.89%          73.27%\n  LIFT OVER CHANCE            +12.44          +21.07\n  BLOCK recall                85.12%          94.21%\n  secrets RELEASED outright   14.88%           0.00%\n\nThe binary gate has nowhere to put an uncertain row, so 14.88% of live-secret and privileged content is ALLOWed outright. This model routes it to REVIEW instead: across both seeds, ZERO of 121 BLOCK rows were sent to ALLOW. 100% of that content is either blocked or held for a human.\n\nWHY THAT IS STRUCTURAL RATHER THAN LUCK. In an ordered three-way taxonomy the errors are ADJACENT, and BLOCK's neighbour is REVIEW, not ALLOW. Collapsing to binary removes the buffer and converts every near-miss into a release. The 0.99 points of accuracy this gives up buy 9 points of containment and eliminate the worst failure mode the system has.\n\nHOW THE FOLD WAS CHOSEN, AND WHERE THE SELECTION METHOD FAILED. Enumerating every contiguous fold of the 5-tier sensitivity ladder and ranking by three-juror agreement put the BINARY gate first (96.4%) and this one third (89.5%). Agreement predicted model accuracy well across seven taxonomies in this project, and it picked the wrong model here -- because it cannot see that two folds have different FAILURE MODES, not merely different difficulty.\n\nTIERS. ALLOW = PUBLIC. REVIEW = INTERNAL, CONFIDENTIAL, REGULATED. BLOCK = NEVER_EGRESS (live credentials, legally privileged material). REVIEW preserves the CONFIDENTIAL and REGULATED distinction that the binary gate discards entirely, so statutory-exposure content is no longer treated identically to public traffic.\n\nSCOPE LIMIT. entsec is a SYNTHETIC enterprise eval, 95.8% distinguishable from real assistant traffic. It exists because real consumer traffic is ~93% PUBLIC and cannot exercise these tiers at all. There is no real enterprise corpus here to validate against."
+}

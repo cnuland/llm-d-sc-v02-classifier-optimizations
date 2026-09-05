@@ -4258,3 +4258,45 @@ is set by a handful of rows that do not generalise.
 **Three orthogonal rankings from one set of models is the finding.** A single
 accuracy figure per model is not a summary of it; it is one of at least three
 answers, and which one matters depends on the deployment.
+
+## 119. A REVIEW tier releases nothing — the three-way egress gate replaces the binary one
+
+§116's fold search ranked the binary egress fold FIRST on sensitivity (96.4%
+agreement) and the three-way ALLOW/REVIEW/BLOCK fold third (89.5%). Trained, two
+seeds, on entsec-gold:
+
+| | binary egress | **egress-triage** |
+|---|---:|---:|
+| accuracy | **95.33%** | 94.34% |
+| majority baseline | 82.89% | 73.27% |
+| **lift over chance** | +12.44 | **+21.07** |
+| **BLOCK recall** | 85.12% | **94.21%** |
+| **secrets RELEASED outright** | 14.88% | **0.00%** |
+
+**Zero of 121 BLOCK rows routed to ALLOW, on both seeds** (seed 22: BLOCK recall
+0.9174, released 0/121). The binary gate has nowhere to put an uncertain row, so
+it ALLOWs 14.88% of live-secret and privileged content. The three-way gate sends
+it to REVIEW.
+
+**The reproduction matters because the mechanism is structural.** In an ordered
+three-way taxonomy the errors are ADJACENT: BLOCK's neighbour is REVIEW, not
+ALLOW. Collapsing to binary removes that buffer and converts every near-miss into
+a release. Giving up 0.99 points of accuracy buys 9 points of containment and
+eliminates the worst failure the system can produce.
+
+**Where the fold search failed, and why.** Jury agreement predicted model accuracy
+across seven taxonomies (§98) and earned +3.32 by picking `triage` over the
+hand-chosen route fold (§116). Here it picked the wrong model, because **agreement
+measures how hard a distinction is, not what happens when you get it wrong.** Two
+folds with different FAILURE MODES look identical to it. Nothing in a 96.4%
+agreement figure reveals that the binary gate's mistakes release secrets while the
+three-way gate's mistakes queue them for a human.
+
+**Fourth reordering of the same models today**: accuracy, then lift over chance,
+then held-out deployability, now failure mode. Each ranking is defensible and they
+disagree. The lesson is not that one metric is correct — it is that **a classifier
+evaluated on a single number has not been evaluated.**
+
+**Recommendation: `llm-d-sc-egress-triage` supersedes `llm-d-sc-egress-gate` for
+any deployment where releasing a secret is worse than queueing a false positive.**
+The binary gate remains appropriate only where no human review path exists.
