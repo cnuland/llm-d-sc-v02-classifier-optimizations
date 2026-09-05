@@ -3736,3 +3736,39 @@ reproduced by fine-tuned models on the collapsed taxonomies.
 **Practical: MiniLM stays the encoder for both complexity gates at 8.38 ms.** The
 genlen result is a single seed against a 2-seed median with an observed spread of
 0.27, so +0.67 is suggestive and gets a second seed before anything is republished.
+
+## 105. SupCon does nothing (+0.14 against a 0.14 floor)
+
+The hierarchy-aware supervised contrastive loss, finally measured after two
+integration bugs (§97) killed every earlier attempt. bge-base + escalate 0.0, the
+best known recipe:
+
+| arm | entsec-gold | real-gold |
+|---|---:|---:|
+| baseline (no SupCon) | 0.8204 | 0.8908 |
+| + SupCon lambda=0.1 | **0.8218** | 0.8944 |
+| delta | **+0.14** | +0.36 |
+
+**+0.14 against sensitivity's measured 0.14-point noise floor.** No effect.
+
+This one deserves recording carefully because the argument for it was the best in
+the project. §57 localised sensitivity's failure to WHERE INTERNAL and
+CONFIDENTIAL sit in representation space; §56 and §60 showed that every
+decision-rule intervention — logit adjustment, span-max, thresholds — merely
+slides along one fixed ROC curve at a 1:2 exchange rate. SupCon was the only
+mechanism tried that acts on the coordinates rather than on a rule over them, it
+has direct literature support (Khosla et al. 2020; hierarchy weighting after
+Findings of EACL 2024), and §83's finding that jurors are individually coherent
+but mutually different made the case stronger still.
+
+It does nothing.
+
+**Fourth mechanism today with a good story and no measurable effect**, alongside
+per-annotator heads (§91, +0.53 inside floor), span-max (§60, a ROC slide) and
+logit adjustment (§56, a ROC slide). All four were rejected by controls rather
+than by intuition, and in all four cases the intuition pointed the wrong way.
+
+The pattern across the day is worth stating: **on this problem, mechanism changes
+have produced almost nothing and representation and taxonomy changes have produced
+everything.** The two effects that moved anything materially were the encoder
+(+4.53 on sensitivity) and collapsing the taxonomy (+3.06 on complexity).
