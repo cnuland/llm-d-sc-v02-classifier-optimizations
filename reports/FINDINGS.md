@@ -4434,3 +4434,73 @@ and not a control. Answer-length ratios by tier are being measured now.
 the single most consequential number in the report — it is the one that decides
 whether any of the other 121 findings matter — and it is exactly where a
 convenient confound would be easiest to overlook.
+
+## 123. §122 RETRACTED — the backwards ordering was a judge artifact
+
+§122 reported that the large model wins by more on prompts the router sends DOWN
+(+37.4) than on prompts it sends UP (+15.4), and flagged that the result rested on
+an uncontrolled judge. Three controls, all on byte-identical cached answers:
+
+**Control 1 — verbosity by tier.** The large model is disproportionately longer on
+exactly the tier where it won by more:
+
+| tier | small words | large words | ratio |
+|---|---:|---:|---:|
+| TRIVIAL | 147 | 198 | **1.35x** |
+| WORK | 284 | 341 | 1.20x |
+
+**Control 2 — is the judge a length detector?** Of 124 DECIDED pairs, **the longer
+answer won 87 (70.2%)**. Against a 50% length-indifferent baseline, the judge is
+substantially measuring words.
+
+**Control 3 — a different judge.** Same answers, `claude-fable-5-1` instead of
+`claude-opus-5`, with a sharpened instruction that a longer answer is not better
+if the extra content was not requested:
+
+| judge | TRIVIAL net | WORK net |
+|---|---:|---:|
+| opus-5 (§122) | **+37.4** | +15.4 |
+| fable-5-1 | **+33.0** | **+33.0** |
+
+**Identical on both tiers. The ordering vanishes.** §122's headline is retracted:
+the large model does not help more on TRIVIAL prompts, and the appearance that it
+did was one judge partly scoring length.
+
+The length-matched subset preserved the pattern (+80.0 TRIVIAL vs +33.3 WORK) but
+at **n=10 and n=12** carries no weight, and would have been the wrong thing to
+lean on.
+
+### What survives both judges
+
+**The classifier separates prompts by how INTERCHANGEABLE the two models are.**
+Tie rates are stable across judges and differ sharply by tier:
+
+| tier | tie (opus) | tie (fable) |
+|---|---:|---:|
+| TRIVIAL | 46.5% | 45.0% |
+| WORK | 27.5% | 20.2% |
+
+Prompts routed TRIVIAL are roughly twice as likely to be answered equivalently.
+**That is the routing premise's first condition and it holds.**
+
+**The second condition does not.** Under the better-controlled judge the large
+model still wins by +33.0 on TRIVIAL — the tier routed to the small model. Even
+discounted for the demonstrated length bias, routing down is not free.
+
+### Status of the question
+
+| claim | verdict |
+|---|---|
+| the classifier finds a real interchangeability axis | **supported, replicated** |
+| routing down is free | **unresolved — instrument compromised** |
+| large helps more on TRIVIAL than WORK | **retracted** |
+
+**Answering this properly requires length-controlled generation** — both models
+constrained to comparable output budgets so the judge cannot use length as a
+proxy. That is a redesign rather than a rerun, and until it exists the economic
+case for complexity routing remains unmeasured.
+
+**Method note.** §122 was recorded WITH its control pending and explicitly not
+acted on. That is the only reason this retraction is cheap: nothing was published,
+no recommendation was changed, and no model card cites it. Writing down what would
+falsify a result before running the check is what makes the check worth running.
