@@ -1,0 +1,11 @@
+{
+  "signal": "triage3cx",
+  "labels": ["TRIVIAL", "STANDARD", "HARD"],
+  "ordered": true,
+  "taxonomy_version": "v1",
+  "folds": {
+    "deployed": {"TRIVIAL": "TRIVIAL", "STANDARD": "WORK", "HARD": "WORK"}
+  },
+  "deployment_fold": "deployed",
+  "description": "Three-way triage folded out of complexity. The ROUTER acts on TRIVIAL/WORK: STANDARD vs HARD is a distinction the deployed gate discards, so every confidence-thresholded metric is scored after the 'deployed' fold (FINDINGS 130)."
+}

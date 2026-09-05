@@ -87,3 +87,54 @@ def test_ledger_accepts_a_real_report_shape():
     for ref in ("report.planes", "report.verdict", "report.metrics"):
         assert ref in src
         assert ref.split(".", 1)[1] in fields
+
+
+def test_fold_sums_probabilities_and_cancels_interior_uncertainty():
+    """§130: a row split 0.45/0.45/0.10 is uncertain 3-way, confident once folded.
+
+    This is the whole mechanism. Half the rows in a 3-way head's least-confident
+    slice were rows the deployed binary gate was already correct on -- 100.0% of
+    them, both seeds -- because their uncertainty lived entirely inside one folded
+    class. If fold_probs ever stops summing, that regression is silent: accuracy
+    is unchanged and only the abstention threshold reads nonsense.
+    """
+    import numpy as np
+    from clfeval.specs.task import ClassifierTaskSpec
+    spec = ClassifierTaskSpec(
+        signal="triage3cx", labels=["HARD", "STANDARD", "TRIVIAL"],
+        folds={"deployed": {"HARD": "WORK", "STANDARD": "WORK", "TRIVIAL": "TRIVIAL"}},
+        deployment_fold="deployed")
+    probs = np.array([[0.45, 0.45, 0.10]])
+    assert probs.max() == 0.45                      # maximally uncertain 3-way
+    sub, fp = spec.fold_probs("deployed", probs)
+    assert sub.labels == ["TRIVIAL", "WORK"]
+    assert fp[0, sub.labels.index("WORK")] == pytest.approx(0.90)
+    assert fp.max() == pytest.approx(0.90)          # confident once deployed
+
+
+def test_as_deployed_folds_labels_alongside_probs():
+    """A fold that moves probs but not y_true scores every row against the wrong
+    key -- and still returns a plausible-looking accuracy."""
+    import numpy as np
+    from clfeval.specs.task import ClassifierTaskSpec
+    spec = ClassifierTaskSpec(
+        signal="t", labels=["A", "B", "C"],
+        folds={"d": {"A": "X", "B": "X", "C": "Y"}}, deployment_fold="d")
+    sub, fp, y = spec.as_deployed(np.array([[0.5, 0.3, 0.2]]), ["B"])
+    assert y == ["X"] and sub.labels == ["X", "Y"]
+
+
+def test_no_deployment_fold_is_a_passthrough():
+    """Most tasks declare no fold; as_deployed must not perturb them."""
+    import numpy as np
+    from clfeval.specs.task import ClassifierTaskSpec
+    spec = ClassifierTaskSpec(signal="t", labels=["A", "B"])
+    p = np.array([[0.7, 0.3]])
+    s2, p2, y2 = spec.as_deployed(p, ["A"])
+    assert s2 is spec and p2 is p and y2 == ["A"]
+
+
+def test_deployment_fold_must_name_a_declared_fold():
+    from clfeval.specs.task import ClassifierTaskSpec
+    with pytest.raises(ValueError, match="not a declared fold"):
+        ClassifierTaskSpec(signal="t", labels=["A", "B"], deployment_fold="ghost")

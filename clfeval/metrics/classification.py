@@ -119,19 +119,33 @@ def gates(y_true: list[str], probs: np.ndarray, spec) -> dict:
 
 def risk_coverage(y_true: list[str], probs: np.ndarray, spec,
                   coverages=(0.95, 0.90, 0.80, 0.70), repeats=40) -> dict:
-    """Held-out abstention curve: accuracy on the rows the model keeps.
+    """Held-out abstention curve, scored in the DEPLOYED label space.
 
     Held out because the abstention threshold is an operating point, and choosing
     one on the rows you then score was worth about a point of optimism on accuracy
     and roughly 2x on over-block at high containment.
+
+    Deployed because confidence is what the threshold reads, and a taxonomy finer
+    than the routing decision puts uncertainty on boundaries the router discards.
+    On a 3-way head deployed as a 2-way gate, half the rows in the least-confident
+    5% were rows the deployed gate was already correct on -- 100.0% of them, on
+    both seeds -- because their uncertainty was entirely interior to one folded
+    class. Thresholding raw softmax.max() there cost 2.3-3.0 points of kept
+    accuracy at 80% coverage. `spec.deployment_fold` selects the space; when a
+    task declares none, this is the trained space and nothing changes.
+
+    Also reports `waste`: the share of escalated rows the gate had ALREADY got
+    right. Kept-accuracy alone cannot distinguish a threshold that finds real
+    errors from one that escalates at random, and escalation is not free.
     """
+    spec, probs, y_true = spec.as_deployed(probs, y_true)
     pred = np.array([spec.labels[i] for i in probs.argmax(1)])
     conf = probs.max(1)
     correct = (pred == np.array(y_true))
     rng = np.random.default_rng(0)
     out = {}
     for cov in coverages:
-        held = []
+        held, wasted = [], []
         for _ in range(repeats):
             idx = rng.permutation(len(correct))
             for a, b in ((idx[:len(idx)//2], idx[len(idx)//2:]),
@@ -139,7 +153,9 @@ def risk_coverage(y_true: list[str], probs: np.ndarray, spec,
                 t = np.quantile(conf[a], 1-cov)
                 keep = conf[b] >= t
                 if keep.sum(): held.append(correct[b][keep].mean())
+                if (~keep).sum(): wasted.append(correct[b][~keep].mean())
         out[f"selective/accuracy@{cov:.2f}"] = float(np.mean(held)) if held else float("nan")
+        out[f"selective/waste@{cov:.2f}"] = float(np.mean(wasted)) if wasted else float("nan")
     return out
 
 
@@ -151,11 +167,25 @@ def confidence_vs_disagreement(rows: list[dict], probs: np.ndarray, spec,
     confidently wrong on hard rows rather than uncertain about them, and no
     threshold rescues it. That distinction explained why one published gate had
     the worst abstention curve in its family despite the second-highest accuracy.
+
+    NOT A SELECTION CRITERION. Across three arms of one matched experiment it
+    ranked them in exactly the reverse of their deployed kept-accuracy: the arm
+    with the best enrichment (2.0x) had the worst accuracy at 80% coverage, and
+    the arm with the worst enrichment (1.0x) beat it by 2.3 points. Enrichment
+    rewards a head for being uncertain without asking whether the uncertainty is
+    about anything the deployment acts on. Read it as a diagnostic for WHY an
+    abstention curve is shaped as it is, and rank arms on `selective/accuracy`
+    and `selective/waste`.
+
+    Scored in the deployed space for the same reason risk_coverage is -- an
+    enrichment computed on a taxonomy the router never sees describes a threshold
+    nobody applies.
     """
     v = spec.votes_field
     flags = np.array([1.0 if isinstance(r.get(v), list) and len(set(r[v])) > 1 else 0.0
                       for r in rows])
     if flags.sum() == 0: return {}
+    spec, probs, _ = spec.as_deployed(probs)
     conf = probs.max(1)
     t = np.quantile(conf, 1-coverage)
     dropped = conf < t

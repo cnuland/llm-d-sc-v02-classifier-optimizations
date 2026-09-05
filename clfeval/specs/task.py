@@ -52,6 +52,7 @@ class ClassifierTaskSpec:
     class_relationships: dict[str, list[str]] = dataclasses.field(default_factory=dict)
     abstention: AbstentionPolicy = dataclasses.field(default_factory=AbstentionPolicy)
     folds: dict[str, dict[str, str]] = dataclasses.field(default_factory=dict)
+    deployment_fold: str | None = None      # which fold the ROUTER actually acts on
     noise_floor: float | None = None
     text_field: str = "text"
     label_field: str = "tier"
@@ -75,6 +76,10 @@ class ClassifierTaskSpec:
             missing = set(self.labels) - set(table)
             if missing:
                 raise ValueError(f"{self.signal}: fold '{name}' does not map {sorted(missing)}")
+        if self.deployment_fold and self.deployment_fold not in self.folds:
+            raise ValueError(
+                f"{self.signal}: deployment_fold '{self.deployment_fold}' is not a "
+                f"declared fold ({sorted(self.folds)})")
 
     @property
     def rank(self) -> dict[str, int]:
@@ -109,6 +114,41 @@ class ClassifierTaskSpec:
             text_field=self.text_field, label_field=self.label_field,
             votes_field=self.votes_field,
             description=f"fold '{name}' of {self.signal}: {t}")
+
+    def fold_probs(self, name: str, probs):
+        """Project a probability matrix onto a collapsed taxonomy.
+
+        Folding is a SUM over the columns that collapse together, and that sum
+        CANCELS uncertainty interior to a folded class exactly: a 3-way row split
+        0.45/0.45/0.10 is maximally uncertain in the trained space and a confident
+        0.90 after folding. Which is correct -- the deployment never had to choose
+        between those two.
+
+        This matters because confidence is what abstention thresholds read. Scoring
+        abstention in the trained space on a model whose taxonomy is finer than its
+        routing decision cost 2.3-3.0 points of kept accuracy at 80% coverage and
+        spent ~80% of the escalation budget on rows the deployed gate had already
+        got right. Returns (folded_spec, folded_probs) with columns in the folded
+        spec's label order.
+        """
+        import numpy as np
+        sub = self.folded(name)
+        t = self.folds[name]
+        cols = [[i for i, l in enumerate(self.labels) if t[l] == out]
+                for out in sub.labels]
+        return sub, np.stack([np.asarray(probs)[:, c].sum(1) for c in cols], axis=1)
+
+    def as_deployed(self, probs, y_true=None):
+        """(spec, probs, y_true) as the ROUTER sees them, or unchanged if no fold.
+
+        The single place that decides whether a metric is scored in the trained
+        taxonomy or the deployed one, so callers cannot silently pick the wrong one.
+        """
+        if not self.deployment_fold:
+            return self, probs, y_true
+        sub, fp = self.fold_probs(self.deployment_fold, probs)
+        t = self.folds[self.deployment_fold]
+        return sub, fp, ([t[v] for v in y_true] if y_true is not None else None)
 
     @classmethod
     def load(cls, path) -> "ClassifierTaskSpec":
