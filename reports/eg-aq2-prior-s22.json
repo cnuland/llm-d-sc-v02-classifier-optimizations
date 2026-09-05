@@ -1,0 +1,142 @@
+{
+ "tag": "eg-aq2-prior-s22",
+ "signal": "egress",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 33538,
+ "epochs": 4,
+ "source": "egress-prior-sqrt:37265",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "ALLOW": 28926,
+  "BLOCK": 4612
+ },
+ "real-gold": {
+  "n": 284,
+  "accuracy": 0.9964788732394366,
+  "macro_f1": 0.8324483775811209,
+  "wilson95": [
+   0.9803273246785605,
+   0.9993781800156881
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 282,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 1,
+    "BLOCK": 1
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.5
+  }
+ },
+ "real-contested": {
+  "n": 119,
+  "accuracy": 1.0,
+  "macro_f1": 0.5,
+  "wilson95": [
+   0.9687272064186726,
+   1.0
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 119,
+    "BLOCK": 0
+   },
+   "BLOCK": {
+    "ALLOW": 0,
+    "BLOCK": 0
+   }
+  },
+  "recall": {
+   "ALLOW": 1.0,
+   "BLOCK": 0.0
+  }
+ },
+ "enterprise-gold": {
+  "n": 744,
+  "accuracy": 0.9905913978494624,
+  "macro_f1": 0.6087446472842011,
+  "wilson95": [
+   0.9807073371671519,
+   0.9954352042480356
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 736,
+    "BLOCK": 3
+   },
+   "BLOCK": {
+    "ALLOW": 4,
+    "BLOCK": 1
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9959404600811907,
+   "BLOCK": 0.2
+  }
+ },
+ "entsec-gold": {
+  "n": 707,
+  "accuracy": 0.9519094766619519,
+  "macro_f1": 0.9173951890034364,
+  "wilson95": [
+   0.9335498859691206,
+   0.9653845601859722
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 565,
+    "BLOCK": 21
+   },
+   "BLOCK": {
+    "ALLOW": 13,
+    "BLOCK": 108
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9641638225255973,
+   "BLOCK": 0.8925619834710744
+  }
+ },
+ "val-internal": {
+  "n": 3727,
+  "accuracy": 0.9898041320096592,
+  "macro_f1": 0.9780189250868527,
+  "wilson95": [
+   0.9860369848869044,
+   0.9925625890001242
+  ],
+  "confusion": {
+   "ALLOW": {
+    "ALLOW": 3209,
+    "BLOCK": 24
+   },
+   "BLOCK": {
+    "ALLOW": 14,
+    "BLOCK": 480
+   }
+  },
+  "recall": {
+   "ALLOW": 0.9925765542839468,
+   "BLOCK": 0.97165991902834
+  }
+ },
+ "cpu_p50_ms": 3.68,
+ "cpu_p99_ms": 9.47
+}

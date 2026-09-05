@@ -4019,3 +4019,53 @@ training skew — the training corpora already match live traffic — so resampl
 toward them would move the model AWAY from the deployment distribution to chase a
 number. sensitivity is different: entsec was built by unconditioned generation
 keeping whatever mix resulted, so its prior is not an artifact of sampling design.
+
+## 113. Prior matching on the egress gate: seventh test of the containment control, sixth rejection
+
+Transferring §111's technique to the published security gate. At argmax it looks
+like a clear win, and on a security gate the containment column is the one you
+would lead with:
+
+| model | accuracy | BLOCK recall | over-block |
+|---|---:|---:|---:|
+| eg-aq2-prior-sqrt | **95.47%** | **90.08%** | 3.41% |
+| eg-ad1-cw-seed11 (published) | 95.33% | 85.12% | **2.56%** |
+
+**+4.96 points of containment.** At matched containment:
+
+| containment | prior-matched | published |
+|---|---:|---:|
+| 85% | 2.90% | **1.88%** |
+| 90% | **3.24%** | 3.58% |
+| 95% | 17.24% | **8.87%** |
+
+Wins one cell, loses badly at 95% where it over-blocks nearly twice as much.
+Better operating point, worse curve — **the identical shape as bge-small on this
+same gate (§106).** The published gate stays.
+
+**§112's rule predicted this before it was run.** Egress sits at 1.57x prior
+mismatch, right at the boundary where resampling's row cost starts to exceed the
+alignment gain: sensitivity at 2.50x won all nine cells, genlen at 1.26x lost
+outright, egress at 1.57x wins at argmax and dies on the curve. A rule derived two
+experiments earlier correctly placed the third.
+
+**Running tally of the matched-containment control:**
+
+| intervention | argmax | curve |
+|---|---|---|
+| logit adjustment (§56) | win | ROC slide |
+| span-max (§60) | win | ROC slide |
+| three-model ensemble (§68) | win | loses 7 of 9 |
+| bge-base on sensitivity (§90) | win | loses 6 of 9 |
+| bge-small on egress (§106) | win | loses 3 of 4 |
+| prior on egress (here) | win | loses 2 of 3 |
+| **prior on sensitivity (§111)** | win | **wins 9 of 9** |
+
+**Seven interventions, one survivor.** Every one of the six would have been
+reported as an improvement by any evaluation that stops at argmax — which is what
+almost every classifier evaluation does.
+
+The control is about forty lines. It has been worth more than every architecture,
+loss function and data-generation idea in this report combined. The transferable
+statement: **on a gated ordered taxonomy, an argmax comparison between two models
+compares two arbitrary points, not two models.**
