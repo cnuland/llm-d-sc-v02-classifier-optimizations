@@ -28,3 +28,18 @@ def expected_calibration_error(probs: np.ndarray, correct: np.ndarray, bins: int
             "calibration/bins": rows,
             # >0 means overconfident: the model claims more certainty than it earns
             "calibration/overconfidence": float(conf.mean() - correct.mean())}
+
+
+def confident_half_spread(probs) -> dict:
+    """How much of the confidence range is left to threshold on in the top half?
+
+    A saturated head compresses its confident rows into a band too narrow to rank:
+    one measured gate ran 0.953 -> 0.962 across its top 60%, a 0.009 window in
+    which to order 330 rows. Quantiles there cut through a spike, which is why its
+    risk-coverage curve went non-monotone while its accuracy looked normal.
+    """
+    import numpy as np
+    conf = np.asarray(probs).max(1)
+    if conf.size < 4: return {}
+    top = conf[conf >= np.median(conf)]
+    return {"calibration/confident_half_spread": float(top.max() - top.min())}

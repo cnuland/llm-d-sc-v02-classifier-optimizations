@@ -5,6 +5,7 @@ worse than no control, and these are the specific failures that produced numbers
 which looked publishable.
 """
 import sys, pathlib
+import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 import numpy as np
 from clfeval.controls import (BaselineControl, SeedStabilityControl, HoldoutControl,
@@ -106,3 +107,68 @@ def test_not_applicable_is_not_pass():
     """'Unmeasured' must never render as 'passed'."""
     r = JudgeIntegrityControl().run(_ctx())
     assert r.status is Status.NOT_APPLICABLE and not r.blocks_promotion
+
+
+def _curve(**pts):
+    return {f"selective/accuracy@{c}": v for c, v in pts.items()}
+
+
+def test_non_monotone_risk_coverage_fails():
+    """§132's real curve. The gate scored 88.41% -- indistinguishable from the
+    folded alternative's 88.95% -- while its accuracy PEAKED at 60% coverage and
+    fell to 91.57% at 30%, worse than keeping 70%. Accuracy, macro-F1 and ECE all
+    looked normal. Only the shape of the curve showed it."""
+    from clfeval.controls.quality import ConfidenceOrderingControl
+    r = ConfidenceOrderingControl().run({"metrics": _curve(**{
+        "0.90": 0.9133, "0.80": 0.9320, "0.70": 0.9534,
+        "0.60": 0.9577, "0.50": 0.9493, "0.40": 0.9367, "0.30": 0.9157})})
+    assert r.status is Status.FAIL
+    assert "NON-MONOTONE" in r.detail
+
+
+def test_monotone_risk_coverage_passes():
+    """The folded 4-way head from the same experiment, same rows."""
+    from clfeval.controls.quality import ConfidenceOrderingControl
+    r = ConfidenceOrderingControl().run({"metrics": _curve(**{
+        "0.90": 0.9234, "0.80": 0.9524, "0.70": 0.9715,
+        "0.60": 0.9970, "0.50": 0.9964, "0.40": 1.0, "0.30": 1.0}) |
+        {"calibration/confident_half_spread": 0.19}})
+    assert r.status is Status.PASS
+
+
+def test_tiny_dip_is_not_a_failure():
+    """Held-out thresholds resample; a curve that wobbles 0.2% between adjacent
+    coverages has not inverted, and failing it would make the control unusable."""
+    from clfeval.controls.quality import ConfidenceOrderingControl
+    r = ConfidenceOrderingControl().run({"metrics": _curve(**{
+        "0.90": 0.920, "0.80": 0.940, "0.70": 0.938, "0.60": 0.960}) |
+        {"calibration/confident_half_spread": 0.19}})
+    assert r.status is Status.PASS
+
+
+def test_saturated_confidence_warns_even_when_monotone():
+    """A curve can rise while having no resolution left to threshold on. The gate
+    in §132 ran 0.953 -> 0.962 across its top 60%: monotone in principle, but a
+    0.009 window in which to rank 330 rows."""
+    from clfeval.controls.quality import ConfidenceOrderingControl
+    r = ConfidenceOrderingControl().run({"metrics": _curve(**{
+        "0.90": 0.920, "0.80": 0.940, "0.70": 0.955, "0.60": 0.960}) |
+        {"calibration/confident_half_spread": 0.009}})
+    assert r.status is Status.WARN
+    assert "saturated" in r.detail
+
+
+def test_confidence_ordering_is_blocking():
+    """A router that cannot order its own confidence cannot be given an escalation
+    policy, which is the operational point of a gate. This must not be advisory."""
+    from clfeval.controls.quality import ConfidenceOrderingControl
+    assert ConfidenceOrderingControl().blocking is True
+
+
+def test_confident_half_spread_measures_the_top_half():
+    import numpy as np
+    from clfeval.metrics.calibration import confident_half_spread
+    # bottom half spans widely; the top half is pinned in a 0.01 band
+    P = np.array([[0.5, 0.5], [0.6, 0.4], [0.95, 0.05], [0.96, 0.04]])
+    s = confident_half_spread(P)["calibration/confident_half_spread"]
+    assert s == pytest.approx(0.01, abs=1e-6)

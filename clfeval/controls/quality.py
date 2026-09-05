@@ -159,3 +159,72 @@ class CalibrationControl(Control):
                 bits.append("confidence is near-blind to jury disagreement — "
                             "abstention will not mitigate hard rows")
         return self._r(status, "; ".join(bits), ece=ece, contested_enrichment=enrich)
+
+
+class ConfidenceOrderingControl(Control):
+    """Are the model's most confident rows actually its most correct rows?
+
+    A risk-coverage curve must rise as coverage falls: dropping the least
+    confident traffic should leave a cleaner remainder. When it does not, the
+    confidence ordering is inverted somewhere in the top of the range and every
+    threshold read off that curve is meaningless.
+
+    This is invisible to accuracy. The gate that motivated this control scored
+    88.41% against a folded alternative's 88.95% -- a wash -- while its curve
+    peaked at 60% coverage and FELL to 91.57% at 30%, worse than keeping 70%. It
+    could not reach 97% at any coverage; the alternative reached 99% by escalating
+    38%. Nothing in accuracy, macro-F1 or ECE distinguished them.
+
+    The usual cause is a saturated head: a 2-class softmax on a hard boundary has
+    one logit difference to express both which side and how sure, and it compresses
+    the confident half into a band too narrow to rank. That is reported separately,
+    because a curve can still be monotone while having no resolution left to
+    threshold on -- and the fix differs (train on a finer taxonomy and fold, rather
+    than recalibrate).
+
+    Blocking: a router that cannot order its own confidence cannot be given an
+    escalation policy, which is the entire operational value of a classifier gate.
+    """
+    name = "confidence_ordering"
+    blocking = True
+
+    #: a drop this small is resampling noise on a few hundred held-out rows
+    TOLERANCE = 0.005
+    #: confident-half spread below this cannot rank the rows inside it
+    MIN_SPREAD = 0.02
+
+    def run(self, ctx):
+        m = ctx["metrics"]
+        pts = sorted(((float(k.split("@")[1]), v)
+                      for k, v in m.items()
+                      if k.startswith("selective/accuracy@") and v == v),
+                     reverse=True)                       # 0.95, 0.90, 0.80, ...
+        if len(pts) < 3:
+            return self._r(Status.NOT_APPLICABLE,
+                           "fewer than three coverage points; a curve needs a shape")
+        drops = [(c0, c1, a0 - a1)
+                 for (c0, a0), (c1, a1) in zip(pts, pts[1:]) if a0 - a1 > self.TOLERANCE]
+        spread = m.get("calibration/confident_half_spread")
+        bits = [f"risk-coverage {' -> '.join(f'{c:.0%}:{a:.2%}' for c, a in pts)}"]
+        if drops:
+            worst = max(drops, key=lambda d: d[2])
+            return self._r(
+                Status.FAIL,
+                f"risk-coverage curve is NON-MONOTONE: accuracy falls {worst[2]:.2%} "
+                f"going from {worst[0]:.0%} to {worst[1]:.0%} coverage. The most "
+                f"confident rows are not the most correct ones, so no escalation "
+                f"threshold read off this curve means anything. "
+                + "; ".join(bits),
+                non_monotone_steps=len(drops), worst_drop=worst[2])
+        if spread is not None and spread < self.MIN_SPREAD:
+            bits.append(f"confident-half spread {spread:.4f} < {self.MIN_SPREAD}")
+            return self._r(
+                Status.WARN,
+                "confidence is monotone but saturated: the top half of rows sit in "
+                f"a {spread:.4f}-wide band, so quantile thresholds there cut through "
+                f"a spike and rank near-arbitrarily. Training on a finer taxonomy and "
+                f"folding to the deployed decision restores resolution. "
+                + "; ".join(bits),
+                confident_half_spread=spread)
+        return self._r(Status.PASS, "; ".join(bits),
+                       confident_half_spread=spread)

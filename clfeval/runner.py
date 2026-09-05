@@ -19,7 +19,8 @@ from __future__ import annotations
 import json, pathlib
 import numpy as np
 from .metrics import classification as M
-from .metrics.calibration import expected_calibration_error
+from .metrics.calibration import (expected_calibration_error,
+                                  confident_half_spread)
 from .controls import DEFAULT_CONTROLS, summarise
 from .reports import QualificationReport
 from .reports.planes import resolve as resolve_planes, verdict as plane_verdict
@@ -66,6 +67,9 @@ def qualify(*, adapter, task, datasets, rows, suite="ad-hoc", root=None,
               if not k.endswith("bins")})
     m.update(M.gates(y, P, task))                                # decision quality
     m.update(M.risk_coverage(y, P, task))
+    # Read in the DEPLOYED space: a saturated head is saturated there,
+    # and that is the space whose thresholds anyone actually sets.
+    m.update(confident_half_spread(task.as_deployed(P)[1]))
     m.update(M.confidence_vs_disagreement(rows, P, task))
     if runtime:
         m.update({f"runtime/{k}": v for k, v in runtime.items()})
