@@ -4838,3 +4838,109 @@ work, and it is not a modelling problem:
 This is the kind of finding only the runtime plane produces. Every model-plane
 number in this report was correct and none of them could reveal that most of the
 work has nowhere to run.
+
+## 130. Abstention must be computed in the DEPLOYED label space — and contested-enrichment points the wrong way
+
+Round AV added a middle tier to triage (TRIVIAL/STANDARD/HARD) on the §119
+theory that a binary gate cannot express uncertainty. Its stated prediction was
+not accuracy but **whether the three-way head's abstention curve enriches for
+jury-contested rows**, where binary triage scored 1.0x — blind (§121).
+
+The prediction was confirmed, and following it would have made the system worse.
+
+### The prediction, confirmed
+
+Same rows, same jury, same procedure as §121 (n=552, contested share 31.9%):
+
+| arm | drop@95% | drop@90% | drop@80% |
+|---|---|---|---|
+| triage binary, seed 11 | 32.1% (**1.0x**) | 39.3% (1.2x) | 38.7% (1.2x) |
+| triage binary, seed 22 | 32.1% (**1.0x**) | 39.3% (1.2x) | 40.5% (1.3x) |
+| triage3cx 3-way, seed 11 | 64.3% (**2.0x**) | 50.0% (1.6x) | 48.6% (1.5x) |
+| triage3cx 3-way, seed 22 | 57.1% (**1.8x**) | 50.0% (1.6x) | 47.7% (1.5x) |
+
+The middle tier doubled contested enrichment. On the §121 metric it is an
+unambiguous win on both seeds.
+
+### The matched comparison says it buys nothing at the cut that ships
+
+`triage` and `triage3cx` are folds of the SAME complexity labels over the SAME
+rows in the SAME order, so `{STANDARD,HARD}->WORK` reproduces the binary label
+exactly — a matched pair, McNemar rather than Wilson:
+
+| seed | binary | 3-way folded | delta | McNemar |
+|---|---|---|---|---|
+| 11 | 90.94% | 91.67% | +0.72 | 4 vs 8, p=0.39 |
+| 22 | 90.94% | 91.30% | +0.36 | 4 vs 6, p=0.75 |
+
+Not significant on either seed. And enrichment, recomputed on folded confidence,
+falls from 2.0x back to 1.2x — most of the gain does not survive the fold.
+
+### Why: the fold is a SUM, and it cancels interior uncertainty exactly
+
+`P(WORK) = P(STANDARD) + P(HARD)`, so a row split 0.45/0.45/0.10 is maximally
+uncertain three-way and a confident 0.90 WORK after folding. Of the 28 rows
+dropped at 95% coverage three-way:
+
+| | seed 11 | seed 22 |
+|---|---|---|
+| rescued by the fold | 16 (57%) | 14 (50%) |
+| rescued: mean P(TRIVIAL) | 0.045 | 0.057 |
+| rescued: mean min(P(STANDARD),P(HARD)) | 0.437 | 0.429 |
+| rescued: **binary decision already correct** | **100.0%** | **100.0%** |
+| rescued: contested share | 75.0% | 71.4% |
+| still dropped: mean P(TRIVIAL) | 0.476 | 0.467 |
+| still dropped: binary correct | 58.3% | 64.3% |
+
+The uncertainty the middle tier created is **real and well-calibrated** — those
+rows are 71-75% jury-contested against a 31.9% pool. It is uncertainty about a
+boundary the deployed decision discards, and the deployed decision is right on
+100.0% of them, both seeds.
+
+### The cost of abstaining in the wrong label space
+
+`waste` = share of escalated rows the gate had already got right:
+
+| seed | strategy | @98% | @95% | @90% | @85% | @80% |
+|---|---|---|---|---|---|---|
+| 11 | binary head | 92.22% (33%) | 92.75% (57%) | 94.56% (59%) | 95.95% (63%) | 96.60% (68%) |
+| 11 | **naive-3way** | 91.85% (83%) | 92.18% (82%) | 92.94% (80%) | 93.82% (80%) | **94.33% (81%)** |
+| 11 | fold-aware | 92.59% (50%) | 93.51% (57%) | 95.16% (61%) | 96.38% (65%) | **97.28% (69%)** |
+| 22 | binary head | 91.67% (58%) | 93.13% (50%) | 94.96% (55%) | 96.16% (61%) | 97.05% (67%) |
+| 22 | **naive-3way** | 91.67% (75%) | 91.79% (82%) | 92.54% (80%) | 93.60% (78%) | **94.10% (80%)** |
+| 22 | fold-aware | 92.22% (50%) | 93.13% (57%) | 94.76% (61%) | 95.74% (66%) | 96.37% (71%) |
+
+`naive-3way` — plain `softmax.max()`, **the default any caller gets** — is
+2.3-3.0 points behind fold-aware at 80% coverage and burns ~80% of its
+escalation budget on rows that were already correct, at every coverage level on
+both seeds.
+
+`fold-aware` vs a separately trained binary head is a wash: seed 11 favours
+fold-aware at every coverage, seed 22 favours binary below 90%. No claim there.
+
+### The metric was anti-correlated with the outcome
+
+| arm | contested enrichment @95% | kept accuracy @80% |
+|---|---|---|
+| naive-3way | **2.0x** (best) | **94.33%** (worst) |
+| fold-aware | 1.2x | 97.28% |
+| binary head | 1.0x (worst) | 96.60% |
+
+Contested-enrichment — the §121 diagnostic — ranks these arms in exactly the
+wrong order. It rewards a head for being uncertain, without asking whether the
+uncertainty is about anything the deployment acts on. Enrichment is diagnostic
+of *calibration*; it is not a selection criterion, and §121 should be read that
+way.
+
+### Rule
+
+**Compute abstention in the label space you deploy, not the one you trained.**
+A finer taxonomy generates more uncertainty and every confidence metric will
+reward it, but uncertainty interior to the deployed decision is noise in the
+abstention signal — worse than noise, because it spends a real escalation budget
+on traffic that was never going to be misrouted.
+
+This generalises past triage: it applies to any classifier whose training
+taxonomy is finer than its routing decision, which is the normal case (complexity
+has 4 labels and drives a 2-way route). `clfeval` should compute risk-coverage
+after applying a task's declared deployment fold, and currently does not.
