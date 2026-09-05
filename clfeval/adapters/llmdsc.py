@@ -34,6 +34,14 @@ class LlmDScAdapter(ClassifierAdapter):
                  signal: str | None = None, channel=None):
         import grpc
         from ._generated import classify_pb2 as pb, classify_pb2_grpc as pbg
+        # Vendored stubs drift silently against the service's real contract. The
+        # first version of this adapter was generated from a proto that lacked
+        # context_completeness entirely, and nothing would have reported that.
+        if not hasattr(pb, "ContextCompleteness"):
+            raise RuntimeError(
+                "vendored gRPC stubs predate ContextCompleteness — regenerate from "
+                "the llm-d-semantic-classifier repo's proto/classify.proto before "
+                "qualifying anything against a live service")
         self.pb, self.task, self.timeout_s = pb, task, timeout_s
         self.signal = signal or task.signal.split("/")[0]
         self.target = target
@@ -50,10 +58,8 @@ class LlmDScAdapter(ClassifierAdapter):
     def _probe(self):
         """Read the service's self-reported provenance from a single call."""
         try:
-            r = self._stub.Classify(
-                self.pb.ClassifyRequest(request_id="clfeval-probe", session_id="probe",
-                                        context="probe", signals=[self.signal]),
-                timeout=self.timeout_s)
+            r = self._stub.Classify(self._req("clfeval-probe", "probe"),
+                                     timeout=self.timeout_s)
             if r.model_revision:
                 self.revision = f"model:{r.model_revision}"
             self.runtime_revision = (
@@ -65,11 +71,21 @@ class LlmDScAdapter(ClassifierAdapter):
         except Exception as e:
             self.runtime_revision = f"llm-d-sc@{self.target} (probe failed: {type(e).__name__})"
 
+    def _req(self, rid: str, text: str):
+        """Build a ClassifyRequest with context completeness DECLARED.
+
+        An eval row is a whole prompt, not a conversational delta, so the correct
+        value is FULL. Leaving it UNSPECIFIED would make the service infer what it
+        was given -- and a qualification that depends on an inference about its own
+        input is measuring something it has not pinned down.
+        """
+        return self.pb.ClassifyRequest(
+            request_id=rid, session_id="clfeval", context=text,
+            signals=[self.signal],
+            context_completeness=self.pb.FULL)
+
     def _one(self, text: str, i: int) -> np.ndarray | None:
-        r = self._stub.Classify(
-            self.pb.ClassifyRequest(request_id=f"clfeval-{i}", session_id="clfeval",
-                                    context=text, signals=[self.signal]),
-            timeout=self.timeout_s)
+        r = self._stub.Classify(self._req(f"clfeval-{i}", text), timeout=self.timeout_s)
         if r.status == self.pb.ABSTAIN:
             self.abstained += 1
             return None

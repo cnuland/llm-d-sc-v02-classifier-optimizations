@@ -4683,3 +4683,41 @@ never asks the runtime what it is running.
 `artifact_identity` is what makes that statement attributable rather than
 speculative: the report records `model:c5f55ef419d268ba843c544dc00988d1e9878044`
 and `taxonomy scr-default-anchors-v1` as reported by the service itself.
+
+## 127. Four seeds settle the noise floor: the effect is 3.0 sigma, not 9.6x
+
+§124 found that the "noise floor" quoted throughout this project was the MINIMUM
+within-configuration seed spread ever observed, and predicted the resulting claims
+were inflated roughly 4x. Two more seeds of the prior-matched configuration
+resolve it:
+
+| config | n | median | spread | sigma est. |
+|---|---:|---:|---:|---:|
+| prior-matched (bge-base, esc 0.0, sqrt prior) | 4 | **0.8310** | 0.0085 | **0.0041** |
+| baseline (bge-base, esc 0.0) | 2 | 0.8175 | 0.0057 | 0.0051 |
+
+| statement | value |
+|---|---:|
+| effect | **+1.34 points** |
+| as published — "nine times the noise floor" (vs 0.0014) | 9.6x |
+| **honest — against the measured pooled sigma (0.0045)** | **3.0 sigma** |
+
+**The effect survives; the confidence does not.** 3 sigma is a real result. "Nine
+times the noise floor" implied near-certainty the data never supported, and it
+appeared in a published model card, now corrected.
+
+**Two compounding errors, both now measured:**
+
+1. **A floor is a property of a CONFIGURATION, not a signal.** 0.0014 was measured
+   on a MiniLM config and applied to bge-base with a resampled corpus. The two
+   configs here have sigma ~0.0041 and ~0.0051 — both about 3x the quoted figure.
+
+2. **Two-seed spreads systematically understate variance.** The range is a biased
+   estimator at small n: E[range] is about 1.13 sigma at n=2 but 2.06 sigma at
+   n=4. This configuration's observed spread GREW from 0.0057 to 0.0085 as seeds
+   were added. Every two-seed spread in this report is an underestimate, and the
+   framework's `seed_stability` control now reports a sigma estimate rather than
+   the raw spread for exactly this reason.
+
+The published median also moved, 0.8303 -> 0.8310, so the point estimate was
+slightly off as well as the interval.
