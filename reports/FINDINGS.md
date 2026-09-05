@@ -3583,3 +3583,76 @@ conversation as "80/20 on real traffic". That is the ENRICHED eval. A random
 over-sample rare tiers roughly 4x, which does not affect any accuracy figure
 (baselines are computed on the eval) but does matter for capacity planning: the
 large model is selected on roughly 6% of live traffic, not 20%.
+
+## 100. Two-tier complexity settles at 0.9269 — and it is the model already published
+
+Round AM trained the collapsed taxonomy directly:
+
+| arm | encoder | refined gold |
+|---|---|---:|
+| cx2-am1-mini-seed11 | MiniLM-L6 | 0.9335 |
+| cx2-am1-mini-seed22 | MiniLM-L6 | 0.9202 |
+| **median** | | **0.9269** |
+| *(4-tier complexity, for comparison)* | | *0.8963* |
+
+**Those numbers are identical to `route-gate`'s, and the ensemble diagnostic
+confirms why: pairwise error overlap between `cx2-am1-mini-seed11` and
+`rt-af1-seed11` is Jaccard = 1.000.** They are the same model. `cx2` and `route`
+are the same fold under different label vocabularies — SIMPLE/REASONING versus
+SMALL/LARGE — trained on the same rows with the same seed. Retraining the
+collapsed taxonomy reproduced the published model exactly, which is a
+reproducibility check passed rather than a new result.
+
+So the answer to "collapse complexity to two tiers": **+3.06 points (0.8963 ->
+0.9269), already shipped as
+[`llm-d-sc-route-gate`](https://huggingface.co/cnuland/llm-d-sc-route-gate).**
+
+## 101. Ensembling fails on the 2-tier taxonomy, and the diagnostic said so first
+
+Five members — two seeds of MiniLM, two of the identically-recipe'd route model,
+one bge-small:
+
+| ensemble | accuracy |
+|---|---:|
+| best single member | **93.35%** |
+| mean of 3 | 92.29% |
+| mean of 5 | 92.29% |
+
+**The ensemble is worse than its best member.** Pairwise error overlap explains it
+before the accuracy does: Jaccard runs **0.667 to 1.000**, so the members fail on
+the same rows and averaging has nothing to correct. bge-small is the most
+complementary at 0.667 and it is still far from independent.
+
+This is the opposite of the earlier complexity result that gained +1.9 from
+ensembling, and the difference is the taxonomy. On four tiers, members disagreed
+about WHICH boundary a row sat on, and those disagreements partly cancelled. On
+two tiers there is one boundary, every member is confused by the same rows near
+it, and there is no diversity left to exploit. **Collapsing the taxonomy removes
+the ensemble's headroom along with the labels' headroom.**
+
+Reporting error overlap before accuracy is what made this cheap: the Jaccard
+table alone was enough to predict the null.
+
+## 102. Denoised labels are WORSE on the collapsed taxonomy (-1.06)
+
+Round AN, with the prediction recorded in the script before it ran. Round AJ's two
+20k corpora, folded to two tiers, no new labelling:
+
+| arm | labels | seed 11 |
+|---|---|---:|
+| an1 | panel consensus | **0.9122** |
+| an2 | self-consistency (3 samples, majority) | 0.9016 |
+| | | **-1.06** |
+
+The prediction was that the gap would SHRINK because the fold already merges away
+MEDIUM/COMPLEX, the boundary where self-consistency was least stable. It did more
+than shrink — it reversed. Direct evidence for the mechanism: **the two labelling
+processes agree on 93.2% of rows at four tiers and 97.8% once folded.** Two thirds
+of the disagreement between them was about a boundary the fold deletes.
+
+**Collapsing the taxonomy and denoising the labels attack the same disagreement,
+and you do not get to bank both.** Collapsing is far cheaper — it is a fold, not
+three labelling passes over 20,000 prompts.
+
+That is the fifth label-quality intervention on complexity to fail, now on both
+taxonomies. The label axis is closed on this signal.

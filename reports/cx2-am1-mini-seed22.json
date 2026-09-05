@@ -1,0 +1,119 @@
+{
+ "tag": "cx2-am1-mini-seed22",
+ "signal": "cx2",
+ "arch": "head",
+ "base": "sentence-transformers/all-MiniLM-L6-v2",
+ "train_rows": 92158,
+ "epochs": 3,
+ "source": "cx2-v2:5566+cx2-real:52212+cx2-active:7326+cx2-distill:30000+cx2-real-contested:7294",
+ "maxlen": 256,
+ "soft_targets": true,
+ "lr": 5e-05,
+ "ordinal": false,
+ "class_weighted": true,
+ "escalate": 0.0,
+ "supcon": 0.0,
+ "supcon_tau": 0.1,
+ "lora_rank": 0,
+ "weight_decay": 0.01,
+ "scheduler": "linear",
+ "warmup_ratio": 0.1,
+ "train_prior": {
+  "SIMPLE": 82785,
+  "REASONING": 9373
+ },
+ "real-gold": {
+  "n": 418,
+  "accuracy": 0.9186602870813397,
+  "macro_f1": 0.8918910695268523,
+  "wilson95": [
+   0.8884843526618167,
+   0.9412109642533477
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 88,
+    "SIMPLE": 9
+   },
+   "SIMPLE": {
+    "REASONING": 25,
+    "SIMPLE": 296
+   }
+  },
+  "recall": {
+   "REASONING": 0.9072164948453608,
+   "SIMPLE": 0.9221183800623053
+  }
+ },
+ "real-contested": {
+  "n": 176,
+  "accuracy": 0.7556818181818182,
+  "macro_f1": 0.7313167891504242,
+  "wilson95": [
+   0.6871833294652515,
+   0.8132570580757846
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 40,
+    "SIMPLE": 9
+   },
+   "SIMPLE": {
+    "REASONING": 34,
+    "SIMPLE": 93
+   }
+  },
+  "recall": {
+   "REASONING": 0.8163265306122449,
+   "SIMPLE": 0.7322834645669292
+  }
+ },
+ "refined-gold": {
+  "n": 376,
+  "accuracy": 0.9202127659574468,
+  "macro_f1": 0.881983678593848,
+  "wilson95": [
+   0.8883835027028489,
+   0.9435422263378882
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 66,
+    "SIMPLE": 7
+   },
+   "SIMPLE": {
+    "REASONING": 23,
+    "SIMPLE": 280
+   }
+  },
+  "recall": {
+   "REASONING": 0.9041095890410958,
+   "SIMPLE": 0.9240924092409241
+  }
+ },
+ "val-internal": {
+  "n": 10240,
+  "accuracy": 0.96025390625,
+  "macro_f1": 0.8964917521956399,
+  "wilson95": [
+   0.956294119742817,
+   0.9638684880038704
+  ],
+  "confusion": {
+   "REASONING": {
+    "REASONING": 898,
+    "SIMPLE": 119
+   },
+   "SIMPLE": {
+    "REASONING": 288,
+    "SIMPLE": 8935
+   }
+  },
+  "recall": {
+   "REASONING": 0.8829891838741396,
+   "SIMPLE": 0.968773717879215
+  }
+ },
+ "cpu_p50_ms": 7.26,
+ "cpu_p99_ms": 17.65
+}
