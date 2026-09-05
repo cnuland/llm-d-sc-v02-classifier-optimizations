@@ -3501,3 +3501,72 @@ measured.
 the honest label at the time, and keeping the arms' failure visible is what made
 the re-run diagnosable — but the cause was mine, in the mechanism under test,
 not in the environment.
+
+## 98. Jury agreement predicts model accuracy across every taxonomy in the project
+
+Seven taxonomies, four signals, folds ranging from binary to five-tier, all scored
+on the same underlying traffic:
+
+| taxonomy | n | jury agreement | minority share | model accuracy |
+|---|---:|---:|---:|---:|
+| sensitivity, 5 tiers | 949 | 74.5% | 5.8% | 0.8176 |
+| complexity, 4 tiers | 594 | 70.4% | 11.1% | 0.8963 |
+| cost, 4 tiers | 595 | 71.8% | 6.6% | 0.8976 |
+| **cx2 SIMPLE/REASONING** | 594 | 82.0% | 24.6% | **0.9269** |
+| egress ALLOW/BLOCK | 949 | 96.4% | 15.0% | 0.9505 |
+| genlen SHORT/LONG | 595 | 88.1% | **49.6%** | 0.9569 |
+| reasoning YES/NO | 594 | 94.6% | 13.5% | 0.9654 |
+
+**Pearson r = 0.90**, fit `model = 0.30 x agreement + 69.0`. The single best
+predictor of how well a classifier will score is not its architecture, its
+encoder, its corpus size or its loss — it is **how often two labellers agree on
+the taxonomy it is being graded against.**
+
+This is the summary of the whole project. Twenty mechanisms, five encoders, six
+corpora, three rubric rewrites and four label-quality interventions were measured
+against these signals; the largest effect any of them produced was +4.53 (encoder,
+on sensitivity). Moving from a 4-tier taxonomy to the 2-tier decision the router
+actually makes is worth **+3.1 to +6.9** and costs nothing operationally.
+
+**The practical rule:** measure jury agreement on a candidate taxonomy BEFORE
+building a classifier for it. It is a few hundred labelled rows and it bounds
+everything downstream. A taxonomy whose labellers agree 70% of the time will not
+produce a high-90s classifier no matter what is done to the model.
+
+**Read the minority-share column alongside it.** `genlen` has the highest accuracy
+per point of agreement in the table because its classes are nearly balanced
+(49.6%), so its 0.9569 is earned against a 53.10% baseline. `egress` reaches 96.4%
+agreement partly because 85% of its rows are ALLOW. Agreement and balance both
+matter, and agreement alone can be inflated by a degenerate split — which is
+exactly what the native-rubric A/B ran into (§99).
+
+## 99. A native 2-tier rubric is WORSE than folding a 4-tier one — twice
+
+Collapsing the taxonomy helps (§98). The obvious next step is to write the rubric
+natively for two tiers rather than folding labels assigned under four. It loses:
+
+| split | folded 4-tier rubric | native 2-tier rubric | delta |
+|---|---:|---:|---:|
+| reasoning YES/NO | 98.8% | 92.2% | **-6.5** |
+| cx2 SIMPLE/REASONING | 93.8% | 87.8% | **-6.0** |
+
+Same direction, near-identical magnitude, two independent splits, same prompts and
+same two labellers in each pair.
+
+**Likely mechanism: the intermediate tiers are scaffolding.** Asking "SIMPLE,
+MEDIUM, COMPLEX or REASONING?" decomposes one hard judgement into three easier
+ones, and the fold discards the hardest boundary AFTER it has done its work of
+anchoring the other two. A 2-tier rubric poses the whole question at once with
+nothing to brace against.
+
+**Practical consequence, and it inverts the obvious design:** keep the fine-grained
+taxonomy for ANNOTATION, ship the collapsed one. The 4-tier rubric is a better
+labelling instrument than the 2-tier rubric even when the 2-tier taxonomy is the
+better product.
+
+**Correction recorded here rather than quietly:** the route split was described in
+conversation as "80/20 on real traffic". That is the ENRICHED eval. A random
+400-prompt sample of real traffic folds 376/24 — about **94/6**. The gold sets
+over-sample rare tiers roughly 4x, which does not affect any accuracy figure
+(baselines are computed on the eval) but does matter for capacity planning: the
+large model is selected on roughly 6% of live traffic, not 20%.

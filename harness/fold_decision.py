@@ -19,6 +19,8 @@ TABLES = {
  "reasoning": ("complexity", {"SIMPLE":"NO","MEDIUM":"NO","COMPLEX":"NO","REASONING":"YES"}),
  "route":     ("complexity", {"SIMPLE":"SMALL","MEDIUM":"SMALL","COMPLEX":"LARGE","REASONING":"LARGE"}),
  "genlen":    ("cost",       {"MINIMAL":"SHORT","LOW":"SHORT","MODERATE":"LONG","HIGH":"LONG"}),
+ "cx2":       ("complexity", {"SIMPLE":"SIMPLE","MEDIUM":"SIMPLE",
+                              "COMPLEX":"REASONING","REASONING":"REASONING"}),
  "egress":    ("sensitivity",{"PUBLIC":"ALLOW","INTERNAL":"ALLOW","CONFIDENTIAL":"ALLOW",
                               "REGULATED":"ALLOW","NEVER_EGRESS":"BLOCK"}),
 }
