@@ -146,16 +146,18 @@ def test_tiny_dip_is_not_a_failure():
     assert r.status is Status.PASS
 
 
-def test_saturated_confidence_warns_even_when_monotone():
-    """A curve can rise while having no resolution left to threshold on. The gate
-    in §132 ran 0.953 -> 0.962 across its top 60%: monotone in principle, but a
-    0.009 window in which to rank 330 rows."""
+def test_narrow_confidence_range_alone_does_not_warn():
+    """§133 retracts the saturation warning. The audited arm with the NARROWEST
+    confident-half spread (0.004, genlen) has a perfect monotone curve to 100% on
+    both seeds, while every arm that actually inverts has a WIDER spread
+    (0.017-0.053). Warning on narrowness fires on the cleanest gates we have."""
     from clfeval.controls.quality import ConfidenceOrderingControl
     r = ConfidenceOrderingControl().run({"metrics": _curve(**{
-        "0.90": 0.920, "0.80": 0.940, "0.70": 0.955, "0.60": 0.960}) |
-        {"calibration/confident_half_spread": 0.009}})
-    assert r.status is Status.WARN
-    assert "saturated" in r.detail
+        "0.90": 0.961, "0.80": 0.977, "0.70": 0.992, "0.60": 0.994,
+        "0.50": 0.996, "0.40": 0.995, "0.30": 1.0}) |
+        {"calibration/confident_half_spread": 0.004}})
+    assert r.status is Status.PASS
+    assert "0.0040" in r.detail          # still reported, just not a verdict
 
 
 def test_confidence_ordering_is_blocking():

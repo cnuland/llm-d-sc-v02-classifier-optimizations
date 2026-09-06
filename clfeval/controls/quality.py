@@ -175,12 +175,18 @@ class ConfidenceOrderingControl(Control):
     could not reach 97% at any coverage; the alternative reached 99% by escalating
     38%. Nothing in accuracy, macro-F1 or ECE distinguished them.
 
-    The usual cause is a saturated head: a 2-class softmax on a hard boundary has
-    one logit difference to express both which side and how sure, and it compresses
-    the confident half into a band too narrow to rank. That is reported separately,
-    because a curve can still be monotone while having no resolution left to
-    threshold on -- and the fix differs (train on a finer taxonomy and fold, rather
-    than recalibrate).
+    An earlier version of this control also WARNed when the confident half of the
+    range was narrow, on the theory that a saturated head is what loses its
+    ordering. An audit of every gate this project published refuted that: the arm
+    with the NARROWEST range (spread 0.004) has a perfect monotone curve to 100%,
+    while every arm that actually inverts has a wider one (0.017-0.053). Saturation
+    describes how little room a threshold has, not whether the ordering inside that
+    room is right. `calibration/confident_half_spread` is still reported -- it is
+    real information about threshold resolution -- but it is not a verdict, because
+    it does not predict this defect.
+
+    What DOES predict it, in that audit: 5 of 8 natively-binary arms inverted and
+    0 of 4 fold-derived arms did, including both matched pairs. Why is untested.
 
     Blocking: a router that cannot order its own confidence cannot be given an
     escalation policy, which is the entire operational value of a classifier gate.
@@ -190,8 +196,6 @@ class ConfidenceOrderingControl(Control):
 
     #: a drop this small is resampling noise on a few hundred held-out rows
     TOLERANCE = 0.005
-    #: confident-half spread below this cannot rank the rows inside it
-    MIN_SPREAD = 0.02
 
     def run(self, ctx):
         m = ctx["metrics"]
@@ -206,6 +210,8 @@ class ConfidenceOrderingControl(Control):
                  for (c0, a0), (c1, a1) in zip(pts, pts[1:]) if a0 - a1 > self.TOLERANCE]
         spread = m.get("calibration/confident_half_spread")
         bits = [f"risk-coverage {' -> '.join(f'{c:.0%}:{a:.2%}' for c, a in pts)}"]
+        if spread is not None:
+            bits.append(f"confident-half spread {spread:.4f}")
         if drops:
             worst = max(drops, key=lambda d: d[2])
             return self._r(
@@ -216,15 +222,5 @@ class ConfidenceOrderingControl(Control):
                 f"threshold read off this curve means anything. "
                 + "; ".join(bits),
                 non_monotone_steps=len(drops), worst_drop=worst[2])
-        if spread is not None and spread < self.MIN_SPREAD:
-            bits.append(f"confident-half spread {spread:.4f} < {self.MIN_SPREAD}")
-            return self._r(
-                Status.WARN,
-                "confidence is monotone but saturated: the top half of rows sit in "
-                f"a {spread:.4f}-wide band, so quantile thresholds there cut through "
-                f"a spike and rank near-arbitrarily. Training on a finer taxonomy and "
-                f"folding to the deployed decision restores resolution. "
-                + "; ".join(bits),
-                confident_half_spread=spread)
         return self._r(Status.PASS, "; ".join(bits),
                        confident_half_spread=spread)

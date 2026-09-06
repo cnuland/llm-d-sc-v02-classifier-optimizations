@@ -5047,3 +5047,75 @@ High-90s accuracy on real traffic is reachable, and this is the price:
 A gate quoted at 95.93% on jury-unanimous rows (§121, triage) is not wrong, but it
 is not an operating point either. The deployable claim is a target paired with an
 escalation rate, and only the fine-then-fold architecture can make one.
+
+## 133. Auditing every published gate: 5 of 8 binary-native arms have inverted confidence, 0 of 4 folded arms do — and the saturation warning I shipped does not predict it
+
+§132 proposed that a natively-binary head saturates and loses its confidence
+ordering. If that is right it is not one bad model, it is a property of every gate
+this project published, because all of them are binary. Auditing all of them on
+their own real-gold + contested pools:
+
+| arm | tag | 100% | 90% | 80% | 70% | 60% | 50% | 40% | 30% | spread | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| triage (binary) | tri-at1-seed11 | 90.9 | 94.6 | 96.6 | 97.7 | 98.2 | 98.2 | 97.7 | 97.0 | 0.017 | **FAIL -0.7** |
+| triage (binary) | tri-at1-seed22 | 90.9 | 95.0 | 97.1 | 97.7 | 97.9 | 98.2 | 97.7 | 97.6 | 0.018 | pass |
+| reasoning (binary) | rs-ae1-seed11 | 94.4 | 98.4 | 98.6 | 98.4 | 98.2 | 97.8 | 97.3 | 96.4 | 0.052 | **FAIL -0.9** |
+| reasoning (binary) | rs-ae1-seed22 | 95.7 | 98.2 | 98.2 | 97.9 | 97.6 | 97.1 | 96.4 | 95.2 | 0.053 | **FAIL -1.2** |
+| genlen (binary) | gl-ae2-seed11 | 92.2 | 96.1 | 97.7 | 99.2 | 99.4 | 99.6 | 99.5 | 100.0 | 0.004 | pass |
+| genlen (binary) | gl-ae2-seed22 | 92.8 | 96.1 | 98.4 | 99.2 | 99.7 | 99.6 | 99.5 | 100.0 | 0.004 | pass |
+| route≡cx2 (binary) | rt-af1-seed11 | 88.4 | 91.3 | 93.2 | 95.3 | 95.8 | 94.9 | 93.7 | 91.6 | 0.035 | **FAIL -2.1** |
+| route≡cx2 (binary) | rt-af1-seed22 | 86.8 | 89.5 | 92.7 | 94.3 | 94.6 | 93.8 | 92.8 | 90.4 | 0.039 | **FAIL -2.4** |
+| complexity4 folded | cx-ab-v2rubric-seed11 | 88.9 | 92.3 | 95.2 | 97.2 | 99.7 | 99.6 | 100.0 | 100.0 | 0.009 | pass |
+| complexity4 folded | cx-ab-v2rubric-seed22 | 88.6 | 92.7 | 95.5 | 97.4 | 98.2 | 100.0 | 100.0 | 100.0 | 0.008 | pass |
+| triage3cx folded | t3cx-av-seed11 | 91.7 | 95.2 | 97.3 | 97.7 | 98.2 | 98.2 | 98.2 | 98.2 | 0.016 | pass |
+| triage3cx folded | t3cx-av-seed22 | 91.3 | 94.8 | 96.4 | 97.4 | 97.9 | 98.6 | 98.6 | 98.2 | 0.016 | pass |
+
+**5 of 8 binary-native arms invert. 0 of 4 fold-derived arms do.** And both gates
+that have a folded counterpart are fixed by it, matched: route/cx2 (FAIL -2.1/-2.4)
+vs complexity4 folded (clean to 100%), triage (FAIL -0.7) vs triage3cx folded
+(clean).
+
+### `route` and `cx2` are the same task under two names
+
+The audit first reported 14 arms and two pairs of rows were identical to display
+precision. They are duplicates: identical eval rows in identical order, labels a
+pure renaming (`SMALL`<->`SIMPLE`, `LARGE`<->`REASONING`), and the two separately
+tagged models agree **to 6.0e-06 in probability** on every row. Two independently
+named gates, one task, one model. The published `route-gate` and the cx2 arm are
+not two results and must not be counted or cited as two.
+
+### The saturation warning does not predict the defect — RETRACTING it
+
+§132 attributed the inversion to a saturated confidence range and I shipped a WARN
+on `confident_half_spread < 0.02` one tick ago. The audit refutes it:
+
+- **genlen has the narrowest spread of any arm (0.004) and a perfect monotone
+  curve**, rising to 100.0% on both seeds.
+- The two folded complexity arms (0.008, 0.009) are also perfectly monotone.
+- Every arm that actually inverts has a *wider* spread: 0.017 to 0.053.
+
+Spread is, if anything, mildly ANTI-correlated with the failure. Saturation
+describes how little room a threshold has; it says nothing about whether the
+ordering inside that room is right, and a tiny range with correct ordering
+thresholds fine. The mechanism sentence in §132 — "saturation is why the ordering
+inverts" — is not supported and is withdrawn; what survives is the observation
+that binary-native heads invert and fold-derived ones did not.
+
+The non-monotonicity check itself is direct and stands: it measures the defect
+rather than a proxy for it.
+
+### Why fold-derived confidence might be better ordered — untested
+
+Offered as a hypothesis, not a result: a folded score sums over labels the router
+treats alike, so it aggregates several partly independent decision boundaries
+rather than reading one. Averaging out per-boundary error would improve ordering
+without necessarily improving argmax, which matches both this audit and §131 (the
+argmax barely moved). Testing it needs an intervention, not more observation.
+
+### Consequence for what has been published
+
+Five of the arms behind published gates cannot be given an escalation policy: any
+threshold set on their confidence is read off a curve that runs backwards past its
+peak. Their accuracy numbers are unaffected and stand. The model cards should say
+which coverage each curve peaks at, since below that point abstention makes the
+gate worse, and none of them say so today.
